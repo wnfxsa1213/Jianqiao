@@ -1,0 +1,158 @@
+--- Log started at 2025-05-21 00:23:45 ---
+2025-05-21 00:23:45.515 DEBUG:   Application started.
+2025-05-21 00:23:45.515 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数开始。
+2025-05-21 00:23:45.515 DEBUG:   剑鞘核心(JianqiaoCoreShell): 初始化核心应用设置。
+2025-05-21 00:23:45.515 DEBUG:   管理员登录热键已从配置文件加载: "VK_LCONTROL + VK_LSHIFT + VK_LMENU + L"
+2025-05-21 00:23:45.515 DEBUG:   用户模式下需拦截的独立按键已从配置文件加载: "VK_APPS, 0X2C, VK_LWIN, VK_RWIN, 0X5F"
+2025-05-21 00:23:45.515 DEBUG:   系统交互模块(SystemInteractionModule): 已创建。
+2025-05-21 00:23:45.515 DEBUG:   剑鞘核心(JianqiaoCoreShell): 底层系统交互模块已实例化。
+2025-05-21 00:23:45.517 DEBUG:   用户视图(UserView): 已创建。
+2025-05-21 00:23:45.517 DEBUG:   管理员仪表盘(AdminDashboardView): 已创建。
+2025-05-21 00:23:45.517 DEBUG:   剑鞘核心外壳: UI设置完成 (QStackedWidget), 视图实例已创建。
+2025-05-21 00:23:45.517 DEBUG:   管理员登录视图(AdminLoginView): 成功加载 AdminLoginView.qss
+2025-05-21 00:23:45.521 DEBUG:   管理员登录视图(AdminLoginView): 已创建。
+2025-05-21 00:23:45.521 DEBUG:   管理员模块(AdminModule): 构造函数开始。
+2025-05-21 00:23:45.521 DEBUG:   管理员模块(AdminModule): 开始加载配置 (密码, 热键, 白名单)...
+2025-05-21 00:23:45.521 DEBUG:   管理员模块(AdminModule): 完整的配置文件路径: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-21 00:23:45.522 DEBUG:   管理员模块(AdminModule): 管理员密码哈希已从配置加载。
+2025-05-21 00:23:45.522 DEBUG:   管理员模块(AdminModule): 管理员登录热键 (VK字符串) 已从配置加载: "VK_SHIFT + VK_CONTROL + VK_MENU (Alt) + S"
+2025-05-21 00:23:45.546 DEBUG:   管理员模块(AdminModule): 从配置文件加载了 3 个白名单应用。
+2025-05-21 00:23:45.546 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
+2025-05-21 00:23:45.546 DEBUG:   管理员模块(AdminModule): 配置加载完成。
+2025-05-21 00:23:45.546 DEBUG:   管理员模块(AdminModule): 构造函数结束。
+2025-05-21 00:23:45.546 INFO:    UserModeModule initialized.
+2025-05-21 00:23:45.546 INFO:    Configuration loaded, 3 apps in whitelist.
+2025-05-21 00:23:45.546 DEBUG:   键盘钩子: 安装成功。
+2025-05-21 00:23:45.546 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 SystemInteractionModule::adminLoginRequested 信号。
+2025-05-21 00:23:45.546 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。
+2025-05-21 00:23:45.546 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图。
+2025-05-21 00:23:45.556 INFO:    Configuration loaded, 3 apps in whitelist.
+2025-05-21 00:23:45.556 INFO:    UserModeModule: Setting app list for UserView with 3 apps.
+2025-05-21 00:23:45.556 DEBUG:   UserView: App list cached with 3 apps.
+2025-05-21 00:23:45.556 INFO:    UserView: Populating with 3 apps.
+2025-05-21 00:23:45.556 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView isEnabled: true
+2025-05-21 00:23:45.556 DEBUG:   剑鞘核心(JianqiaoCoreShell): 用户视图已显示 (初始状态)。
+2025-05-21 00:23:45.556 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数结束。
+2025-05-21 00:23:45.564 DEBUG:   UserView: First showEvent, populating list with 3 cached apps.
+2025-05-21 00:23:45.564 INFO:    UserView: Populating with 3 apps.
+2025-05-21 00:23:47.171 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-21 00:23:47.171 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-21 00:23:47.179 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-21 00:23:47.179 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-21 00:23:47.268 DEBUG:   "用户模式下按键: VK_LMENU (LAlt) (VK: 0xa4), m_userModeActive: 1"
+2025-05-21 00:23:47.268 DEBUG:   "用户模式下按键 VK_LMENU (LAlt) 未被任何规则拦截。"
+2025-05-21 00:23:47.444 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-21 00:23:47.444 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-21 00:23:47.444 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-21 00:23:47.444 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-21 00:23:47.444 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-21 00:23:47.444 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-21 00:23:47.444 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-21 00:23:47.444 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-21 00:23:49.617 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
+2025-05-21 00:23:49.617 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
+2025-05-21 00:23:49.617 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
+2025-05-21 00:23:49.617 DEBUG:   管理员模块(AdminModule): 密码验证成功。
+2025-05-21 00:23:49.617 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
+2025-05-21 00:23:49.617 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
+2025-05-21 00:23:49.617 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
+2025-05-21 00:23:49.617 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
+2025-05-21 00:23:49.617 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
+2025-05-21 00:23:49.617 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_LCONTROL + VK_LSHIFT + VK_LMENU (LAlt) + L"
+2025-05-21 00:23:49.617 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView isEnabled: true
+2025-05-21 00:23:49.617 DEBUG:   管理员模块(AdminModule): 请求显示管理员仪表盘视图。
+2025-05-21 00:23:49.617 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-21 00:23:49.617 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
+2025-05-21 00:23:49.617 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_LCONTROL + VK_LSHIFT + VK_LMENU (LAlt) + L"
+2025-05-21 00:23:49.617 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。显示由CoreShell的StackedWidget处理。
+2025-05-21 00:23:50.479 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
+2025-05-21 00:23:50.479 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
+2025-05-21 00:23:50.479 DEBUG:   管理员模块(AdminModule): AdminDashboardView 请求退出管理模式。
+2025-05-21 00:23:50.479 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
+2025-05-21 00:23:50.479 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-21 00:23:50.479 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图。
+2025-05-21 00:23:50.489 INFO:    Configuration loaded, 3 apps in whitelist.
+2025-05-21 00:23:50.489 INFO:    UserModeModule: Setting app list for UserView with 3 apps.
+2025-05-21 00:23:50.489 DEBUG:   UserView: App list cached with 3 apps.
+2025-05-21 00:23:50.489 INFO:    UserView: Populating with 3 apps.
+2025-05-21 00:23:50.489 DEBUG:   UserView: Subsequent showEvent.
+2025-05-21 00:23:50.489 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView isEnabled: true
+2025-05-21 00:23:50.489 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
+2025-05-21 00:23:50.807 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-21 00:23:50.807 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-21 00:23:51.308 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-21 00:23:51.308 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-21 00:23:51.308 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-21 00:23:51.308 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-21 00:23:51.431 DEBUG:   "用户模式下按键: VK_LMENU (LAlt) (VK: 0xa4), m_userModeActive: 1"
+2025-05-21 00:23:51.431 DEBUG:   "用户模式下按键 VK_LMENU (LAlt) 未被任何规则拦截。"
+2025-05-21 00:23:51.547 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-21 00:23:51.547 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-21 00:23:51.547 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-21 00:23:51.547 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-21 00:23:51.547 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-21 00:23:51.547 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-21 00:23:51.552 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-21 00:23:51.552 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-21 00:23:52.636 DEBUG:   管理员登录视图(AdminLoginView): '管理白名单'按钮被点击。
+2025-05-21 00:23:52.636 DEBUG:   管理员模块(AdminModule): 请求显示管理员仪表盘视图。
+2025-05-21 00:23:52.639 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-21 00:23:52.639 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
+2025-05-21 00:23:52.639 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_LCONTROL + VK_LSHIFT + VK_LMENU (LAlt) + L"
+2025-05-21 00:23:52.639 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。显示由CoreShell的StackedWidget处理。
+2025-05-21 00:23:58.085 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-21 00:23:58.085 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-21 00:23:58.085 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-21 00:23:58.085 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-21 00:23:58.085 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-21 00:23:58.085 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-21 00:23:58.089 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-21 00:23:58.089 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-21 00:24:00.527 DEBUG:   管理员登录视图(AdminLoginView): '管理白名单'按钮被点击。
+2025-05-21 00:24:00.527 DEBUG:   管理员模块(AdminModule): 请求显示管理员仪表盘视图。
+2025-05-21 00:24:00.527 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-21 00:24:00.527 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
+2025-05-21 00:24:00.527 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_LCONTROL + VK_LSHIFT + VK_LMENU (LAlt) + L"
+2025-05-21 00:24:00.527 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。显示由CoreShell的StackedWidget处理。
+2025-05-21 00:24:01.715 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-21 00:24:01.715 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-21 00:24:01.715 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-21 00:24:01.715 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-21 00:24:01.715 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-21 00:24:01.715 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-21 00:24:01.721 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-21 00:24:01.721 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-21 00:24:02.773 DEBUG:   管理员登录视图(AdminLoginView): '退出登录'按钮被点击。
+2025-05-21 00:24:02.773 DEBUG:   管理员模块(AdminModule): 登录视图请求退出管理员模式（例如通过取消按钮）。
+2025-05-21 00:24:02.774 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-21 00:24:02.774 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
+2025-05-21 00:24:02.774 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-21 00:24:02.774 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图。
+2025-05-21 00:24:02.777 INFO:    Configuration loaded, 3 apps in whitelist.
+2025-05-21 00:24:02.777 INFO:    UserModeModule: Setting app list for UserView with 3 apps.
+2025-05-21 00:24:02.777 DEBUG:   UserView: App list cached with 3 apps.
+2025-05-21 00:24:02.777 INFO:    UserView: Populating with 3 apps.
+2025-05-21 00:24:02.777 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView isEnabled: true
+2025-05-21 00:24:02.777 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
+2025-05-21 00:24:03.092 DEBUG:   "用户模式下按键: VK_LWIN (VK: 0x5b), m_userModeActive: 1"
+2025-05-21 00:24:03.092 DEBUG:   系统交互模块(LowLevelKeyboardProc): 用户模式下，拦截按键: 91
+2025-05-21 00:24:04.037 DEBUG:   "用户模式下按键: VK_LWIN (VK: 0x5b), m_userModeActive: 1"
+2025-05-21 00:24:04.037 DEBUG:   系统交互模块(LowLevelKeyboardProc): 用户模式下，拦截按键: 91
+2025-05-21 00:24:04.713 DEBUG:   "用户模式下按键: VK_LMENU (LAlt) (VK: 0xa4), m_userModeActive: 1"
+2025-05-21 00:24:04.713 DEBUG:   "用户模式下按键 VK_LMENU (LAlt) 未被任何规则拦截。"
+2025-05-21 00:24:04.876 DEBUG:   "用户模式下按键: VK_TAB (VK: 0x09), m_userModeActive: 1"
+2025-05-21 00:24:04.876 DEBUG:   系统交互模块(LowLevelKeyboardProc): 在用户模式下拦截 Alt+Tab.
+2025-05-21 00:24:05.688 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-21 00:24:05.688 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-21 00:24:05.875 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-21 00:24:05.875 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-21 00:24:05.948 DEBUG:   "用户模式下按键: VK_LMENU (LAlt) (VK: 0xa4), m_userModeActive: 1"
+2025-05-21 00:24:05.948 DEBUG:   "用户模式下按键 VK_LMENU (LAlt) 未被任何规则拦截。"
+2025-05-21 00:24:06.129 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-21 00:24:06.129 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-21 00:24:06.129 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-21 00:24:06.129 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-21 00:24:06.129 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-21 00:24:06.129 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-21 00:24:06.133 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-21 00:24:06.133 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。

@@ -1,0 +1,50 @@
+对“剑鞘系统”开发文档的修订和补充 (基于UI/UX现代化及单平台Windows)
+1. 系统架构 (UI/UX相关调整)
+JianqiaoCoreShell (主框架模块):
+UI技术栈: 可以考虑使用Qt Quick (QML) 来构建更具现代化观感和流畅动画效果的界面，特别是用户模式下的界面。QML在创建动态和视觉丰富的UI方面比传统的Qt Widgets更有优势。如果团队对QML不熟悉，依然可以使用Qt Widgets，但需要更注重自定义样式表 (QSS) 的设计和应用，以达到现代化效果。
+视觉风格: 追求扁平化设计、简约图标、清晰的排版和流畅的过渡动画。
+AdminModule (管理员模块):
+AdminLoginView:
+设计上应简洁、安全感强。可以考虑非传统的登录界面唤出方式，例如从屏幕边缘平滑滑出，而不是简单的模态对话框。
+组合键唤醒后，登录界面出现时可以伴随 subtle (不易察觉但能提升体验的) 动画效果。
+WhitelistManagerView:
+采用现代化的列表视图或卡片式布局来展示白名单应用。
+提供清晰的视觉反馈。
+操作按钮（增、删、改）应直观易用，图标化设计优先。
+UserModeModule (用户模式模块):
+UserView: 这是用户长时间面对的界面，UI/UX至关重要。
+应用启动器: 可以设计成类似现代操作系统的启动菜单 (Launchpad-style)、Dock栏或者卡片式网格布局。应用图标应清晰美观。
+背景: 考虑使用动态背景、模糊特效（如毛玻璃效果，Windows上有Mica或Acrylic材质API可以借鉴）或者与管理员设定的主题色联动的背景，增强沉浸感。
+状态提示: 对于系统状态（如网络连接、时间等）的展示，如果需要，应融入整体设计，避免突兀。
+无缝体验: 用户启动白名单应用、切换应用时，界面过渡应平滑自然。
+2. 核心功能实现方案与技术难点 (Windows平台特性)
+SystemInteractionModule (底层系统交互模块 - Windows特定强化):
+GlobalKeyboardHook:
+Windows平台: SetWindowsHookEx 与 WH_KEYBOARD_LL 是标准且可靠的选择。确保在独立的线程中处理钩子回调，避免阻塞主消息循环。
+WindowControlAPIWrapper:
+现代化窗口效果: 可以研究使用Windows API（如DWM API - Desktop Window Manager）来实现更高级的窗口效果，例如：
+毛玻璃/亚克力效果 (Mica/Acrylic): 如果“剑鞘系统”的某些UI元素（非全屏遮挡部分，例如管理员界面的某个面板）希望有透明模糊效果，可以尝试 DwmEnableBlurBehindWindow (旧) 或更新的Composition API。对于全屏遮挡的主体，此特性意义不大，但若有弹出式管理窗口则可考虑。
+自定义窗口边框和标题栏: Qt本身可以实现无边框窗口，但如果需要更接近原生应用体验的自定义标题栏（例如集成自定义按钮），则需要处理窗口消息如 WM_NCHITTEST。
+窗口动画/过渡: 可以结合Windows的动画API或Qt自身的动画框架 (QPropertyAnimation) 来使窗口的显示、隐藏、切换更加平滑。
+顶层窗口管理 (SetWindowPos, SetForegroundWindow): 在Windows上，这些API是控制窗口层级和激活状态的核心。需要特别注意不同进程间窗口激活的权限问题 (AttachThreadInput 可能需要)。
+任务栏隐藏: 除了窗口全屏，可能还需要调用API确保任务栏被可靠隐藏且不会意外弹出（例如 SHAppBarMessage）。
+快捷键拦截:
+Ctrl+Alt+Del: 在Windows上，应用层拦截此组合键几乎不可能。最佳策略是通过组策略编辑器 (gpedit.msc) 来禁用它（如果环境允许管理员进行此类系统配置）。应用本身应专注于拦截其他可控的快捷键。需向客户明确这一点。
+Win键相关快捷键 (如 Win+D, Win+Tab): 低级别键盘钩子 (WH_KEYBOARD_LL) 通常可以有效拦截。
+3. UI/UX设计与开发建议 (现代化与Windows平台)
+设计原则:
+一致性: 整个应用的视觉风格、交互模式保持一致。
+反馈性: 用户的操作应有即时且清晰的视觉反馈。
+简约性: 避免不必要的视觉元素和复杂操作，信息层级清晰。
+流畅性: 动画和过渡效果应自然、不卡顿，提升用户体验。
+工具与资源:
+图标库: 使用现代化、风格统一的图标库 (如 Fluent UI System Icons, Material Design Icons 等，注意授权)。
+配色方案: 选择专业、和谐的配色方案。可以提供几种主题供管理员选择。
+动效设计: 参考当前主流操作系统和应用的动画效果，但避免过度动画。
+Qt实现技巧:
+QML: 如果选择QML，可以利用其强大的声明式语法和内置动画模块快速构建现代化UI。
+Qt Widgets + QSS: 如果使用Widgets，需要精心编写QSS样式表。可以借鉴现有的一些现代化QSS主题，并根据需求定制。利用 QGraphicsEffect (如 QGraphicsBlurEffect) 可以实现一些视觉效果，但性能上可能不如平台原生API。
+自定义控件: 对于一些标准控件无法满足的特殊视觉或交互需求，可能需要自定义Qt控件。
+利用Windows平台特性:
+主题感知: 应用可以尝试获取Windows当前的主题色（亮色/暗色模式），并自动调整UI以匹配，但这会增加复杂度，初期可不作要求。
+通知: 如果“剑鞘系统”需要发送通知，可以使用Windows的通知API (Toast Notifications) 以获得更原生的体验。

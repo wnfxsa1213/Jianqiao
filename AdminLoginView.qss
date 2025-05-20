@@ -1,0 +1,56 @@
+/* AdminLoginView.qss */
+QWidget#AdminLoginView { /* 使用对象名称选择器以确保样式只应用于 AdminLoginView 实例 */
+    background-color: #f0f0f0; /* 浅灰色背景 */
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+
+QLabel {
+    color: #333333; /* 深灰色文字 */
+    font-size: 14px;
+}
+
+QLineEdit {
+    background-color: #ffffff; /* 白色背景 */
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    padding: 8px; /* 增加内边距 */
+    font-size: 14px;
+    color: #333333;
+}
+
+QLineEdit:focus {
+    border: 1px solid #0078d4; /* 焦点时蓝色边框，类似Fluent Design */
+}
+
+QPushButton {
+    background-color: #0078d4; /* 蓝色背景 */
+    color: white; /* 白色文字 */
+    border: none;
+    border-radius: 3px;
+    padding: 8px 16px; /* 增加内边距 */
+    font-size: 14px;
+    min-height: 20px; /* 确保按钮有足够高度 */
+}
+
+QPushButton:hover {
+    background-color: #005a9e; /* 悬停时深蓝色 */
+}
+
+QPushButton:pressed {
+    background-color: #00396e; /* 按下时更深的蓝色 */
+}
+
+/* 为退出按钮设置不同样式 */
+QPushButton#m_exitButton { /* 假设退出按钮的对象名称是 m_exitButton */
+    background-color: #e0e0e0; /* 浅灰色背景 */
+    color: #333333; /* 深灰色文字 */
+}
+
+QPushButton#m_exitButton:hover {
+    background-color: #c0c0c0; /* 悬停时深灰色 */
+}
+
+QPushButton#m_exitButton:pressed {
+    background-color: #a0a0a0; /* 按下时更深的灰色 */
+} 

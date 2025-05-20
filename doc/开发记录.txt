@@ -1,0 +1,233 @@
+**剑鞘系统 - 开发记录**
+
+**当前阶段总结 (截至管理员交互与配置完善)**
+
+**已实现功能:**
+
+1.  **项目核心框架 (`JianqiaoCoreShell`):**
+    *   基于 Qt 6 C++ 与 CMake 构建。
+    *   实现主窗口无边框全屏显示，覆盖桌面与任务栏。
+    *   通过 `qt.conf` 解决 Qt 平台插件部署问题。
+    *   **管理员视图交互时的Z-Order管理:** `JianqiaoCoreShell` 响应 `AdminModule::adminViewVisible` 信号，动态调整自身主窗口的 `HWND_NOTOPMOST` / `HWND_TOPMOST` 状态，配合管理员视图的置顶，确保主Shell不会覆盖活动管理员窗口。
+
+2.  **底层系统交互 (`SystemInteractionModule`):**
+    *   封装 Windows API 调用，实现全局低级别键盘钩子 (`WH_KEYBOARD_LL`)。
+    *   实现 `bringToFrontAndActivate(WId)`，使用 `SetWindowPos`、`SetForegroundWindow`等API将指定窗口置顶并激活。
+    *   实现 `findMainWindowForProcessOrChildren(DWORD initialPid, const QString& executableNameHint)`，用于查找进程主窗口（包括子进程），解决了 `notepad.exe` 等应用的窗口查找问题。
+    *   热键配置从 `config.json` 加载 (`loadConfiguration`)。
+    *   包含 `m_userModeActive` 状态及 `setUserModeActive(bool active)` 方法，供 `JianqiaoCoreShell` 控制键盘钩子行为（管理员/用户模式）。
+    *   `LowLevelKeyboardProc` 包含检测管理员登录热键的逻辑。
+    *   添加 `getCurrentAdminLoginHotkeyStrings()` 方法。
+    *   `getIconForExecutable` 中尝试使用 `SHGFI_USEFILEATTRIBUTES` 改进图标获取。
+
+3.  **管理员模块 (`AdminModule`):**
+    *   持有 `SystemInteractionModule` 实例指针，用于调用窗口置顶等功能。
+    *   `AdminLoginView` (含密码输入) 。
+    *   **重构进行中:** `WhitelistManagerView` 正在被新的 `AdminDashboardView` 替代。
+    *   **视图管理与置顶:** 热键触发显示 `AdminLoginView`；登录成功后显示 `AdminDashboardView`；视图显示时调用 `SystemInteractionModule::bringToFrontAndActivate` 置顶。
+    *   **白名单管理 (迁移至 `AdminDashboardView`):** UI增删白名单应用，更改保存回 `config.json`并能从配置文件加载。
+    *   **管理员登录与密码管理:**
+        *   从 `config.json` 加载和保存管理员密码 (SHA256哈希)。
+        *   `AdminLoginView` 进行登录尝试，`AdminModule` 验证密码。
+        *   密码修改功能将整合到 `AdminDashboardView`。
+    *   **管理员登录热键配置:**
+        *   将整合到 `AdminDashboardView` (通过 `HotkeyEditDialog`)。
+        *   `AdminModule` 将新热键序列 (DWORD列表) 保存到 `config.json`。
+    *   **管理员模式退出流程:**
+        *   管理员视图 (`AdminLoginView`, `AdminDashboardView`) 提供退出/关闭操作。
+        *   `AdminModule` 统一处理退出逻辑 (`requestExitAdminMode`)，关闭相关视图，并发出 `exitAdminModeRequested` (通知 `CoreShell` 切换模式) 和 `adminViewVisible(false)` (通知 `CoreShell` 恢复自身置顶)。
+    *   修复 `onAdminLoginHotkeyChanged` 槽以接受 `QList<DWORD>`。
+
+4.  **用户模式模块 (`UserModeModule`):**
+    *   `UserView` 显示白名单应用列表，修复了数据更新后不立即刷新UI的问题。
+    *   能够从 `config.json` 加载白名单并启动应用 (`QProcess`)。
+    *   启动应用后，调用 `SystemInteractionModule::findMainWindowForProcessOrChildren` 查找主窗口，并调用 `bringToFrontAndActivate` 尝试置顶。
+    *   `QProcess` 增加了延时和 `finished` 信号连接 `deleteLater`。
+
+5.  **配置文件 (`config.json`):**
+    *   存储白名单应用列表 (`whitelist_apps`)。
+    *   存储管理员登录热键 (`shortcuts.admin_login.key_sequence`)。
+    *   存储管理员密码 (`admin_password`, SHA256哈希)。
+
+6.  **代码与调试:**
+    *   主要调试输出信息已中文化。
+    *   `CMakeLists.txt`: 添加了 `AdminDashboardView.cpp` 和 `AdminDashboardView.h`。
+
+**待改进和优化的方面:**
+
+1.  **窗口焦点管理:**
+    *   确保管理员窗口和白名单应用窗口在显示时能可靠、自动地获取键盘输入焦点。
+2.  **`AdminLoginView` UI 完善:**
+    *   完成密码输入框、登录按钮、退出/取消按钮的UI布局和样式。
+    *   登录失败时，在视图内显示错误提示。
+3.  **热键动态生效与配置:**
+    *   研究管理员登录热键更改后无需重启应用即可生效的机制。
+4.  **错误处理与日志:**
+    *   强化各模块中 Windows API 调用的错误检查和日志记录。
+    *   增强 `config.json` 加载的错误报告和校验。
+5.  **代码质量:**
+    *   持续优化模块化设计和接口清晰度。
+    *   解决 Linter 提示的 `includePath` 问题 (如 `HotkeyEditDialog.cpp`) 以改善IDE体验。
+6.  **UWP 应用兼容性:**
+    *   如 `calc.exe` 的窗口查找和置顶问题，当前仍搁置。
+7.  **性能:**
+    *   移除或控制不必要的 `qDebug` 输出。
+8.  **概率性CMD窗口问题：**
+    *   调查在管理员登录成功后偶尔弹出CMD窗口的问题。
+
+**下一步计划 (核心开发方向):**
+
+1.  **`JianqiaoCoreShell`: 完成 `QStackedWidget` 视图切换逻辑:**
+    *   **首要任务：** 在 `JianqiaoCoreShell.cpp` 中完整实现 `QStackedWidget` 的初始化和视图切换方法，使 `AdminDashboardView` 能够全界面显示。
+2.  **`AdminDashboardView` 功能完善:**
+    *   迁移密码修改功能。
+    *   迁移管理员登录热键修改功能。
+    *   UI/UX 细节打磨。
+3.  **图标加载问题深入调查:**
+    *   进一步排查 `SystemInteractionModule::getIconForExecutable` 中 `SHGetFileInfoW` 调用失败或返回空图标的原因。
+4.  **用户模式快捷键拦截 (`SystemInteractionModule`, `UserModeModule`):**
+    *   在 `SystemInteractionModule::LowLevelKeyboardProc` 中，当 `m_userModeActive == true` 时，根据预定义列表拦截并消费特定系统快捷键。
+5.  **`UserView` UI/UX 实现:**
+    *   设计并实现一个现代化的用户界面 (如卡片式布局)。
+6.  **`UserModeModule`: 应用监控与窗口层级健壮性:**
+    *   启动白名单应用后的状态监控。
+    *   持续优化窗口层级管理。
+
+**日期：** 2025-05-17
+**开发者：** 北鲲
+**模块：** `JianqiaoCoreShell`, `AdminModule`, `AdminLoginView`, `WhitelistManagerView`, `SystemInteractionModule`
+
+**窗口层级与管理员视图置顶问题解决：**
+
+1.  **核心问题描述：**
+    *   管理员窗口（`AdminLoginView`, `WhitelistManagerView`）在显示后，若点击 `JianqiaoCoreShell` 主窗口背景，管理员窗口会被主窗口覆盖。
+    *   初步尝试修改 `JianqiaoCoreShell` 的 Qt 窗口标志 (`WindowStaysOnTopHint`) 导致主窗口意外最小化。
+
+2.  **解决方案与实施：**
+    *   **动态调整主窗口Z-Order：**
+        *   当管理员视图（`AdminLoginView` 或 `WhitelistManagerView`）即将显示时，`AdminModule` 发出 `adminViewVisible(true)` 信号。
+        *   `JianqiaoCoreShell` 接收此信号后，在其槽函数 `onAdminViewVisibilityChanged(true)` 中，通过 Windows API `SetWindowPos` 将自身主窗口的 Z-order 设置为 `HWND_NOTOPMOST`。
+        *   管理员视图则通过 `SystemInteractionModule::bringWindowToTop` 成功显示在最前方。
+    *   **主窗口层级恢复：**
+        *   `AdminModule` 在所有管理员视图均隐藏后发出 `adminViewVisible(false)` 信号。
+        *   `JianqiaoCoreShell` 接收此信号后，恢复自身主窗口的 Z-order 为 `HWND_TOPMOST`。
+    *   **管理员视图交互调整：**
+        *   `AdminLoginView` 在打开 `WhitelistManagerView` 后自动隐藏。
+
+3.  **当前效果：**
+    *   管理员视图能正确置顶，主窗口在管理员视图活动时不再覆盖它，关闭管理员视图后主窗口恢复置顶。
+
+**遗留Linter问题：**
+*   项目中部分文件存在Linter关于Qt头文件无法找到的提示。
+
+**下一步计划：**
+*   为管理员视图设计更正式的关闭/返回用户模式的交互流程。
+*   继续开发用户模式界面 (`UserModeModule`, `UserView`) 及模式切换逻辑。
+
+---
+**日期：** 2025-05-18
+**开发者：** 北鲲
+**模块：** `AdminModule`, `SystemInteractionModule`, `UserModeModule`, `JianqiaoCoreShell`, `AdminLoginView`, `AdminDashboardView`
+
+**多轮问题修复与功能完善：**
+
+1.  **管理员热键可靠性增强：**
+    *   调整了 `SystemInteractionModule::LowLevelKeyboardProc` 中管理员登录热键的检测逻辑，确保在各种情况下都能被优先检测。
+    *   优化了 `AdminModule` 中各视图显示和隐藏的逻辑。
+
+2.  **管理员登录流程完善：**
+    *   `AdminLoginView` 登录成功后不再自动关闭，增加"管理白名单"按钮触发后续操作。
+
+3.  **用户界面白名单实时更新：**
+    *   `JianqiaoCoreShell::handleExitAdminModeTriggered` 中显式调用 `m_userModeModule->loadAndSetWhitelist()` 刷新 `UserView`。
+
+4.  **白名单应用启动与置顶优化：**
+    *   改进了应用启动后查找主窗口并置顶的逻辑。
+
+5.  **解决了 `isUserModeActive` 编译错误。**
+
+**当前状态总结：**
+核心交互流程更加稳定。管理员登录、白名单管理、返回用户模式的流程顺畅。用户模式下能够正确显示和启动白名单应用并置顶。
+
+**待关注的遗留和潜在优化点：**
+*   窗口焦点管理。
+*   `AdminLoginView` 界面完善。
+*   热键动态生效。
+*   错误处理与日志。
+*   UWP应用兼容性。
+*   管理员密码的哈希存储 (已改为SHA256)。
+
+---
+**日期：** 2025-05-18 (续)
+**开发者：** 北鲲
+**模块：** UserModeModule, AdminModule, AdminLoginView, AdminDashboardView (新)
+
+**问题修复与新功能规划：**
+
+1.  **用户界面首次加载图标问题修复：**
+    *   修改 `UserModeModule::showUserView()`，在显示 `UserView` 前确保调用 `m_userView->setAppList(m_whitelistedApps)`。
+
+2.  **管理员登录密码问题确认与解决：**
+    *   用户更新了 `config.json` 中的密码哈希值，解决登录问题。
+
+3.  **修复重复打开白名单管理视图失败的问题：**
+    *   在 `AdminModule` 构造函数中添加了 `AdminLoginView::openWhitelistManagerRequested` 信号到 `AdminModule::showWhitelistManagerView` (后改为 `showAdminDashboardView`) 槽的连接。
+
+4.  **新功能规划：统一管理员仪表盘 (`AdminDashboardView`)：**
+    *   创建了 `AdminDashboardView.h` 和 `AdminDashboardView.cpp` 的基本框架。
+    *   修改了 `AdminModule.h` 以使用 `AdminDashboardView*`。
+
+5.  **新的问题：在打开管理员登录窗口，正确输入密码进入管理窗口，会弹出一个CMD窗口，概率性事件**
+    *   记录此问题待排查。
+
+---
+**日期:** 2025-05-19 (今日)
+**开发者:** 北鲲 
+**模块:** `UserView`, `SystemInteractionModule`, `AdminModule`, `AdminDashboardView`, `JianqiaoCoreShell`, `CMakeLists.txt`
+
+**主要进展与修复:**
+
+1.  **Bug修复：白名单刷新问题 (用户界面)**
+    *   **问题描述：** 在管理员模式下添加新的白名单程序后，返回用户界面时，新添加的程序不会立即显示，需要重启应用。
+    *   **修复措施：** 修改了 `UserView::setAppList` 方法，确保在数据模型更新后（即使视图当时不可见）也调用 `populateAppList` 来刷新应用列表。
+    *   **当前状态：** 此问题已解决。
+
+2.  **Bug修复与尝试：应用图标加载失败**
+    *   **问题描述：** 应用无法正确查找或显示白名单程序的图标。日志显示 `SHGetFileInfoW failed` 错误。
+    *   **修复尝试：** 修改了 `SystemInteractionModule::getIconForExecutable` 方法，在调用 `SHGetFileInfoW` 时增加了 `SHGFI_USEFILEATTRIBUTES` 标志和 `FILE_ATTRIBUTE_NORMAL` 文件属性。
+    *   **当前状态：** 初步修改已完成。但根据后续日志，部分图标加载问题（`Icon for ... is null`）仍然存在。需要进一步观察。
+
+3.  **重大重构：引入统一管理员仪表盘 (`AdminDashboardView`)**
+    *   **背景：** 逐步替换原有的 `WhitelistManagerView`。
+    *   **编译错误处理：**
+        *   为 `AdminDashboardView` 添加了缺失的信号和方法的存根实现。
+        *   修复了 `AdminDashboardView.cpp` 中 `common_types.h` 的包含路径和 `DWORD` 未定义错误。
+        *   为 `SystemInteractionModule` 添加了 `getCurrentAdminLoginHotkeyStrings()` 方法。
+    *   **信号槽参数类型不匹配：** `AdminModule::onAdminLoginHotkeyChanged` 槽修改为接受 `QList<DWORD>`。
+    *   **信号连接调整：** 移除了 `AdminModule.cpp` 中多余的 `AdminDashboardView::viewClosed` 连接。
+    *   **链接错误处理 (LNK2019):** 将 `AdminDashboardView` 相关文件添加到 `CMakeLists.txt`。
+    *   **当前状态：** 项目已能成功编译。`AdminDashboardView` 的基本框架已搭建。
+
+4.  **UI开发：`AdminDashboardView` 白名单管理界面初步实现**
+    *   在 `AdminDashboardView` 中实现了白名单的UI（列表、增删按钮）及基本逻辑。
+    *   `setWhitelistedApps`, `populateWhitelistView`, `onAddAppClicked`, `onRemoveAppClicked` 已实现，能更新UI并发射 `whitelistChanged` 信号。
+    *   **当前状态：** 白名单的查看、添加、删除功能已在 `AdminDashboardView` 中初步可用。
+
+5.  **UI/UX调整计划：`AdminDashboardView` 全界面显示**
+    *   **问题描述：** `AdminDashboardView` 当前显示为小的独立窗口。
+    *   **解决方案提出：** 修改 `AdminDashboardView` 移除工具窗口标志；修改 `JianqiaoCoreShell` 使用 `QStackedWidget` 管理视图。
+    *   **已执行步骤：**
+        *   `AdminDashboardView.cpp`: 移除了 `setWindowFlags(...)`。
+        *   `JianqiaoCoreShell.h`: 声明了 `QStackedWidget` 相关成员和方法。
+    *   **当前状态：** `AdminDashboardView` 本身的窗口化行为已修改。`JianqiaoCoreShell.h` 已更新，但 `.cpp` 中 `QStackedWidget` 的完整逻辑尚未实现。**这是导致 `AdminDashboardView` 仍为小窗口的原因。**
+
+**当前主要待解决问题与下一步计划 (总结自上方，并突出当前焦点):**
+
+1.  **首要任务：`JianqiaoCoreShell.cpp` - 实现 `QStackedWidget` 逻辑，使 `AdminDashboardView` 全界面显示。**
+2.  **`AdminDashboardView` - 功能完善 (密码修改、热键修改等)。**
+3.  **图标加载 - 持续调查 `SHGetFileInfoW` 问题。**
+4.  **概率性CMD窗口 - 排查原因。**
+5.  Linter错误 (`HotkeyEditDialog.cpp`) - 解决 `includePath` 问题。
+6.  其他待改进项 (焦点管理, `AdminLoginView` UI, 热键动态生效等)。
+
+---

@@ -1,0 +1,58 @@
+“剑鞘系统”项目AI辅助开发指南 (Cursor Rules)
+1. 项目概览:
+项目名称: 剑鞘系统 (Jianqiao System)
+目标: 开发一款Windows平台的霸屏应用程序，提供受控的操作环境。
+核心特性: 管理员安全登录 (自定义热键)、白名单应用管理、用户模式快捷键拦截、严格的窗口层级控制 (白名单应用 > 剑鞘系统 > 桌面)。
+2. 技术栈:
+主要语言: C++
+框架: Qt 6 (最新稳定版)
+目标操作系统: Windows (不考虑跨平台)
+构建系统: qmake 或 CMake (根据项目实际选择为准)
+编译器: MSVC
+3. 架构与模块:
+JianqiaoCoreShell: 主应用框架，全屏管理，模式切换。
+AdminModule: 管理员登录、白名单配置等。
+UserModeModule: 用户受限环境，应用启动器，快捷键与窗口控制。
+SystemInteractionModule: (关键模块) 封装所有Windows底层API调用，如图：
+全局键盘钩子 (SetWindowsHookEx with WH_KEYBOARD_LL)
+窗口控制 (Z-order, 状态，层级 - SetWindowPos, SetForegroundWindow, etc.)
+任务栏控制 (SHAppBarMessage)
+可能的高级窗口效果 (DWM API)
+4. UI/UX 指向:
+风格: 现代化、扁平化、流畅、专业。
+实现:
+优先考虑 QML 以实现丰富的视觉和动画效果，尤其在 UserModeModule。
+若使用 Qt Widgets，则需配合精细的 QSS 样式表。
+动画与过渡: 注重平滑自然的动画效果，提升用户体验。
+图标与配色: 使用现代化图标库 (如 Fluent UI System Icons)，采用专业配色方案。
+5. 核心技术关注点:
+Windows API 的正确使用与封装: 所有底层调用集中在 SystemInteractionModule。
+全局键盘钩子的稳定性和可靠性: 用于管理员热键和用户模式快捷键拦截。
+窗口层级控制的精确性: 确保 白名单应用 > 剑鞘系统 > 桌面 的严格顺序，即使在焦点切换、应用启动/关闭等复杂情况下。
+快捷键拦截的全面性: 特别注意 Win键相关的快捷键。Ctrl+Alt+Del 以系统策略处理为主。
+应用权限: 程序可能需要以管理员权限运行。
+资源管理: 严格管理Windows API返回的句柄和钩子，防止泄漏。
+错误处理: 对所有OS API调用进行彻底的错误检查和日志记录。
+6. 编码与开发约定:
+模块化设计: 严格遵守模块划分，降低耦合。
+接口清晰: SystemInteractionModule 对上层提供简洁稳定的接口。
+代码注释: 对复杂逻辑和OS API调用部分进行清晰注释。
+Windows特定代码: 仅存在于 SystemInteractionModule 或明确标记的区域。避免在核心逻辑中混杂平台代码。
+安全性: 注意管理员凭证的安全存储。
+7. AI 辅助请求建议:
+当请求涉及Windows API时，请明确指出API名称或预期功能。
+当讨论UI实现时，可指明是QML还是Qt Widgets。
+对于底层交互问题，可引导AI重点分析 SystemInteractionModule 的逻辑。
+可要求AI生成符合现代化UI/UX原则的QML代码片段或QSS样式。
+在生成代码时，提醒AI注意错误处理和资源释放。
+8. 禁止事项:
+避免生成任何跨平台兼容性代码。
+避免使用已废弃的Qt模块或Windows API，除非有特殊原因并明确指出。
+9. 关键文件（预计）：
+systeminteraction_win.cpp/h (或类似命名的 SystemInteractionModule 实现文件)
+UserView.qml / UserView.cpp/ui
+AdminLoginView.qml / AdminLoginView.cpp/ui
+WhitelistManagerView.qml / WhitelistManagerView.cpp/ui
+10.使用MCP工具
+已经配置了一些MCP工具
+例如：code-mcp toolbox context7 clear-thought

@@ -1,0 +1,29 @@
+{
+  "shortcuts": {
+    "admin_login": {
+      "description": "打开管理员登录界面的热键",
+      "key_sequence": ["VK_LCONTROL", "VK_LSHIFT", "VK_LMENU", "L"]
+    }
+  },
+  "admin_password": "admin123",
+  "whitelist_apps": [
+    {
+      "name": "记事本",
+      "path": "C:/Windows/System32/notepad.exe"
+    },
+    {
+      "name": "计算器",
+      "path": "C:/Windows/System32/calc.exe"
+    }
+  ],
+  "user_mode_settings": {
+    "description": "用户模式下的特定设置",
+    "blocked_keys": [
+      "VK_LWIN",
+      "VK_RWIN",
+      "VK_APPS",
+      "VK_SNAPSHOT",
+      "VK_SLEEP"
+    ]
+  }
+} 
