@@ -95,12 +95,8 @@ void JianqiaoCoreShell::switchToUserModeView()
         m_userModeModule->loadAndSetWhitelist();
     }
     if (m_mainStackedWidget && m_userViewInstance) {
-        m_userViewInstance->setEnabled(true);
         m_mainStackedWidget->setCurrentWidget(m_userViewInstance);
-        qDebug() << "剑鞘核心(JianqiaoCoreShell): UserView isEnabled:" << m_userViewInstance->isEnabled();
-        if (m_adminDashboardInstance) {
-             m_adminDashboardInstance->setEnabled(false);
-        }
+        qDebug() << "剑鞘核心(JianqiaoCoreShell): UserView is now current widget.";
         this->activateWindow();
         this->raise();
         m_userViewInstance->setFocus(Qt::OtherFocusReason);
@@ -111,21 +107,22 @@ void JianqiaoCoreShell::switchToUserModeView()
 
 void JianqiaoCoreShell::switchToAdminDashboard()
 {
+    qDebug() << "JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.";
+    if (!m_adminDashboardInstance) {
+        qCritical() << "AdminDashboardView instance is null in switchToAdminDashboard!";
+        return;
+    }
     qDebug() << "剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。";
     if (m_adminModule && m_adminDashboardInstance) {
         m_adminDashboardInstance->setWhitelistedApps(m_adminModule->getWhitelistedApps());
         if (m_systemInteractionModule) {
             m_adminDashboardInstance->setCurrentAdminLoginHotkey(m_systemInteractionModule->getCurrentAdminLoginHotkeyStrings());
         }
-        m_adminDashboardInstance->setEnabled(true);
-        qDebug() << "剑鞘核心(JianqiaoCoreShell): AdminDashboardView isEnabled:" << m_adminDashboardInstance->isEnabled();
-        
-        if (m_userViewInstance) {
-            m_userViewInstance->setEnabled(false);
-        }
+        qDebug() << "剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.";
     }
     if (m_mainStackedWidget && m_adminDashboardInstance) {
         m_mainStackedWidget->setCurrentWidget(m_adminDashboardInstance);
+        qDebug() << "剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry:" << m_mainStackedWidget->geometry();
         this->activateWindow();
         this->raise();
         m_adminDashboardInstance->setFocus(Qt::OtherFocusReason);
@@ -167,6 +164,11 @@ void JianqiaoCoreShell::handleAdminLoginSuccessful()
     qDebug() << "剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。";
     m_currentMode = OperatingMode::AdminModeActive;
     qDebug() << "剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.";
+
+    if (m_adminModule) {
+        m_adminModule->prepareAdminDashboardData();
+    }
+
     switchToAdminDashboard();
 }
 

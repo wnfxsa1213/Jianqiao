@@ -6,6 +6,8 @@
 #include <QVBoxLayout> // For placeholder
 #include <QPushButton> // Added for m_exitButton member
 #include <QListWidget> // Added
+#include <QTabWidget> // <--- 添加 QTabWidget 头文件
+#include <QLineEdit> // Added for QLineEdit
 #include <windows.h> // Added for DWORD type
 #include "common_types.h" // Corrected path
 
@@ -39,31 +41,49 @@ private slots:
     void onRemoveAppClicked(); // Added
     void onChangeHotkeyClicked(); // Added slot for changing hotkey
     void onExitApplicationClicked(); // Added slot
-    void onChangePasswordClicked(); // Added slot for password change
+    void onConfirmPasswordChangeClicked(); // <--- 新增槽函数
     // void onSomeSettingChanged();
 
 private:
     void setupUi();
     void populateWhitelistView(); // Helper to refresh the list view
 
-    // Placeholder UI elements
-    QLabel *m_placeholderLabel;
+    // Main layout and TabWidget
     QVBoxLayout *m_mainLayout;
-    QPushButton *m_exitButton;
+    QTabWidget *m_tabWidget; // <--- 添加 QTabWidget 成员
 
-    // Whitelist management UI
-    QListWidget* m_whitelistListWidget; // Added
-    QPushButton* m_addAppButton;        // Added
-    QPushButton* m_removeAppButton;     // Added
+    // Widgets for Tabs (will contain the groups)
+    QWidget* m_whitelistTab;
+    QWidget* m_settingsTab;
 
-    QList<AppInfo> m_currentApps; // Added to store current apps
+    // Whitelist management UI (will be on m_whitelistTab)
+    QListWidget* m_whitelistListWidget;
+    QPushButton* m_addAppButton;
+    QPushButton* m_removeAppButton;
+    QList<AppInfo> m_currentApps;
 
+    // Settings UI (will be on m_settingsTab)
     // Hotkey UI
-    QLabel* m_currentHotkeyTitleLabel; // Added: e.g., "Current Admin Hotkey:"
-    QLabel* m_currentHotkeyDisplayLabel; // Added: Displays the actual hotkey string
-    QPushButton* m_editHotkeyButton;    // Added: Button to trigger hotkey edit dialog
-    QPushButton* m_exitApplicationButton; // Added button member
-    QPushButton* m_changePasswordButton; // Added button member for password change
+    QLabel* m_currentHotkeyTitleLabel;
+    QLabel* m_currentHotkeyDisplayLabel;
+    QPushButton* m_editHotkeyButton;
+    
+    // Password UI
+    // QPushButton* m_changePasswordButton; // This button will be replaced by a dedicated section
+    QLabel* m_currentPasswordLabel;
+    QLineEdit* m_currentPasswordLineEdit;
+    QLabel* m_newPasswordLabel;
+    QLineEdit* m_newPasswordLineEdit;
+    QLabel* m_confirmPasswordLabel;
+    QLineEdit* m_confirmPasswordLineEdit;
+    QPushButton* m_confirmChangePasswordButton;
+
+    // Buttons at the bottom
+    QPushButton *m_exitButton;
+    QPushButton* m_exitApplicationButton;
+
+    // Placeholder UI elements
+    // QLabel *m_placeholderLabel; // No longer needed with tabs
 
     // Example: Pointers to specialized widgets if we break it down
     // WhitelistManagerWidget* m_whitelistWidget;

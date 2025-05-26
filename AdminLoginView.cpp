@@ -60,23 +60,13 @@ void AdminLoginView::setupUi()
         emit userRequestsExit();
     });
 
-    m_manageWhitelistButton = new QPushButton("管理白名单", this);
-    m_manageWhitelistButton->setObjectName("m_manageWhitelistButton");
-    m_manageWhitelistButton->setEnabled(false); // Initially disabled
-    connect(m_manageWhitelistButton, &QPushButton::clicked, this, [this]() {
-        qDebug() << "管理员登录视图(AdminLoginView): '管理白名单'按钮被点击。";
-        emit openWhitelistManagerRequested();
-    });
-
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(m_infoLabel);
     mainLayout->addSpacing(10);
     mainLayout->addWidget(m_passwordEdit);
     mainLayout->addWidget(m_loginButton);
-    mainLayout->addWidget(m_manageWhitelistButton);
     mainLayout->addStretch();
     mainLayout->addWidget(m_exitButton);
-    mainLayout->addSpacing(10);
     setLayout(mainLayout);
 }
 
@@ -106,7 +96,6 @@ void AdminLoginView::notifyLoginResult(bool success)
         m_passwordEdit->clear();
         m_passwordEdit->setEnabled(false);
         m_loginButton->setEnabled(false);
-        m_manageWhitelistButton->setEnabled(true);
         qDebug() << "管理员登录视图(AdminLoginView): 登录成功，UI已更新。";
     } else {
         m_infoLabel->setText("密码错误，请重试！");
@@ -114,4 +103,27 @@ void AdminLoginView::notifyLoginResult(bool success)
         m_passwordEdit->setFocus();
         qDebug() << "管理员登录视图(AdminLoginView): 登录失败，UI已更新。";
     }
+    if (m_loginButton) m_loginButton->setEnabled(true);
+    qDebug() << "管理员登录视图(AdminLoginView): UI已重置为初始状态。";
+}
+
+void AdminLoginView::resetUI()
+{
+    if (m_infoLabel) m_infoLabel->setText("请输入管理员密码");
+    if (m_passwordEdit) {
+        m_passwordEdit->clear();
+        m_passwordEdit->setEnabled(true);
+        m_passwordEdit->setFocus();
+    }
+    if (m_loginButton) m_loginButton->setEnabled(true);
+    qDebug() << "管理员登录视图(AdminLoginView): UI已重置为初始状态。";
+}
+
+QString AdminLoginView::getPassword() const
+{
+    if (m_passwordEdit) {
+        return m_passwordEdit->text();
+    }
+    qWarning() << "AdminLoginView: m_passwordEdit is null in getPassword(). Returning empty string.";
+    return QString();
 }

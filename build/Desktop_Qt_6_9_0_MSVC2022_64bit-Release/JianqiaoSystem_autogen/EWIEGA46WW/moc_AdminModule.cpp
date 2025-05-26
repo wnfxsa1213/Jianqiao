@@ -47,7 +47,6 @@ template <> constexpr inline auto AdminModule::qt_create_metaobjectdata<qt_meta_
         "configurationChanged",
         "loginSuccessfulAndAdminActive",
         "showLoginView",
-        "showAdminDashboardView",
         "requestExitAdminMode",
         "onAdminLoginHotkeyChanged",
         "QList<DWORD>",
@@ -81,38 +80,36 @@ template <> constexpr inline auto AdminModule::qt_create_metaobjectdata<qt_meta_
         QtMocHelpers::SignalData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'showLoginView'
         QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPublic, QMetaType::Void),
-        // Slot 'showAdminDashboardView'
-        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'requestExitAdminMode'
-        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'onAdminLoginHotkeyChanged'
-        QtMocHelpers::SlotData<void(const QList<DWORD> &)>(10, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 11, 12 },
+        QtMocHelpers::SlotData<void(const QList<DWORD> &)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 10, 11 },
         }}),
         // Slot 'isAnyViewVisible'
-        QtMocHelpers::SlotData<bool() const>(13, 2, QMC::AccessPublic, QMetaType::Bool),
+        QtMocHelpers::SlotData<bool() const>(12, 2, QMC::AccessPublic, QMetaType::Bool),
         // Slot 'onWhitelistUpdated'
-        QtMocHelpers::SlotData<void(const QList<AppInfo> &)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 15, 16 },
+        QtMocHelpers::SlotData<void(const QList<AppInfo> &)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 14, 15 },
         }}),
         // Slot 'getWhitelistedApps'
-        QtMocHelpers::SlotData<QList<AppInfo>() const>(17, 2, QMC::AccessPublic, 0x80000000 | 15),
+        QtMocHelpers::SlotData<QList<AppInfo>() const>(16, 2, QMC::AccessPublic, 0x80000000 | 14),
         // Slot 'isLoginViewActive'
-        QtMocHelpers::SlotData<bool() const>(18, 2, QMC::AccessPublic, QMetaType::Bool),
+        QtMocHelpers::SlotData<bool() const>(17, 2, QMC::AccessPublic, QMetaType::Bool),
         // Slot 'onUserRequestsExitAdminMode'
-        QtMocHelpers::SlotData<void()>(19, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(18, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onLoginViewRequestsExit'
-        QtMocHelpers::SlotData<void()>(20, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(19, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onLoginAttempt'
-        QtMocHelpers::SlotData<void(const QString &)>(21, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::QString, 22 },
+        QtMocHelpers::SlotData<void(const QString &)>(20, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QString, 21 },
         }}),
         // Slot 'onChangePasswordRequested'
-        QtMocHelpers::SlotData<void(const QString &, const QString &)>(23, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::QString, 24 }, { QMetaType::QString, 25 },
+        QtMocHelpers::SlotData<void(const QString &, const QString &)>(22, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QString, 23 }, { QMetaType::QString, 24 },
         }}),
         // Slot 'onLoginViewHidden'
-        QtMocHelpers::SlotData<void()>(26, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(25, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -141,21 +138,20 @@ void AdminModule::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 2: _t->configurationChanged(); break;
         case 3: _t->loginSuccessfulAndAdminActive(); break;
         case 4: _t->showLoginView(); break;
-        case 5: _t->showAdminDashboardView(); break;
-        case 6: _t->requestExitAdminMode(); break;
-        case 7: _t->onAdminLoginHotkeyChanged((*reinterpret_cast< std::add_pointer_t<QList<DWORD>>>(_a[1]))); break;
-        case 8: { bool _r = _t->isAnyViewVisible();
+        case 5: _t->requestExitAdminMode(); break;
+        case 6: _t->onAdminLoginHotkeyChanged((*reinterpret_cast< std::add_pointer_t<QList<DWORD>>>(_a[1]))); break;
+        case 7: { bool _r = _t->isAnyViewVisible();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 9: _t->onWhitelistUpdated((*reinterpret_cast< std::add_pointer_t<QList<AppInfo>>>(_a[1]))); break;
-        case 10: { QList<AppInfo> _r = _t->getWhitelistedApps();
+        case 8: _t->onWhitelistUpdated((*reinterpret_cast< std::add_pointer_t<QList<AppInfo>>>(_a[1]))); break;
+        case 9: { QList<AppInfo> _r = _t->getWhitelistedApps();
             if (_a[0]) *reinterpret_cast< QList<AppInfo>*>(_a[0]) = std::move(_r); }  break;
-        case 11: { bool _r = _t->isLoginViewActive();
+        case 10: { bool _r = _t->isLoginViewActive();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
-        case 12: _t->onUserRequestsExitAdminMode(); break;
-        case 13: _t->onLoginViewRequestsExit(); break;
-        case 14: _t->onLoginAttempt((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 15: _t->onChangePasswordRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 16: _t->onLoginViewHidden(); break;
+        case 11: _t->onUserRequestsExitAdminMode(); break;
+        case 12: _t->onLoginViewRequestsExit(); break;
+        case 13: _t->onLoginAttempt((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 14: _t->onChangePasswordRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 15: _t->onLoginViewHidden(); break;
         default: ;
         }
     }
@@ -190,14 +186,14 @@ int AdminModule::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 17)
+        if (_id < 16)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 17;
+        _id -= 16;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 17)
+        if (_id < 16)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 17;
+        _id -= 16;
     }
     return _id;
 }

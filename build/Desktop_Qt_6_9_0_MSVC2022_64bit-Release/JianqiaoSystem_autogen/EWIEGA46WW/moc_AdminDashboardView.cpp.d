@@ -147,6 +147,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qkeysequence.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpaintdevice.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpalette.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpen.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpicture.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpixelformat.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpixmap.h \
@@ -154,7 +155,10 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qregion.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgb.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgba64.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtextcursor.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtextdocument.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtextformat.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtextoption.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtgui-config.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiexports.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiglobal.h \
@@ -163,8 +167,10 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs_win.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLabel \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLineEdit \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QListWidget \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QPushButton \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QTabWidget \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QVBoxLayout \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QWidget \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qabstractbutton.h \
@@ -179,6 +185,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlabel.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlayout.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlayoutitem.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlineedit.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlistview.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlistwidget.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qpushbutton.h \

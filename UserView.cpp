@@ -9,6 +9,7 @@
 #include <QPixmap> // <--- 添加 QPixmap include
 #include <QPushButton>
 #include <QCoreApplication>
+#include <QPainter> // ADDED for custom painting
 
 UserView::UserView(QWidget *parent)
     : QWidget(parent),
@@ -19,7 +20,6 @@ UserView::UserView(QWidget *parent)
 {
     qDebug() << "用户视图(UserView): 已创建。";
     setupUi();
-    setStyleSheet("background-color: transparent;"); 
 }
 
 UserView::~UserView()
@@ -135,6 +135,43 @@ void UserView::populateAppList(const QList<AppInfo>& apps) {
          m_dockFrame->layout()->activate();
     }
     update(); // Repaint the UserView itself
+}
+
+void UserView::setCurrentBackground(const QString& imagePath) {
+    if (imagePath.isEmpty()) {
+        qDebug() << "UserView: Received empty image path, clearing background.";
+        m_currentBackground = QPixmap(); // Set to a null pixmap
+    } else {
+        QPixmap newBg(imagePath);
+        if (newBg.isNull()) {
+            qWarning() << "UserView: Failed to load background image from:" << imagePath;
+            // m_currentBackground = QPixmap(); // Optionally clear or keep old if load fails
+            // Or set a default solid color background in paintEvent if m_currentBackground is null
+        } else {
+            m_currentBackground = newBg;
+            qDebug() << "UserView: Background image loaded from:" << imagePath;
+        }
+    }
+    update(); // Trigger a repaint
+}
+
+void UserView::paintEvent(QPaintEvent *event) {
+    QPainter painter(this);
+
+    if (!m_currentBackground.isNull()) {
+        // Draw the background image, scaled to fill the widget
+        painter.drawPixmap(rect(), m_currentBackground);
+    } else {
+        // Fallback: If no background image or it failed to load, fill with a default color
+        painter.fillRect(rect(), QColor(30, 30, 30)); // Default dark gray
+    }
+
+    // It's VERY IMPORTANT to call the base class paintEvent if you are not handling
+    // all painting for child widgets yourself, OR if UserView itself has Q_OBJECT and uses stylesheets for other properties.
+    // However, since m_dockFrame is a child widget, its painting is generally handled after the parent's paintEvent.
+    // If m_dockFrame (or other children) are not appearing, uncommenting the line below might be necessary,
+    // but it can also interfere if you've fully painted the background.
+    // QWidget::paintEvent(event); 
 }
 
 void UserView::onIconClicked(const QString& appPath) {

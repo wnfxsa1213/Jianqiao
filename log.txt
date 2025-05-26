@@ -1,36 +1,32 @@
-23:26:52: 为项目JianqiaoSystem执行步骤 ...
-23:26:52: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target clean
+21:08:24: 为项目JianqiaoSystem执行步骤 ...
+21:08:24: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target clean
 
-[1/2 16.1/sec] Cleaning additional files...
-[2/2 23.8/sec] Cleaning all built files...
+[1/2 16.7/sec] Cleaning additional files...
+[2/2 24.1/sec] Cleaning all built files...
 Cleaning... 14 files.
-23:26:52: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"正常退出。
-23:26:53: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target all JianqiaoSystem
+21:08:24: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"正常退出。
+21:08:24: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target all JianqiaoSystem
 
-[1/15 1.5/sec] Automatic MOC and UIC for target JianqiaoSystem
-[2/15 0.8/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HoverIconWidget.cpp.obj
-[3/15 1.2/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AppCardWidget.cpp.obj
-[4/15 1.6/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\main.cpp.obj
-[5/15 2.0/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj
-FAILED: CMakeFiles/JianqiaoSystem.dir/HotkeyEditDialog.cpp.obj 
-C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\HostX64\x64\cl.exe  /nologo /TP -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -IC:\Users\13027\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release\JianqiaoSystem_autogen\include -IC:\Users\13027\Desktop\Jianqiaov2 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtWidgets -external:ID:\QT6\6.9.0\msvc2022_64\include -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore -external:ID:\QT6\6.9.0\msvc2022_64\mkspecs\win32-msvc -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui\6.9.0 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui\6.9.0\QtGui -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore\6.9.0 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore\6.9.0\QtCore -external:W0 /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -Zc:__cplusplus -permissive- -utf-8 /showIncludes /FoCMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj /FdCMakeFiles\JianqiaoSystem.dir\ /FS -c C:\Users\13027\Desktop\Jianqiaov2\HotkeyEditDialog.cpp
-C:\Users\13027\Desktop\Jianqiaov2\HotkeyEditDialog.cpp(289): error C2065: “m_pressedNativeKeys”: 未声明的标识符
-C:\Users\13027\Desktop\Jianqiaov2\HotkeyEditDialog.cpp(289): error C2143: 语法错误: 缺少“;”(在“:”的前面)
-C:\Users\13027\Desktop\Jianqiaov2\HotkeyEditDialog.cpp(289): error C2143: 语法错误: 缺少“;”(在“)”的前面)
-C:\Users\13027\Desktop\Jianqiaov2\HotkeyEditDialog.cpp(409): error C2065: “m_pressedNativeKeys”: 未声明的标识符
-C:\Users\13027\Desktop\Jianqiaov2\HotkeyEditDialog.cpp(409): error C2143: 语法错误: 缺少“;”(在“:”的前面)
-C:\Users\13027\Desktop\Jianqiaov2\HotkeyEditDialog.cpp(409): error C2143: 语法错误: 缺少“;”(在“)”的前面)
-[6/15 2.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserView.cpp.obj
-[7/15 2.6/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminLoginView.cpp.obj
-[8/15 2.9/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoCoreShell.cpp.obj
-[9/15 2.8/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj
-[10/15 3.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\WhitelistManagerView.cpp.obj
-[11/15 3.2/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj
-[12/15 3.5/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj
-[13/15 3.8/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\mocs_compilation.cpp.obj
+[1/15 1.6/sec] Automatic MOC and UIC for target JianqiaoSystem
+[2/15 1.0/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AppCardWidget.cpp.obj
+[3/15 1.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HoverIconWidget.cpp.obj
+[4/15 1.8/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserView.cpp.obj
+[5/15 2.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\main.cpp.obj
+[6/15 2.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminLoginView.cpp.obj
+[7/15 2.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj
+[8/15 3.0/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj
+FAILED: CMakeFiles/JianqiaoSystem.dir/SystemInteractionModule.cpp.obj 
+C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\HostX64\x64\cl.exe  /nologo /TP -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -IC:\Users\13027\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release\JianqiaoSystem_autogen\include -IC:\Users\13027\Desktop\Jianqiaov2 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtWidgets -external:ID:\QT6\6.9.0\msvc2022_64\include -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore -external:ID:\QT6\6.9.0\msvc2022_64\mkspecs\win32-msvc -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui\6.9.0 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui\6.9.0\QtGui -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore\6.9.0 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore\6.9.0\QtCore -external:W0 /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -Zc:__cplusplus -permissive- -utf-8 /showIncludes /FoCMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj /FdCMakeFiles\JianqiaoSystem.dir\ /FS -c C:\Users\13027\Desktop\Jianqiaov2\SystemInteractionModule.cpp
+C:\Users\13027\Desktop\Jianqiaov2\SystemInteractionModule.cpp(723): error C2059: 语法错误:“}”
+C:\Users\13027\Desktop\Jianqiaov2\SystemInteractionModule.cpp(723): error C2143: 语法错误: 缺少“;”(在“}”的前面)
+[9/15 3.2/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoCoreShell.cpp.obj
+[10/15 3.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj
+[11/15 3.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\WhitelistManagerView.cpp.obj
+[12/15 3.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\mocs_compilation.cpp.obj
+[13/15 3.9/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj
 [14/15 4.0/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminModule.cpp.obj
 ninja: build stopped: subcommand failed.
-23:26:56: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"退出，退出代码 1 。
-23:26:56: Error while building/deploying project JianqiaoSystem (kit: Desktop Qt 6.9.0 MSVC2022 64bit)
-23:26:56: When executing step "构建"
-23:26:56: Elapsed time: 00:04.
+21:08:28: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"退出，退出代码 1 。
+21:08:28: Error while building/deploying project JianqiaoSystem (kit: Desktop Qt 6.9.0 MSVC2022 64bit)
+21:08:28: When executing step "构建"
+21:08:28: Elapsed time: 00:04.

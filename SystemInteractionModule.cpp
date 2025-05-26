@@ -77,7 +77,23 @@ SystemInteractionModule::SystemInteractionModule(QObject *parent)
     , m_isHookInstalled(false)
 {
     instance_ = this; // Set the static instance pointer
-    m_configPath = QCoreApplication::applicationDirPath() + "/config.json";
+
+    // Determine config path - consistent with AdminModule
+    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    if (configDir.isEmpty()) {
+        qWarning() << "SystemInteractionModule: Could not get AppConfigLocation, falling back to applicationDirPath for config.";
+        configDir = QCoreApplication::applicationDirPath();
+    }
+    QDir dir(configDir);
+    if (!dir.exists()) {
+        if (!dir.mkpath(".")) {
+            qWarning() << "SystemInteractionModule: Could not create config directory:" << configDir << "Using application dir as last resort.";
+            configDir = QCoreApplication::applicationDirPath(); // Fallback if creation fails
+        }
+    }
+    m_configPath = configDir + "/config.json"; // Store for potential future use, though loadConfiguration also calculates it
+    qDebug() << "SystemInteractionModule: Config path set to:" << m_configPath;
+
     if (!loadConfiguration()) {
         qWarning() << "系统交互模块(SystemInteractionModule): 配置文件加载失败，部分功能可能使用默认设置。";
         // Admin hotkey will be defaulted in loadConfiguration if needed
@@ -102,7 +118,25 @@ bool SystemInteractionModule::loadConfiguration() {
     bool hotkeyLoaded = false;
     bool blockedKeysLoaded = false;
 
-    QString configPath = QCoreApplication::applicationDirPath() + "/config.json";
+    // Determine config path - consistent with AdminModule
+    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    if (configDir.isEmpty()) {
+        qWarning() << "SystemInteractionModule (loadConfiguration): Could not get AppConfigLocation, falling back to applicationDirPath for config.";
+        configDir = QCoreApplication::applicationDirPath();
+    }
+    // Ensure directory exists (it should if AdminModule ran first, but good to be robust)
+    QDir dirObj(configDir);
+    if (!dirObj.exists()) {
+        qWarning() << "SystemInteractionModule (loadConfiguration): Config directory" << configDir << "does not exist. Attempting to use application dir.";
+        // It's unlikely this module should *create* the directory if it doesn't exist, 
+        // as AdminModule usually handles initial config creation.
+        // If AdminModule hasn't run or created it, SIM might operate with defaults.
+        // For robustness if SIM is somehow initialized first or AdminModule fails to create dir:
+        // configDir = QCoreApplication::applicationDirPath(); // Or just proceed and let file open fail for defaults
+    }
+    QString configPath = configDir + "/config.json";
+    qDebug() << "SystemInteractionModule (loadConfiguration): Attempting to load config from:" << configPath;
+
     QFile configFile(configPath);
 
     if (!configFile.exists()) {
@@ -222,56 +256,51 @@ LRESULT CALLBACK SystemInteractionModule::LowLevelKeyboardProc(int nCode, WPARAM
             // This hotkey should ideally always be available unless a more critical modal operation is in progress.
             if (isKeyDown && !instance_->m_adminLoginHotkey.isEmpty()) {
                 bool allAdminHotkeyModifiersPressed = true;
-                int nonModifierAdminKey = 0;
-                QSet<DWORD> currentAdminComboPresses;
+                DWORD nonModifierAdminKey = 0; // Use DWORD, not int
+                // QSet<DWORD> currentAdminComboPresses; // This set is not strictly needed for the logic to fire the signal
 
                 for (DWORD requiredKey : instance_->m_adminLoginHotkey) {
-                    // Check if it's a common modifier, actual modifiers are VK_LCONTROL, VK_RCONTROL, VK_LSHIFT, VK_RSHIFT, VK_LMENU, VK_RMENU
-                    // Or general VK_CONTROL, VK_SHIFT, VK_MENU
-                    bool isMod = (requiredKey == VK_LCONTROL || requiredKey == VK_RCONTROL || requiredKey == VK_CONTROL || 
-                                  requiredKey == VK_LSHIFT  || requiredKey == VK_RSHIFT  || requiredKey == VK_SHIFT || 
-                                  requiredKey == VK_LMENU   || requiredKey == VK_RMENU   || requiredKey == VK_MENU);
+                    bool isMod = instance_->isModifierKey(requiredKey);
                     
                     if (isMod) {
-                        if (!instance_->m_pressedKeys.contains(requiredKey)) {
-                            // Specific modifier like VK_LCONTROL not pressed, check generic if it was in config
-                            if (requiredKey == VK_LCONTROL || requiredKey == VK_RCONTROL) {
-                               if (!instance_->m_pressedKeys.contains(VK_CONTROL) && 
-                                   !instance_->m_pressedKeys.contains(VK_LCONTROL) && 
-                                   !instance_->m_pressedKeys.contains(VK_RCONTROL)) { allAdminHotkeyModifiersPressed = false; break; }
-                            } else if (requiredKey == VK_LSHIFT || requiredKey == VK_RSHIFT) {
-                                if (!instance_->m_pressedKeys.contains(VK_SHIFT) && 
-                                    !instance_->m_pressedKeys.contains(VK_LSHIFT) && 
-                                    !instance_->m_pressedKeys.contains(VK_RSHIFT)) { allAdminHotkeyModifiersPressed = false; break; }
-                            } else if (requiredKey == VK_LMENU || requiredKey == VK_RMENU) {
-                                if (!instance_->m_pressedKeys.contains(VK_MENU) && 
-                                    !instance_->m_pressedKeys.contains(VK_LMENU) && 
-                                    !instance_->m_pressedKeys.contains(VK_RMENU)) { allAdminHotkeyModifiersPressed = false; break; }
-                            } else { // Generic modifier from config
-                                 if (!instance_->m_pressedKeys.contains(requiredKey)) {allAdminHotkeyModifiersPressed = false; break;}
-                            }
+                        bool modifierFound = false;
+                        if (requiredKey == VK_LCONTROL || requiredKey == VK_RCONTROL || requiredKey == VK_CONTROL) {
+                            modifierFound = instance_->m_pressedKeys.contains(VK_LCONTROL) ||
+                                            instance_->m_pressedKeys.contains(VK_RCONTROL) ||
+                                            instance_->m_pressedKeys.contains(VK_CONTROL);
+                        } else if (requiredKey == VK_LSHIFT || requiredKey == VK_RSHIFT || requiredKey == VK_SHIFT) {
+                            modifierFound = instance_->m_pressedKeys.contains(VK_LSHIFT) ||
+                                            instance_->m_pressedKeys.contains(VK_RSHIFT) ||
+                                            instance_->m_pressedKeys.contains(VK_SHIFT);
+                        } else if (requiredKey == VK_LMENU || requiredKey == VK_RMENU || requiredKey == VK_MENU) {
+                            modifierFound = instance_->m_pressedKeys.contains(VK_LMENU) ||
+                                            instance_->m_pressedKeys.contains(VK_RMENU) ||
+                                            instance_->m_pressedKeys.contains(VK_MENU);
+                        } else { 
+                            // For any other key considered a modifier by isModifierKey (e.g. VK_LWIN)
+                            modifierFound = instance_->m_pressedKeys.contains(requiredKey);
                         }
-                        currentAdminComboPresses.insert(requiredKey);
+
+                        if (!modifierFound) {
+                            allAdminHotkeyModifiersPressed = false;
+                            break;
+                        }
+                        // currentAdminComboPresses.insert(requiredKey); // Not essential for triggering
                     } else { // It's a non-modifier key from the hotkey sequence
                         nonModifierAdminKey = requiredKey;
-                        if (vkCode == requiredKey) { // This is the non-modifier key just pressed
-                            currentAdminComboPresses.insert(requiredKey);
-                        } else {
-                            // This key press is not the non-modifier part of the hotkey, so combo cannot complete now
-                            allAdminHotkeyModifiersPressed = false; 
-                        }
+                        // We don't check vkCode against nonModifierAdminKey here yet.
+                        // This loop is just to ascertain all *modifiers* are pressed and identify the nonModifierKey.
                     }
                 }
 
                 if (allAdminHotkeyModifiersPressed && nonModifierAdminKey != 0 && vkCode == nonModifierAdminKey) {
-                    // Check if ONLY the required keys for the admin hotkey are pressed
-                    // This means m_pressedKeys should contain all keys in m_adminLoginHotkey
-                    // and the size of m_pressedKeys should be exactly m_adminLoginHotkey.size()
-                    bool allRequiredDown = true;
+                    // All configured modifiers are pressed, and the current key press is the configured non-modifier key.
+                    // Now, ensure ONLY the required keys for the admin hotkey are pressed.
+                    bool allRequiredDown = true; // This will re-verify all keys, including the non-modifier.
                     for(DWORD reqKey : instance_->m_adminLoginHotkey) {
                         bool specificModFound = instance_->m_pressedKeys.contains(reqKey);
                         if (!specificModFound) {
-                            // Handle generic vs specific (e.g. config says VK_CONTROL, user presses VK_LCONTROL)
+                            // Handle generic in config, specific key pressed by user
                             if ((reqKey == VK_CONTROL && (instance_->m_pressedKeys.contains(VK_LCONTROL) || instance_->m_pressedKeys.contains(VK_RCONTROL))) ||
                                 (reqKey == VK_SHIFT && (instance_->m_pressedKeys.contains(VK_LSHIFT) || instance_->m_pressedKeys.contains(VK_RSHIFT))) ||
                                 (reqKey == VK_MENU && (instance_->m_pressedKeys.contains(VK_LMENU) || instance_->m_pressedKeys.contains(VK_RMENU)))) {
@@ -618,40 +647,22 @@ bool SystemInteractionModule::isModifierKey(DWORD vkCode) const {
 }
 
 QString SystemInteractionModule::vkCodeToString(DWORD vkCode) const {
-    // Try to find a direct match in our map first (e.g., for specific letters, numbers, F-keys)
+    // Iterate through the VK_CODE_MAP to find a matching QString key for the given DWORD value.
+    // This ensures that the returned string is one that stringToVkCode can parse back.
     for (auto it = VK_CODE_MAP.constBegin(); it != VK_CODE_MAP.constEnd(); ++it) {
         if (it.value() == vkCode) {
-            if (!it.key().startsWith("VK_")) return it.key(); // Return direct char like 'A', '0'
+            return it.key(); // Return the canonical string representation from the map
         }
     }
-    // Check common VK codes that might not be in the simple map or have generic names
-    switch (vkCode) {
-        case VK_LCONTROL: return "VK_LCONTROL";
-        case VK_RCONTROL: return "VK_RCONTROL";
-        case VK_CONTROL:  return "VK_CONTROL";
-        case VK_LSHIFT:   return "VK_LSHIFT";
-        case VK_RSHIFT:   return "VK_RSHIFT";
-        case VK_SHIFT:    return "VK_SHIFT";
-        case VK_LMENU:    return "VK_LMENU (LAlt)";
-        case VK_RMENU:    return "VK_RMENU (RAlt)";
-        case VK_MENU:     return "VK_MENU (Alt)";
-        case VK_LWIN:     return "VK_LWIN";
-        case VK_RWIN:     return "VK_RWIN";
-        case VK_APPS:     return "VK_APPS";
-        case VK_ESCAPE:   return "VK_ESCAPE";
-        case VK_TAB:      return "VK_TAB";
-        case VK_RETURN:   return "VK_RETURN";
-        case VK_SPACE:    return "VK_SPACE";
-        case VK_BACK:     return "VK_BACK (Backspace)";
-        case VK_DELETE:   return "VK_DELETE";
-        // Add more as needed
-        default: break;
-    }
-    // Fallback for F-keys if not caught by map iteration (should be)
+
+    // Fallback for F-keys if they were somehow not in the map or if the map is incomplete.
+    // (initializeVkCodeMap should be comprehensive for F1-F12).
     if (vkCode >= VK_F1 && vkCode <= VK_F24) {
         return QString("F%1").arg(vkCode - VK_F1 + 1);
     }
-    // Default to hex if no string representation found
+    
+    // If no string representation is found in the map, return the hex code as a last resort.
+    qWarning() << "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x" + QString::number(vkCode, 16).toUpper();
     return QString("0x%1").arg(vkCode, 2, 16, QChar('0')).toUpper();
 }
 

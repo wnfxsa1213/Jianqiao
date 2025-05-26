@@ -27,7 +27,6 @@ public:
 
 public slots:
     void showLoginView();
-    void showAdminDashboardView(); // New method
     void requestExitAdminMode(); // Called by CoreShell to hide all admin views
     void onAdminLoginHotkeyChanged(const QList<DWORD>& newHotkeySequence); // New: Changed parameter type
     bool isAnyViewVisible() const; // New method
@@ -55,6 +54,7 @@ private:
     QString m_adminPasswordHash; // Renamed from m_adminPassword to match usage in cpp
     QList<AppInfo> m_whitelistedApps; // <--- 修改成员变量类型
     QList<DWORD> m_currentAdminLoginHotkeyVkCodes; // Added declaration
+    bool m_isAdminAuthenticated; // NEW: Tracks if admin is currently authenticated
 
     // Config related methods - now declared
     void loadConfig(); 
@@ -68,6 +68,11 @@ private:
     bool verifyPassword(const QString& password);
     bool saveAdminPasswordToConfig(const QString& newPassword);
     bool saveAdminLoginHotkeyToConfig(const QStringList& hotkeyVkStrings);
+
+    // void prepareAdminDashboardData(); // NEW private method - MOVING TO PUBLIC
+
+public: // Ensure prepareAdminDashboardData is public if called from CoreShell
+    void prepareAdminDashboardData(); // MOVED to public
 
 };
 

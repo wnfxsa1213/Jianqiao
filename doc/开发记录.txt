@@ -203,10 +203,10 @@
         *   为 `AdminDashboardView` 添加了缺失的信号和方法的存根实现。
         *   修复了 `AdminDashboardView.cpp` 中 `common_types.h` 的包含路径和 `DWORD` 未定义错误。
         *   为 `SystemInteractionModule` 添加了 `getCurrentAdminLoginHotkeyStrings()` 方法。
-    *   **信号槽参数类型不匹配：** `AdminModule::onAdminLoginHotkeyChanged` 槽修改为接受 `QList<DWORD>`。
-    *   **信号连接调整：** 移除了 `AdminModule.cpp` 中多余的 `AdminDashboardView::viewClosed` 连接。
-    *   **链接错误处理 (LNK2019):** 将 `AdminDashboardView` 相关文件添加到 `CMakeLists.txt`。
-    *   **当前状态：** 项目已能成功编译。`AdminDashboardView` 的基本框架已搭建。
+        *   信号槽参数类型不匹配：`AdminModule::onAdminLoginHotkeyChanged` 槽修改为接受 `QList<DWORD>`。
+        *   信号连接调整：移除了 `AdminModule.cpp` 中多余的 `AdminDashboardView::viewClosed` 连接。
+        *   链接错误处理 (LNK2019): 将 `AdminDashboardView` 相关文件添加到 `CMakeLists.txt`。
+        *   当前状态：项目已能成功编译。`AdminDashboardView` 的基本框架已搭建。
 
 4.  **UI开发：`AdminDashboardView` 白名单管理界面初步实现**
     *   在 `AdminDashboardView` 中实现了白名单的UI（列表、增删按钮）及基本逻辑。
@@ -230,4 +230,90 @@
 5.  Linter错误 (`HotkeyEditDialog.cpp`) - 解决 `includePath` 问题。
 6.  其他待改进项 (焦点管理, `AdminLoginView` UI, 热键动态生效等)。
 
+---
+**日期:** 2025-05-21 (今日)
+**开发者:** 北鲲
+**模块:** `AdminModule`, `AdminLoginView`, `UserView`, `JianqiaoCoreShell`
+
+**主要进展与修复:**
+
+1.  **Bug修复与逻辑梳理：管理员二次登录及仪表盘访问问题**
+    *   **问题描述：** 第一次通过热键 -> 登录 -> 管理白名单 进入仪表盘正常。退出后，第二次通过热键 -> 登录 -> 管理白名单，无法进入仪表盘。
+    *   **核心原因分析：** `AdminModule` 中 `m_isAdminAuthenticated` 状态未在退出管理员模式或登出时正确重置，且登录视图 (`AdminLoginView`) 和管理员模块 (`AdminModule`) 之间的交互逻辑不够清晰，导致后续认证和视图切换流程受阻。
+    *   **修复措施与重构：**
+        *   在 `AdminModule` 中引入 `m_isAdminAuthenticated` 成员变量，并在关键节点（如构造、登录成功、退出管理模式）进行维护。
+        *   调整了 `AdminModule` 中处理登录 (`onLoginAttempt`)、处理来自登录视图的白名单管理请求 (`handleOpenWhitelistManagerRequestFromLoginView`)、处理仪表盘退出请求 (`onUserRequestsExitAdminMode`) 的逻辑。
+        *   确保 `JianqiaoCoreShell::handleAdminLoginSuccessful()` 在切换到 `AdminDashboardView` 前调用 `AdminModule::prepareAdminDashboardData()`。
+        *   在 `AdminLoginView` 中添加 `resetUI()` 方法，并在 `AdminModule::showLoginView()` 中调用，以确保每次显示登录视图时其状态（如密码框内容）被重置，解决了第二次登录时密码残留导致认证失败的问题。
+    *   **编译错误处理：** 解决了因上述重构引入的一系列编译错误，包括成员访问权限、孤立函数定义、方法缺失等。
+    *   **当前状态：** 管理员登录、认证、进入仪表盘、退出管理模式的流程更加清晰和健壮。重复登录和访问仪表盘的问题已解决。
+
+2.  **UI简化：`AdminLoginView` 界面精简**
+    *   **背景：** 基于新的登录流程，`AdminLoginView` 不再需要直接提供"管理白名单"的入口，该入口由登录成功后的 `AdminModule` 统一导向 `AdminDashboardView`。
+    *   **修改内容：**
+        *   从 `AdminLoginView` 中移除了 "管理白名单" 按钮 (`m_manageWhitelistButton`) 及其相关的信号 (`openWhitelistManagerRequested`) 和槽。
+        *   更新了 `AdminModule` 以移除对 `AdminLoginView::openWhitelistManagerRequested` 信号的依赖。
+    *   **当前状态：** `AdminLoginView` UI 更简洁，专注于密码输入和登录/退出操作。
+
+3.  **UI开发：`UserView` 背景图片显示**
+    *   **功能实现：**
+        *   `UserView` 添加了 `m_currentBackground` (QPixmap) 成员。
+        *   添加了 `setCurrentBackground(const QString& imagePath)` 方法用于加载背景图片。
+        *   重写了 `paintEvent(QPaintEvent *event)` 方法，使用 `QPainter` 绘制背景图片。如果图片为空或加载失败，则绘制默认深色背景。
+        *   从 `UserView` 构造函数中移除了原有的透明背景样式表设置。
+    *   **当前状态：** `UserView` 现在可以显示指定的图片作为背景。为后续实现"背景库"功能打下了基础。
+
+**当前主要待解决问题与下一步计划 (突出显示):**
+
+1.  **首要任务：`JianqiaoCoreShell.cpp` - 实现 `QStackedWidget` 逻辑，使 `AdminDashboardView` 全界面显示。**
+2.  **`AdminDashboardView` - 功能完善 (密码修改、热键修改界面集成等)。**
+3.  **`UserView` - UI/UX 提升 (背景库, Dock栏细节)。**
+4.  **应用图标加载 - 持续调查 `SHGetFileInfoW` 问题。**
+5. **用户模式快捷键拦截 - 全面实现。**
+6.  概率性CMD窗口 - 排查原因。
+7.  Linter错误 - 解决 `includePath` 问题 (尤其在 `UserView.h` 和 `.cpp` 中新出现的Qt模块相关错误)。
+
+---
+--- 
+日期: 2025-05-23 (今日)
+开发者: 北鲲 (与AI协作)
+模块: SystemInteractionModule, JianqiaoCoreShell, AdminDashboardView, AdminModule
+
+主要进展与修复:
+
+1.  **Bug修复与逻辑完善：管理员登录热键可靠性**
+    *   **问题描述：** 更新热键后（特别是当配置的热键包含通用修饰符如 VK_SHIFT，而用户按下特定修饰符如 VK_LSHIFT 时），新的热键可能无法触发登录窗口。重启程序后，热键恢复到修改前或默认状态的问题也已解决。
+    *   **核心原因分析：**
+        *   `SystemInteractionModule::LowLevelKeyboardProc` 中对热键组合的检测逻辑在匹配通用修饰键与特定修饰键时存在不足。
+        *   之前修复的配置文件路径不一致问题 (`SystemInteractionModule` 与 `AdminModule` 使用不同的 `config.json` 路径) 是导致热键更改无法持久化的主要原因。
+        *   `SystemInteractionModule::vkCodeToString` 方法在某些情况下可能未返回 `VK_CODE_MAP` 中的标准键名，导致 `stringToVkCode` 解析失败，影响配置的正确保存和加载。
+    *   **修复措施与重构：**
+        *   **配置文件路径统一：** 已确保 `SystemInteractionModule` 和 `AdminModule` 使用相同的、位于用户程序配置目录下的 `config.json` 文件。 (先前已完成于 2025-05-23 早期)
+        *   **`vkCodeToString` 修正：** 确保 `vkCodeToString` 优先从 `VK_CODE_MAP` 返回键名，保证与 `stringToVkCode` 的可逆性。 (先前已完成于 2025-05-23 早期)
+        *   **热键检测逻辑增强 (`LowLevelKeyboardProc`)：**
+            *   改进了修饰键的判断逻辑，使其能够正确处理当配置的热键为通用修饰键（如 `VK_SHIFT`, `VK_CONTROL`, `VK_MENU`）时，用户按下特定修饰键（如 `VK_LSHIFT`, `VK_RCONTROL`）的情况。
+            *   确保在判断最终热键组合是否满足时，对整个 `m_pressedKeys` 集合的大小进行校验，避免无关按键干扰。
+    *   **当前状态：** 管理员登录热键的修改、保存、加载以及在程序运行时的检测功能已恢复正常且更加健壮。用户修改后的热键在重启程序后依然有效。
+
+2.  **UI/UX进展：`JianqiaoCoreShell` 中 `QStackedWidget` 应用**
+    *   **进展：** 根据之前的计划，`JianqiaoCoreShell.cpp` 中与 `QStackedWidget` 相关的初始化、视图添加和切换逻辑（`switchToUserModeView` 和 `switchToAdminDashboard`）已基本完成。
+    *   **效果：** `AdminDashboardView` 现在作为主应用程序的一个页面，通过 `QStackedWidget` 进行切换，实现了全界面显示，而非独立的弹出式小窗口。
+    *   **相关调整：** 
+        * 移除了 `JianqiaoCoreShell` 中不必要的 `setEnabled(true/false)` 调用，因为视图的激活状态由 `QStackedWidget` 的 `setCurrentWidget` 控制。 (先前已完成于 2025-05-23 早期)
+        * `AdminModule::onLoginViewHidden()` 的调用时机得到调整，确保在`AdminLoginView`隐藏后，无论登录成功与否，都能正确触发后续逻辑（如更新`AdminModule`内部状态，或在仅隐藏`AdminLoginView`而不显示`AdminDashboardView`时通知`CoreShell`更新Z-order）。(先前已完成于 2025-05-23 早期)
+
+3.  **Bug修复：密码修改成功后的双重弹窗**
+    *   **问题描述：** 修改密码成功后，出现两个提示框："密码更改成功"和"功能正在开发中"。
+    *   **修复措施：** 移除了 `AdminDashboardView::onConfirmPasswordChangeClicked()` 中多余的 "功能正在开发中" 的 `QMessageBox`。 (先前已完成于 2025-05-23 早期)
+    *   **当前状态：** 问题已解决，密码修改成功后只显示一个确认提示。
+
+
+当前主要待解决问题与下一步计划 (基本与上一条记录一致，但更新了`QStackedWidget`和热键的状态):
+
+1.  **`AdminDashboardView` - 功能完善 (主要是密码修改界面和逻辑的进一步测试与确认，热键修改已集成并验证)。**
+2.  **应用图标加载 - 持续调查 `SHGetFileInfoW` 问题。**
+3.  **用户模式快捷键拦截 - 全面实现。**
+4.  **`UserView` - UI/UX 提升 (背景库, Dock栏细节)。**
+5.  概率性CMD窗口 - 排查原因。
+6.  Linter错误 - 解决 `includePath` 问题。
 ---

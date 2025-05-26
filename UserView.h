@@ -8,6 +8,7 @@
 #include <QHBoxLayout>   // For centering dock
 #include <QFrame>        // For the dock background
 #include "HoverIconWidget.h" 
+#include <QPixmap> // ADDED for m_currentBackground
 
 // Forward declarations
 // class QLabel; // No longer used
@@ -25,6 +26,7 @@ public:
 
     void populateAppList(const QList<AppInfo>& apps);
     void setAppList(const QList<AppInfo>& apps);
+    void setCurrentBackground(const QString& imagePath); // ADDED
 
 signals:
     void applicationLaunchRequested(const QString& appPath);
@@ -32,6 +34,7 @@ signals:
 
 protected:
     void showEvent(QShowEvent *event) override;
+    void paintEvent(QPaintEvent *event) override; // ADDED override
 
 private slots:
     // void onAppItemDoubleClicked(QListWidgetItem *item); // Removed
@@ -51,6 +54,8 @@ private:
 
     bool m_isFirstShow = true;         // Flag for first show event
     QList<AppInfo> m_cachedAppList; // Cache for app list
+
+    QPixmap m_currentBackground; // ADDED
 
     // Removed members related to QScrollArea and QGridLayout
     // QScrollArea* m_scrollArea;

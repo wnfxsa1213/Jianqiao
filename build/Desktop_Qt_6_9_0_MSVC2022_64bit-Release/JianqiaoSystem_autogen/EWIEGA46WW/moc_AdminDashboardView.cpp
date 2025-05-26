@@ -56,7 +56,7 @@ template <> constexpr inline auto AdminDashboardView::qt_create_metaobjectdata<q
         "onRemoveAppClicked",
         "onChangeHotkeyClicked",
         "onExitApplicationClicked",
-        "onChangePasswordClicked"
+        "onConfirmPasswordChangeClicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -82,7 +82,7 @@ template <> constexpr inline auto AdminDashboardView::qt_create_metaobjectdata<q
         QtMocHelpers::SlotData<void()>(14, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onExitApplicationClicked'
         QtMocHelpers::SlotData<void()>(15, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onChangePasswordClicked'
+        // Slot 'onConfirmPasswordChangeClicked'
         QtMocHelpers::SlotData<void()>(16, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
@@ -115,7 +115,7 @@ void AdminDashboardView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
         case 5: _t->onRemoveAppClicked(); break;
         case 6: _t->onChangeHotkeyClicked(); break;
         case 7: _t->onExitApplicationClicked(); break;
-        case 8: _t->onChangePasswordClicked(); break;
+        case 8: _t->onConfirmPasswordChangeClicked(); break;
         default: ;
         }
     }

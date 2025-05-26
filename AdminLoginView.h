@@ -14,7 +14,8 @@ public:
     explicit AdminLoginView(QWidget *parent = nullptr);
     ~AdminLoginView();
 
-    void openWhitelistManager();
+    QString getPassword() const;
+    void resetUI();
 
 public slots:
     void notifyLoginResult(bool success); // To receive login result from AdminModule
@@ -22,7 +23,6 @@ public slots:
 signals:
     void loginAttempt(const QString& password); // Emitted when login button is clicked
     void userRequestsExit();
-    void openWhitelistManagerRequested();
     void viewHidden();
 
 protected:
@@ -35,7 +35,6 @@ private:
     QLineEdit *m_passwordEdit; // For password input
     QPushButton *m_loginButton; // Login button
     QPushButton *m_exitButton;
-    QPushButton *m_manageWhitelistButton; // Added button
 };
 
 #endif // ADMINLOGINVIEW_H 

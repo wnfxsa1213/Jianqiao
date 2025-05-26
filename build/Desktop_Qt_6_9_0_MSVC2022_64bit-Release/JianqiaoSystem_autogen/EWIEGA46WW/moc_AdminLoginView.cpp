@@ -43,7 +43,6 @@ template <> constexpr inline auto AdminLoginView::qt_create_metaobjectdata<qt_me
         "",
         "password",
         "userRequestsExit",
-        "openWhitelistManagerRequested",
         "viewHidden",
         "notifyLoginResult",
         "success"
@@ -56,13 +55,11 @@ template <> constexpr inline auto AdminLoginView::qt_create_metaobjectdata<qt_me
         }}),
         // Signal 'userRequestsExit'
         QtMocHelpers::SignalData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
-        // Signal 'openWhitelistManagerRequested'
-        QtMocHelpers::SignalData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'viewHidden'
-        QtMocHelpers::SignalData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SignalData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'notifyLoginResult'
-        QtMocHelpers::SlotData<void(bool)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Bool, 8 },
+        QtMocHelpers::SlotData<void(bool)>(6, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Bool, 7 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -89,9 +86,8 @@ void AdminLoginView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         switch (_id) {
         case 0: _t->loginAttempt((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 1: _t->userRequestsExit(); break;
-        case 2: _t->openWhitelistManagerRequested(); break;
-        case 3: _t->viewHidden(); break;
-        case 4: _t->notifyLoginResult((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 2: _t->viewHidden(); break;
+        case 3: _t->notifyLoginResult((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
         default: ;
         }
     }
@@ -100,9 +96,7 @@ void AdminLoginView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
             return;
         if (QtMocHelpers::indexOfMethod<void (AdminLoginView::*)()>(_a, &AdminLoginView::userRequestsExit, 1))
             return;
-        if (QtMocHelpers::indexOfMethod<void (AdminLoginView::*)()>(_a, &AdminLoginView::openWhitelistManagerRequested, 2))
-            return;
-        if (QtMocHelpers::indexOfMethod<void (AdminLoginView::*)()>(_a, &AdminLoginView::viewHidden, 3))
+        if (QtMocHelpers::indexOfMethod<void (AdminLoginView::*)()>(_a, &AdminLoginView::viewHidden, 2))
             return;
     }
 }
@@ -126,14 +120,14 @@ int AdminLoginView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 4;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 5)
+        if (_id < 4)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 5;
+        _id -= 4;
     }
     return _id;
 }
@@ -151,14 +145,8 @@ void AdminLoginView::userRequestsExit()
 }
 
 // SIGNAL 2
-void AdminLoginView::openWhitelistManagerRequested()
-{
-    QMetaObject::activate(this, &staticMetaObject, 2, nullptr);
-}
-
-// SIGNAL 3
 void AdminLoginView::viewHidden()
 {
-    QMetaObject::activate(this, &staticMetaObject, 3, nullptr);
+    QMetaObject::activate(this, &staticMetaObject, 2, nullptr);
 }
 QT_WARNING_POP

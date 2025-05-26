@@ -20,7 +20,8 @@ AdminModule::AdminModule(SystemInteractionModule* systemInteraction, AdminDashbo
     : QObject(parent),
       m_loginView(new AdminLoginView(nullptr)), 
       m_adminDashboardView(dashboardView),
-      m_systemInteractionModulePtr(systemInteraction)
+      m_systemInteractionModulePtr(systemInteraction),
+      m_isAdminAuthenticated(false)
 {
     qDebug() << "管理员模块(AdminModule): 构造函数开始。";
 
@@ -28,7 +29,6 @@ AdminModule::AdminModule(SystemInteractionModule* systemInteraction, AdminDashbo
 
     connect(m_loginView, &AdminLoginView::loginAttempt, this, &AdminModule::onLoginAttempt);
     connect(m_loginView, &AdminLoginView::userRequestsExit, this, &AdminModule::onLoginViewRequestsExit);
-    connect(m_loginView, &AdminLoginView::openWhitelistManagerRequested, this, &AdminModule::showAdminDashboardView);
 
     if (m_adminDashboardView) { 
         connect(m_adminDashboardView, &AdminDashboardView::whitelistChanged, this, &AdminModule::onWhitelistUpdated);
@@ -48,6 +48,8 @@ void AdminModule::showLoginView()
 {
     qDebug() << "管理员模块(AdminModule): 请求显示管理员登录视图。";
     if (m_loginView) {
+        m_loginView->resetUI();
+
         if (m_adminDashboardView && m_adminDashboardView->isVisible()) {
             qDebug() << "管理员模块(AdminModule): 管理员仪表盘视图可见，先隐藏它。";
             m_adminDashboardView->hide();
@@ -59,37 +61,6 @@ void AdminModule::showLoginView()
         qDebug() << "管理员模块(AdminModule): 管理员登录视图已显示。";
     } else {
         qWarning() << "管理员模块(AdminModule): 登录视图实例为空，无法显示！";
-    }
-}
-
-void AdminModule::showAdminDashboardView()
-{
-    qDebug() << "管理员模块(AdminModule): 请求显示管理员仪表盘视图。";
-    if (m_loginView && m_loginView->isVisible()) {
-        m_loginView->hide();
-    }
-
-    if (!m_adminDashboardView) { 
-        qWarning() << "管理员模块(AdminModule): 管理员仪表盘视图为空，尝试重新创建。";
-        // m_adminDashboardView = new AdminDashboardView(nullptr);
-        // connect(m_adminDashboardView, &AdminDashboardView::whitelistChanged, this, &AdminModule::onWhitelistUpdated);
-        // connect(m_adminDashboardView, &AdminDashboardView::userRequestsExitAdminMode, this, &AdminModule::onUserRequestsExitAdminMode);
-        // connect(m_adminDashboardView, &AdminDashboardView::changePasswordRequested, this, &AdminModule::onChangePasswordRequested);
-        // connect(m_adminDashboardView, &AdminDashboardView::adminLoginHotkeyChanged, this, &AdminModule::onAdminLoginHotkeyChanged);
-    }
-
-    if (m_adminDashboardView) {
-        m_adminDashboardView->setWhitelistedApps(m_whitelistedApps);
-        m_adminDashboardView->setCurrentAdminLoginHotkey(m_systemInteractionModulePtr->getCurrentAdminLoginHotkeyStrings());
-        qDebug() << "管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。显示由CoreShell的StackedWidget处理。";
-        // if (!m_adminDashboardView->isVisible()) { // CoreShell handles visibility
-        //     m_adminDashboardView->showNormal(); 
-        // }
-        // m_adminDashboardView->activateWindow(); // CoreShell handles activation/focus
-        // m_adminDashboardView->raise(); // CoreShell handles Z-order within its stack
-        // emit adminViewVisible(true); // REMOVED: Dashboard is part of stacked widget, shell's Z-order shouldn't change for this.
-    } else {
-         qWarning() << "管理员模块(AdminModule): 管理员仪表盘视图实例为空，无法准备数据！";
     }
 }
 
@@ -106,11 +77,12 @@ void AdminModule::requestExitAdminMode() {
 }
 
 void AdminModule::onUserRequestsExitAdminMode() {
-    qDebug() << "管理员模块(AdminModule): AdminDashboardView 请求退出管理模式。";
-    // if (m_adminDashboardView) { // Visibility managed by StackedWidget
+    qDebug() << "管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。";
+    m_isAdminAuthenticated = false;
+    // if (m_adminDashboardView && m_adminDashboardView->isVisible()) { // CoreShell handles this
     //     m_adminDashboardView->hide();
     // }
-    emit adminViewVisible(false); 
+    // emit adminViewVisible(false); // CoreShell should manage this based on stack changes or specific signals
     emit exitAdminModeRequested(); 
 }
 
@@ -119,11 +91,13 @@ void AdminModule::onLoginViewRequestsExit()
     qDebug() << "管理员模块(AdminModule): 登录视图请求退出管理员模式（例如通过取消按钮）。";
     if (m_loginView) {
         m_loginView->hide();
+        onLoginViewHidden();
     }
-    if (!isAnyViewVisible()) {
-         emit adminViewVisible(false); 
-         emit exitAdminModeRequested();
-    }
+    m_isAdminAuthenticated = false; 
+    // if (!isAnyViewVisible()) { // This check might be complex with stacked widget
+         // emit adminViewVisible(false); // Let CoreShell manage this
+    emit exitAdminModeRequested(); // 通知 CoreShell 返回用户模式
+    // }
 }
 
 void AdminModule::onLoginViewHidden() {
@@ -153,18 +127,22 @@ void AdminModule::onLoginAttempt(const QString& password)
     qDebug() << "管理员模块(AdminModule): 收到登录尝试。";
     if (verifyPassword(password)) {
         qDebug() << "管理员模块(AdminModule): 密码验证成功。";
+        m_isAdminAuthenticated = true; 
         if(m_loginView) {
             m_loginView->notifyLoginResult(true); 
-            // Potentially hide login view *after* CoreShell has switched to dashboard if there's a flicker
-            // For now, let login view hide itself or CoreShell manage it upon mode change.
-            // m_loginView->hide(); // Consider if this is needed here or if openWhitelistManagerRequested signal should do it.
+            // Hide login view as we are proceeding to dashboard (CoreShell will show dashboard)
+            // It might be better for CoreShell to hide login view once login is confirmed.
+            // For now, let login view handle its own hiding on success or AdminModule does it before emitting signal.
+            if (m_loginView->isVisible()) {
+                 m_loginView->hide(); 
+                 onLoginViewHidden();
+            }
         }
-        // This signal will cause CoreShell to switch to the AdminDashboardView
         emit loginSuccessfulAndAdminActive(); 
-        // This call now mainly ensures the dashboard has the latest data before CoreShell shows it.
-        showAdminDashboardView(); 
+        // REMOVED: showAdminDashboardView(); // CoreShell will call prepareAdminDashboardData and switch view
     } else {
         qDebug() << "管理员模块(AdminModule): 密码验证失败。";
+        m_isAdminAuthenticated = false; 
         if(m_loginView) {
             m_loginView->notifyLoginResult(false/*, "密码错误，请重试。"*/);
         }
@@ -639,4 +617,21 @@ bool AdminModule::saveAdminLoginHotkeyToConfig(const QStringList& hotkeyVkString
 QList<AppInfo> AdminModule::getWhitelistedApps() const
 {
     return m_whitelistedApps; // Ensure this returns the member variable correctly
+}
+
+void AdminModule::prepareAdminDashboardData()
+{
+    qDebug() << "管理员模块(AdminModule): prepareAdminDashboardData() 调用。";
+    if (m_adminDashboardView) {
+        m_adminDashboardView->setWhitelistedApps(m_whitelistedApps);
+        if (m_systemInteractionModulePtr) {
+            m_adminDashboardView->setCurrentAdminLoginHotkey(m_systemInteractionModulePtr->getCurrentAdminLoginHotkeyStrings());
+        } else {
+            qWarning() << "AdminModule: SystemInteractionModule is null in prepareAdminDashboardData.";
+            m_adminDashboardView->setCurrentAdminLoginHotkey(QStringList() << "Error: SIM null");
+        }
+        qDebug() << "管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。";
+    } else {
+         qWarning() << "管理员模块(AdminModule): 管理员仪表盘视图实例为空，无法准备数据！";
+    }
 }

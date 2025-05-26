@@ -8,22 +8,32 @@
 #include <QGroupBox> // For visually grouping sections
 #include <QCoreApplication> // Added for QCoreApplication::quit()
 #include <QHBoxLayout>
+#include <QFormLayout>
 #include <QSizePolicy>
 #include <QFrame> // Added for separator line
+#include <QTabWidget>
 
 AdminDashboardView::AdminDashboardView(QWidget *parent)
     : QWidget(parent)
-    , m_placeholderLabel(nullptr)
     , m_mainLayout(nullptr)
-    , m_exitButton(nullptr)
+    , m_tabWidget(nullptr)
+    , m_whitelistTab(nullptr)
+    , m_settingsTab(nullptr)
     , m_whitelistListWidget(nullptr)
     , m_addAppButton(nullptr)
     , m_removeAppButton(nullptr)
     , m_currentHotkeyTitleLabel(nullptr)
     , m_currentHotkeyDisplayLabel(nullptr)
     , m_editHotkeyButton(nullptr)
-    , m_exitApplicationButton(nullptr) // Initialize new member
-    , m_changePasswordButton(nullptr) // Initialize new member
+    , m_currentPasswordLabel(nullptr)
+    , m_currentPasswordLineEdit(nullptr)
+    , m_newPasswordLabel(nullptr)
+    , m_newPasswordLineEdit(nullptr)
+    , m_confirmPasswordLabel(nullptr)
+    , m_confirmPasswordLineEdit(nullptr)
+    , m_confirmChangePasswordButton(nullptr)
+    , m_exitButton(nullptr)
+    , m_exitApplicationButton(nullptr)
 {
     qDebug() << "管理员仪表盘(AdminDashboardView): 已创建。";
     setupUi();
@@ -37,6 +47,7 @@ AdminDashboardView::~AdminDashboardView()
 void AdminDashboardView::setupUi()
 {
     setWindowTitle("管理员仪表盘");
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     // setMinimumSize(800, 600); // Increased size for more content
 
     // Material Design inspired stylesheet
@@ -81,80 +92,124 @@ void AdminDashboardView::setupUi()
         "    border: 1px solid #CFD8DC;"
         "    border-radius: 4px;"
         "    background-color: white;"
+        "    min-height: 20px; /* Ensure line edits have a decent height */"
         "}"
         "QGroupBox { font-weight: bold; border: 1px solid #CFD8DC; border-radius: 4px; margin-top: 10px; }" 
         "QGroupBox::title { subcontrol-origin: margin; subcontrol-position: top left; padding: 0 5px 0 5px; background-color: #ECEFF1; }"
+        "QTabWidget::pane { border: 1px solid #CFD8DC; border-top: 1px solid #CFD8DC; border-radius: 4px; background-color: #FFFFFF; margin-top: -1px; }"
+        "QTabWidget::tab-bar { alignment: left; }"
+        "QTabBar::tab {"
+        "    background-color: #ECEFF1; /* Light background for inactive tabs */"
+        "    color: #263238; /* Dark text for inactive tabs */"
+        "    border: 1px solid #CFD8DC;"
+        "    border-bottom: none; /* Remove bottom border for tabs */"
+        "    border-top-left-radius: 4px;"
+        "    border-top-right-radius: 4px;"
+        "    padding: 8px 16px;"
+        "    margin-right: 2px; /* Space between tabs */"
+        "}"
+        "QTabBar::tab:selected {"
+        "    background-color: #FFFFFF; /* White background for selected tab */"
+        "    color: #263238; /* Dark text for selected tab */"
+        "    border-color: #CFD8DC;"
+        "}"
+        "QTabBar::tab:hover {"
+        "    background-color: #E0E0E0; /* Slightly darker on hover */"
+        "}"
     ));
 
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setSpacing(15);
     m_mainLayout->setContentsMargins(15, 15, 15, 15);
 
-    QHBoxLayout* columnsLayout = new QHBoxLayout();
-    columnsLayout->setSpacing(15);
+    // --- Create TabWidget and Tabs ---
+    m_tabWidget = new QTabWidget(this);
+    m_tabWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    QVBoxLayout* leftColumnLayout = new QVBoxLayout();
-    QGroupBox* whitelistGroup = new QGroupBox("白名单应用管理", this);
-    QVBoxLayout* whitelistLayout = new QVBoxLayout(whitelistGroup);
-    m_whitelistListWidget = new QListWidget(this);
+    // --- Whitelist Tab ---
+    m_whitelistTab = new QWidget(m_tabWidget);
+    QVBoxLayout* whitelistTabLayout = new QVBoxLayout(m_whitelistTab);
+    whitelistTabLayout->setContentsMargins(10, 10, 10, 10);
+    QGroupBox* whitelistGroup = new QGroupBox("白名单应用管理", m_whitelistTab);
+    QVBoxLayout* whitelistGroupLayout = new QVBoxLayout(whitelistGroup);
+    m_whitelistListWidget = new QListWidget(whitelistGroup);
     m_whitelistListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     m_whitelistListWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    whitelistLayout->addWidget(m_whitelistListWidget, 1);
+    whitelistGroupLayout->addWidget(m_whitelistListWidget, 1); // Give list widget stretch factor
 
     QHBoxLayout* whitelistButtonsLayout = new QHBoxLayout();
-    m_addAppButton = new QPushButton("添加应用...", this);
-    m_removeAppButton = new QPushButton("移除选中", this);
+    m_addAppButton = new QPushButton("添加应用...", whitelistGroup);
+    m_removeAppButton = new QPushButton("移除选中", whitelistGroup);
     connect(m_addAppButton, &QPushButton::clicked, this, &AdminDashboardView::onAddAppClicked);
     connect(m_removeAppButton, &QPushButton::clicked, this, &AdminDashboardView::onRemoveAppClicked);
     whitelistButtonsLayout->addStretch();
     whitelistButtonsLayout->addWidget(m_addAppButton);
     whitelistButtonsLayout->addWidget(m_removeAppButton);
-    whitelistLayout->addLayout(whitelistButtonsLayout);
-    leftColumnLayout->addWidget(whitelistGroup);
+    whitelistGroupLayout->addLayout(whitelistButtonsLayout);
+    whitelistTabLayout->addWidget(whitelistGroup);
+    m_whitelistTab->setLayout(whitelistTabLayout);
+    m_tabWidget->addTab(m_whitelistTab, "白名单管理");
+
+    // --- Settings Tab ---
+    m_settingsTab = new QWidget(m_tabWidget);
+    QVBoxLayout* settingsTabLayout = new QVBoxLayout(m_settingsTab);
+    settingsTabLayout->setContentsMargins(10, 10, 10, 10);
     
-    columnsLayout->addLayout(leftColumnLayout, 2);
+    // --- Hotkey Settings Group ---
+    QGroupBox* hotkeySettingsGroup = new QGroupBox("热键设置", m_settingsTab);
+    QVBoxLayout* hotkeySettingsLayout = new QVBoxLayout(hotkeySettingsGroup);
 
-    QVBoxLayout* rightColumnLayout = new QVBoxLayout();
-    QGroupBox* settingsGroup = new QGroupBox("系统设置", this);
-    QVBoxLayout* settingsLayout = new QVBoxLayout(settingsGroup);
-
-    // Hotkey Settings Section
-    QHBoxLayout* hotkeyLayout = new QHBoxLayout();
-    m_currentHotkeyTitleLabel = new QLabel("当前管理员热键:", this);
-    m_currentHotkeyDisplayLabel = new QLabel("[" + tr("未设置或加载中...") + "]", this);
+    QHBoxLayout* hotkeyDisplayLayout = new QHBoxLayout();
+    m_currentHotkeyTitleLabel = new QLabel("当前管理员热键:", hotkeySettingsGroup);
+    m_currentHotkeyDisplayLabel = new QLabel("[" + tr("未设置或加载中...") + "]", hotkeySettingsGroup);
     m_currentHotkeyDisplayLabel->setStyleSheet("font-weight: bold; padding: 2px 5px; background-color: white; border: 1px solid #CFD8DC; border-radius: 3px;");
-    m_editHotkeyButton = new QPushButton("修改热键...", this);
+    m_editHotkeyButton = new QPushButton("修改热键...", hotkeySettingsGroup);
     connect(m_editHotkeyButton, &QPushButton::clicked, this, &AdminDashboardView::onChangeHotkeyClicked);
-    hotkeyLayout->addWidget(m_currentHotkeyTitleLabel);
-    hotkeyLayout->addWidget(m_currentHotkeyDisplayLabel, 1);
-    hotkeyLayout->addWidget(m_editHotkeyButton);
-    settingsLayout->addLayout(hotkeyLayout);
+    hotkeyDisplayLayout->addWidget(m_currentHotkeyTitleLabel);
+    hotkeyDisplayLayout->addWidget(m_currentHotkeyDisplayLabel, 1);
+    hotkeyDisplayLayout->addWidget(m_editHotkeyButton);
+    hotkeySettingsLayout->addLayout(hotkeyDisplayLayout);
+    settingsTabLayout->addWidget(hotkeySettingsGroup);
 
-    // Separator Line
-    QFrame* line = new QFrame(this);
-    line->setFrameShape(QFrame::HLine);
-    line->setFrameShadow(QFrame::Sunken);
-    settingsLayout->addWidget(line);
+    // --- Password Settings Group ---
+    QGroupBox* passwordSettingsGroup = new QGroupBox("密码设置", m_settingsTab);
+    QFormLayout* passwordSettingsFormLayout = new QFormLayout(passwordSettingsGroup); // QFormLayout is good for label-field pairs
+    passwordSettingsFormLayout->setSpacing(10);
+    passwordSettingsFormLayout->setContentsMargins(10,10,10,10);
 
-    // Password Settings Section
-    QHBoxLayout* passwordLayout = new QHBoxLayout();
-    QLabel* passwordTitleLabel = new QLabel("管理员密码:", this);
-    m_changePasswordButton = new QPushButton("修改密码...", this);
-    connect(m_changePasswordButton, &QPushButton::clicked, this, &AdminDashboardView::onChangePasswordClicked);
-    passwordLayout->addWidget(passwordTitleLabel);
-    passwordLayout->addStretch(); // Push button to the right
-    passwordLayout->addWidget(m_changePasswordButton);
-    settingsLayout->addLayout(passwordLayout);
+    m_currentPasswordLabel = new QLabel("当前密码:", passwordSettingsGroup);
+    m_currentPasswordLineEdit = new QLineEdit(passwordSettingsGroup);
+    m_currentPasswordLineEdit->setEchoMode(QLineEdit::Password);
+    passwordSettingsFormLayout->addRow(m_currentPasswordLabel, m_currentPasswordLineEdit);
 
-    settingsLayout->addStretch(); // Pushes all settings content to the top
+    m_newPasswordLabel = new QLabel("新密码:", passwordSettingsGroup);
+    m_newPasswordLineEdit = new QLineEdit(passwordSettingsGroup);
+    m_newPasswordLineEdit->setEchoMode(QLineEdit::Password);
+    passwordSettingsFormLayout->addRow(m_newPasswordLabel, m_newPasswordLineEdit);
+
+    m_confirmPasswordLabel = new QLabel("确认新密码:", passwordSettingsGroup);
+    m_confirmPasswordLineEdit = new QLineEdit(passwordSettingsGroup);
+    m_confirmPasswordLineEdit->setEchoMode(QLineEdit::Password);
+    passwordSettingsFormLayout->addRow(m_confirmPasswordLabel, m_confirmPasswordLineEdit);
     
-    rightColumnLayout->addWidget(settingsGroup);
-    rightColumnLayout->addStretch(1);
+    m_confirmChangePasswordButton = new QPushButton("确认修改密码", passwordSettingsGroup);
+    connect(m_confirmChangePasswordButton, &QPushButton::clicked, this, &AdminDashboardView::onConfirmPasswordChangeClicked);
+    
+    QHBoxLayout* buttonLayout = new QHBoxLayout(); // To align button to the right
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(m_confirmChangePasswordButton);
+    passwordSettingsFormLayout->addRow(buttonLayout); // Add the button layout as a row
+    
+    settingsTabLayout->addWidget(passwordSettingsGroup);
 
-    columnsLayout->addLayout(rightColumnLayout, 1);
+    settingsTabLayout->addStretch(1); 
+    m_settingsTab->setLayout(settingsTabLayout);
+    m_tabWidget->addTab(m_settingsTab, "系统设置");
 
-    m_mainLayout->addLayout(columnsLayout, 1);
+    // Add TabWidget to the main layout, making it the central expanding part
+    m_mainLayout->addWidget(m_tabWidget, 1); // The '1' stretch factor is important
 
+    // --- Bottom Buttons Layout ---
     m_exitButton = new QPushButton("关闭仪表盘 (返回用户模式)", this);
     connect(m_exitButton, &QPushButton::clicked, this, [this]() {
         qDebug() << "AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.";
@@ -188,6 +243,7 @@ void AdminDashboardView::setupUi()
     bottomLayout->addSpacing(10);
     bottomLayout->addWidget(m_exitApplicationButton);
     
+    // Add bottom buttons layout to the main layout, it will not expand
     m_mainLayout->addLayout(bottomLayout);
     
     setLayout(m_mainLayout);
@@ -346,11 +402,51 @@ void AdminDashboardView::onExitApplicationClicked() {
     QCoreApplication::instance()->quit();
 }
 
-void AdminDashboardView::onChangePasswordClicked()
+void AdminDashboardView::onConfirmPasswordChangeClicked()
 {
-    qDebug() << "AdminDashboardView::onChangePasswordClicked INVOKED.";
+    qDebug() << "AdminDashboardView::onConfirmPasswordChangeClicked INVOKED.";
+
+    QString currentPassword = m_currentPasswordLineEdit->text();
+    QString newPassword = m_newPasswordLineEdit->text();
+    QString confirmPassword = m_confirmPasswordLineEdit->text();
+
+    if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+        QMessageBox::warning(this, tr("输入错误"), tr("所有密码字段都必须填写。"));
+        return;
+    }
+
+    if (newPassword != confirmPassword) {
+        QMessageBox::warning(this, tr("密码不匹配"), tr("新密码和确认新密码字段不一致。"));
+        m_newPasswordLineEdit->clear();
+        m_confirmPasswordLineEdit->clear();
+        m_newPasswordLineEdit->setFocus();
+        return;
+    }
+    
+    // Basic complexity check: e.g., minimum length
+    if (newPassword.length() < 6) {
+        QMessageBox::warning(this, tr("密码太短"), tr("新密码长度至少需要6个字符。"));
+        m_newPasswordLineEdit->clear();
+        m_confirmPasswordLineEdit->clear();
+        m_newPasswordLineEdit->setFocus();
+        return;
+    }
+    
+    // Optional: Check if new password is the same as current password (usually not allowed)
+    // This would require AdminModule to verify currentPassword first, then compare.
+    // For now, we just emit. If AdminModule finds currentPassword is wrong, it will handle it.
+
+    qDebug() << "AdminDashboardView: Emitting changePasswordRequested.";
+    emit changePasswordRequested(currentPassword, newPassword);
+
+    // Clear fields after attempting (regardless of success at AdminModule level, for security)
+    m_currentPasswordLineEdit->clear();
+    m_newPasswordLineEdit->clear();
+    m_confirmPasswordLineEdit->clear();
+    
+    // Optionally, provide feedback that request was sent, actual success depends on AdminModule
+    qDebug() << "AdminDashboardView::onConfirmPasswordChangeClicked INVOKED.";
     qDebug() << "管理员仪表盘(AdminDashboardView): '修改密码' 按钮被点击。";
-    QMessageBox::information(this, "功能提示", "修改密码功能正在开发中。");
 }
 
 // Implement other methods and slots as functionality is migrated 
