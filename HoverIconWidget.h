@@ -24,6 +24,8 @@ public:
     void setScaleFactor(qreal factor);
     QString applicationPath() const;
 
+    void setLaunching(bool isLaunching);
+
 protected:
     void enterEvent(QEnterEvent *event) override;
     void leaveEvent(QEvent *event) override;
@@ -48,6 +50,8 @@ private:
     QSize m_baseSize;
     int m_iconSize;
     int m_padding;
+
+    bool m_isLaunching = false;
 };
 
 #endif // HOVERICONWIDGET_H 

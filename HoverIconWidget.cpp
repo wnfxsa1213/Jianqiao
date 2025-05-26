@@ -58,9 +58,24 @@ HoverIconWidget::HoverIconWidget(const QPixmap &icon, const QString &appName, co
     setupAnimation();
     setAttribute(Qt::WA_Hover); 
     setFocusPolicy(Qt::NoFocus); // Usually, these are not focusable
+    m_isLaunching = false; // Initialize m_isLaunching
 }
 
 HoverIconWidget::~HoverIconWidget() = default;
+
+void HoverIconWidget::setLaunching(bool isLaunching) {
+    if (m_isLaunching == isLaunching) return;
+    m_isLaunching = isLaunching;
+    if (m_isLaunching) {
+        // Optional: Could change icon appearance here, e.g., make it greyscale
+        // For now, relying on the overlay in paintEvent and disabling interaction.
+        if (m_scaleAnimation->state() == QAbstractAnimation::Running) {
+            m_scaleAnimation->stop();
+        }
+        setScaleFactor(1.0); // Reset scale if it was animating/hovered
+    }
+    update(); // Trigger a repaint to show/hide the overlay
+}
 
 void HoverIconWidget::setupAnimation() {
     m_scaleAnimation = new QPropertyAnimation(this, "scaleFactor");
@@ -104,6 +119,7 @@ void HoverIconWidget::setScaleFactor(qreal factor) {
 
 void HoverIconWidget::enterEvent(QEnterEvent *event) {
     QWidget::enterEvent(event);
+    if (m_isLaunching) return; // Do not animate if launching
     m_scaleAnimation->stop(); // Stop any ongoing animation
     m_scaleAnimation->setStartValue(m_currentScaleFactor); // Start from current scale
     m_scaleAnimation->setEndValue(1.35);      // Target scale when hovered
@@ -113,6 +129,7 @@ void HoverIconWidget::enterEvent(QEnterEvent *event) {
 
 void HoverIconWidget::leaveEvent(QEvent *event) {
     QWidget::leaveEvent(event);
+    if (m_isLaunching) return; // Do not animate if launching
     m_scaleAnimation->stop(); // Stop any ongoing animation
     m_scaleAnimation->setStartValue(m_currentScaleFactor); // Start from current scale
     m_scaleAnimation->setEndValue(1.0);       // Target scale when not hovered (original size)
@@ -121,18 +138,20 @@ void HoverIconWidget::leaveEvent(QEvent *event) {
 }
 
 void HoverIconWidget::paintEvent(QPaintEvent *event) {
-    // All painting is handled by the QLabels and the widget's background (if any)
-    // For custom background or effects, QPainter would be used here.
-    // Example: Rounded corners for the widget background (if not using stylesheets)
-    // QPainter painter(this);
-    // painter.setRenderHint(QPainter::Antialiasing);
-    // painter.fillRect(rect(), Qt::transparent); // If WA_TranslucentBackground is set
-    // QPainterPath path;
-    // path.addRoundedRect(rect(), 5, 5); // 5px radius
-    // painter.setClipPath(path);
-    // painter.fillPath(path, QColor(100,100,100,100)); // Semi-transparent background
-    
-    QWidget::paintEvent(event);
+    QWidget::paintEvent(event); // Call base class to paint children (labels)
+
+    if (m_isLaunching) {
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing);
+        // Draw a semi-transparent overlay
+        painter.fillRect(rect(), QColor(0, 0, 0, 128)); // Black with 50% opacity
+
+        // Optional: Draw a loading indicator (e.g., spinning icon or text)
+        // For simplicity, we'll just use the overlay for now.
+        // Example text:
+        // painter.setPen(Qt::white);
+        // painter.drawText(rect(), Qt::AlignCenter, "Loading...");
+    }
 }
 
 QSize HoverIconWidget::sizeHint() const {
@@ -150,6 +169,10 @@ QSize HoverIconWidget::minimumSizeHint() const {
 }
 
 void HoverIconWidget::mousePressEvent(QMouseEvent *event) {
+    if (m_isLaunching) {
+        event->accept(); // Consume the event, do nothing further
+        return;
+    }
     if (event->button() == Qt::LeftButton) {
         emit clicked(m_appPath);
     }

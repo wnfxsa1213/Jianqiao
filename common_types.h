@@ -9,6 +9,7 @@ struct AppInfo {
     QString name;
     QString path;
     QIcon icon; // Added to store the application's icon
+    QString mainExecutableHint; // Added to store the main executable name for launcher apps
 
     // Optional: Add an equality operator if not already present and needed for QList comparisons etc.
     bool operator==(const AppInfo& other) const {

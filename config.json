@@ -1,29 +1,39 @@
 {
+  "admin_password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
   "shortcuts": {
-    "admin_login": {
-      "description": "打开管理员登录界面的热键",
-      "key_sequence": ["VK_LCONTROL", "VK_LSHIFT", "VK_LMENU", "L"]
-    }
+      "admin_login": {
+          "key_sequence": [
+              "VK_SHIFT",
+              "VK_CONTROL",
+              "VK_MENU",
+              "A"
+          ]
+      }
   },
-  "admin_password": "admin123",
   "whitelist_apps": [
-    {
-      "name": "记事本",
-      "path": "C:/Windows/System32/notepad.exe"
-    },
-    {
-      "name": "计算器",
-      "path": "C:/Windows/System32/calc.exe"
-    }
-  ],
-  "user_mode_settings": {
-    "description": "用户模式下的特定设置",
-    "blocked_keys": [
-      "VK_LWIN",
-      "VK_RWIN",
-      "VK_APPS",
-      "VK_SNAPSHOT",
-      "VK_SLEEP"
-    ]
-  }
-} 
+      {
+          "name": "WPS",
+          "path": "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
+      },
+      {
+          "name": "百度云盘",
+          "path": "D:/BaiduNetdisk/BaiduNetdisk.exe"
+      },
+      {
+          "name": "Photoshop",
+          "path": "D:/PS2024/Adobe Photoshop 2024/Photoshop.exe"
+      },
+      {
+          "name": "QQ",
+          "path": "D:/qq/QQ.exe"
+      },
+      {
+          "name": "betaflight",
+          "path": "D:/BF/betaflight-configurator.exe"
+      },
+      {
+          "name": "微信",
+          "path": "D:/WeChat/WeChat.exe"
+      }
+  ]
+}

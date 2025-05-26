@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QCoreApplication>
 #include <QPainter> // ADDED for custom painting
+#include <QTimer> // Ensure QTimer is included for implementation
 
 UserView::UserView(QWidget *parent)
     : QWidget(parent),
@@ -65,6 +66,17 @@ void UserView::setupUi() {
 
 void UserView::clearAppIcons() {
     if (!m_dockLayout) return;
+
+    // Stop and delete all pending launch timers
+    for (QTimer* timer : qAsConst(m_launchTimers)) { // Use qAsConst for C++11 range-based for with QHash
+        if (timer) {
+            timer->stop();
+            timer->deleteLater();
+        }
+    }
+    m_launchTimers.clear();
+    m_launchingApps.clear();
+
     QLayoutItem* item;
     while ((item = m_dockLayout->takeAt(0)) != nullptr) {
         if (QWidget* widget = item->widget()) {
@@ -174,7 +186,80 @@ void UserView::paintEvent(QPaintEvent *event) {
     // QWidget::paintEvent(event); 
 }
 
+HoverIconWidget* UserView::findAppCardByPath(const QString& appPath) const {
+    for (HoverIconWidget* iconWidget : m_appIconWidgets) {
+        if (iconWidget && iconWidget->applicationPath() == appPath) {
+            return iconWidget;
+        }
+    }
+    return nullptr;
+}
+
 void UserView::onIconClicked(const QString& appPath) {
+    if (m_launchingApps.contains(appPath)) {
+        qDebug() << "UserView::onIconClicked - Application" << appPath << "is already marked as launching. Ignoring click.";
+        return;
+    }
     qDebug() << "用户视图(UserView): 图标点击，请求启动应用:" << appPath;
+    // Set launching state and start internal timer immediately
+    setAppIconLaunching(appPath, true); 
     emit applicationLaunchRequested(appPath);
+}
+
+void UserView::setAppIconLaunching(const QString& appPath, bool isLaunching) {
+    HoverIconWidget* iconWidget = findAppCardByPath(appPath);
+    if (!iconWidget) {
+        qWarning() << "UserView::setAppIconLaunching - Could not find app card for path:" << appPath;
+        return;
+    }
+
+    iconWidget->setLaunching(isLaunching); // Update visual state of the icon
+
+    if (isLaunching) {
+        if (!m_launchingApps.contains(appPath)) {
+            m_launchingApps.insert(appPath);
+        }
+
+        QTimer* timer = m_launchTimers.value(appPath, nullptr);
+        if (!timer) {
+            timer = new QTimer(this);
+            m_launchTimers.insert(appPath, timer);
+            // Use a lambda that captures appPath to call onLaunchTimerTimeout
+            connect(timer, &QTimer::timeout, this, [this, capturedAppPath = appPath]() {
+                onLaunchTimerTimeout(capturedAppPath);
+            });
+        }
+        timer->start(LAUNCH_TIMEOUT_MS); 
+        qDebug() << "UserView::setAppIconLaunching - Launch timer started for" << appPath << "(" << LAUNCH_TIMEOUT_MS << "ms). Icon state: launching.";
+    } else {
+        if (m_launchingApps.contains(appPath)) {
+            m_launchingApps.remove(appPath);
+        }
+
+        QTimer* timer = m_launchTimers.value(appPath, nullptr);
+        if (timer) {
+            timer->stop();
+            // Optionally, remove and delete the timer if it won't be reused soon.
+            // m_launchTimers.remove(appPath);
+            // timer->deleteLater(); 
+            // For now, just stop it. It will be restarted if the app is launched again.
+            qDebug() << "UserView::setAppIconLaunching - Launch timer stopped for" << appPath << ". Icon state: normal.";
+        }
+    }
+}
+
+void UserView::resetAppIconState(const QString& appPath) {
+    qDebug() << "UserView::resetAppIconState - Resetting icon state for" << appPath;
+    setAppIconLaunching(appPath, false);
+}
+
+void UserView::onLaunchTimerTimeout(const QString& appPath) {
+    qWarning() << "UserView::onLaunchTimerTimeout - Launch timer timed out for" << appPath << ". Resetting icon state.";
+    // Check if the app is still in m_launchingApps, because it might have been successfully launched
+    // and reset by onApplicationActivated just before the timer fired.
+    if(m_launchingApps.contains(appPath)){ // Only reset if it's still considered launching by UserView
+        resetAppIconState(appPath);
+    } else {
+        qDebug() << "UserView::onLaunchTimerTimeout - Timer for" << appPath << "fired, but app is no longer in m_launchingApps. State likely already reset.";
+    }
 }

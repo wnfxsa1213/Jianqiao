@@ -48,15 +48,17 @@ template <> constexpr inline auto UserModeModule::qt_create_metaobjectdata<qt_me
         "error",
         "onApplicationLaunchRequested",
         "appPath",
+        "onProcessStateChanged",
+        "QProcess::ProcessState",
+        "newState",
+        "onApplicationActivated",
+        "onProcessStarted",
         "onProcessFinished",
         "exitCode",
         "QProcess::ExitStatus",
         "exitStatus",
-        "onProcessErrorOccurred",
-        "QProcess::ProcessError",
-        "onProcessStateChanged",
-        "QProcess::ProcessState",
-        "newState"
+        "onProcessError",
+        "QProcess::ProcessError"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -72,17 +74,25 @@ template <> constexpr inline auto UserModeModule::qt_create_metaobjectdata<qt_me
         QtMocHelpers::SlotData<void(const QString &)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 8 },
         }}),
-        // Slot 'onProcessFinished'
-        QtMocHelpers::SlotData<void(int, QProcess::ExitStatus)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Int, 10 }, { 0x80000000 | 11, 12 },
-        }}),
-        // Slot 'onProcessErrorOccurred'
-        QtMocHelpers::SlotData<void(QProcess::ProcessError)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 14, 6 },
-        }}),
         // Slot 'onProcessStateChanged'
-        QtMocHelpers::SlotData<void(QProcess::ProcessState)>(15, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 16, 17 },
+        QtMocHelpers::SlotData<void(QProcess::ProcessState)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 10, 11 },
+        }}),
+        // Slot 'onApplicationActivated'
+        QtMocHelpers::SlotData<void(const QString &)>(12, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 8 },
+        }}),
+        // Slot 'onProcessStarted'
+        QtMocHelpers::SlotData<void(const QString &)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 8 },
+        }}),
+        // Slot 'onProcessFinished'
+        QtMocHelpers::SlotData<void(const QString &, int, QProcess::ExitStatus)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 8 }, { QMetaType::Int, 15 }, { 0x80000000 | 16, 17 },
+        }}),
+        // Slot 'onProcessError'
+        QtMocHelpers::SlotData<void(const QString &, QProcess::ProcessError)>(18, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 8 }, { 0x80000000 | 19, 6 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -111,9 +121,11 @@ void UserModeModule::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 1: _t->userModeDeactivated(); break;
         case 2: _t->applicationFailedToLaunch((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
         case 3: _t->onApplicationLaunchRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 4: _t->onProcessFinished((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QProcess::ExitStatus>>(_a[2]))); break;
-        case 5: _t->onProcessErrorOccurred((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessError>>(_a[1]))); break;
-        case 6: _t->onProcessStateChanged((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessState>>(_a[1]))); break;
+        case 4: _t->onProcessStateChanged((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessState>>(_a[1]))); break;
+        case 5: _t->onApplicationActivated((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 6: _t->onProcessStarted((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 7: _t->onProcessFinished((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QProcess::ExitStatus>>(_a[3]))); break;
+        case 8: _t->onProcessError((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QProcess::ProcessError>>(_a[2]))); break;
         default: ;
         }
     }
@@ -146,14 +158,14 @@ int UserModeModule::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 9;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 9)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 7;
+        _id -= 9;
     }
     return _id;
 }

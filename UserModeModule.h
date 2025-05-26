@@ -45,10 +45,14 @@ signals:
     void applicationFailedToLaunch(const QString& appName, const QString& error); // Consider using this
 
 public slots:
-    void onApplicationLaunchRequested(const QString& appPath); // Corrected signature
-    void onProcessFinished(int exitCode, QProcess::ExitStatus exitStatus);
-    void onProcessErrorOccurred(QProcess::ProcessError error);
+    void onApplicationLaunchRequested(const QString& appPath);
     void onProcessStateChanged(QProcess::ProcessState newState);
+    void onApplicationActivated(const QString& appPath);
+
+    // Corrected slot declarations to match implementations that take appPath
+    void onProcessStarted(const QString& appPath);
+    void onProcessFinished(const QString& appPath, int exitCode, QProcess::ExitStatus exitStatus);
+    void onProcessError(const QString& appPath, QProcess::ProcessError error);
 
 private:
     void launchApplication(const QString& appPath, const QString& appName = QString());
@@ -63,6 +67,7 @@ private:
     QMap<QProcess*, QString> m_launchedProcesses; // Stores launched QProcess and its original app path
     QTimer* m_processMonitoringTimer;
     SystemInteractionModule* m_systemInteractionModulePtr; // Added declaration
+    bool m_configLoaded = false; // ADDED
 
     // QPointer<SystemInteractionModule> m_systemInteractionModule; // Using QPointer for safety
     // bool m_isActive; // Flag to indicate if user mode is currently active
