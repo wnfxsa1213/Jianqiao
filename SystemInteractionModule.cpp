@@ -28,12 +28,14 @@
 #include <QThread> // 添加头文件
 #include <VersionHelpers.h> // 确保包含了必要的头文件
 #include <QCollator> // Qt5之后用于自然排序
+#include <QtConcurrent> // Required for QtConcurrent::run
+#include <QProcess> // Added for QProcess
 
 // Define a structure to pass data to EnumWindowsProc for hint-based search
 struct HintedEnumWindowsCallbackArg {
     DWORD targetPid;
     HWND bestHwnd;
-    int bestScore;
+    int bestScore; // This will store the score of the bestHwnd
     const QJsonObject* hints; // Pointer to the window hints
 
     HintedEnumWindowsCallbackArg(DWORD pid, const QJsonObject* h)
@@ -48,6 +50,9 @@ const QMap<QString, DWORD> SystemInteractionModule::VK_CODE_MAP = SystemInteract
 // Define constants for short activation
 const int SHORT_ACTIVATION_ATTEMPTS = 5; // Max attempts
 const int SHORT_ACTIVATION_INTERVAL_MS = 300; // Interval between attempts
+
+// Define constants if not already defined elsewhere (e.g., at the top of the .cpp file)
+// const int HINT_DETECTION_DELAY_MS = 5000; // Example, ensure this matches what's used
 
 QMap<QString, DWORD> SystemInteractionModule::initializeVkCodeMap() {
     QMap<QString, DWORD> map;
@@ -515,7 +520,8 @@ void SystemInteractionModule::bringToFrontAndActivate(WId windowId)
 }
 
 // Callback function for EnumWindows (modified for hint-based search)
-static BOOL CALLBACK EnumWindowsProcWithHints(HWND hwnd, LPARAM lParam)
+// CORRECTED: Added SystemInteractionModule:: scope
+BOOL CALLBACK SystemInteractionModule::EnumWindowsProcWithHints(HWND hwnd, LPARAM lParam)
 {
     HintedEnumWindowsCallbackArg* pArg = reinterpret_cast<HintedEnumWindowsCallbackArg*>(lParam);
     DWORD currentWindowProcessId;
@@ -616,17 +622,24 @@ static BOOL CALLBACK EnumWindowsProcWithHints(HWND hwnd, LPARAM lParam)
 }
 
 // New findMainWindowForProcess that uses hints
-HWND SystemInteractionModule::findMainWindowForProcess(DWORD processId, const QJsonObject& windowHints) {
+// Modified to return pair of HWND and score
+QPair<HWND, int> SystemInteractionModule::findMainWindowForProcessWithScore(DWORD processId, const QJsonObject& windowHints) {
     qDebug() << "[SystemInteractionModule] Attempting to find main window for PID:" << processId << "with hints:" << QJsonDocument(windowHints).toJson(QJsonDocument::Compact);
     HintedEnumWindowsCallbackArg callbackArg(processId, &windowHints);
-    EnumWindows(EnumWindowsProcWithHints, reinterpret_cast<LPARAM>(&callbackArg));
+    // Ensure the callback is properly scoped
+    EnumWindows(SystemInteractionModule::EnumWindowsProcWithHints, reinterpret_cast<LPARAM>(&callbackArg));
 
     if (callbackArg.bestHwnd) {
         qDebug() << "[SystemInteractionModule] Best window found for PID" << processId << "is" << callbackArg.bestHwnd << "with score" << callbackArg.bestScore;
     } else {
         qDebug() << "[SystemInteractionModule] No suitable window found for PID" << processId << "with given hints and logic.";
     }
-    return callbackArg.bestHwnd;
+    return qMakePair(callbackArg.bestHwnd, callbackArg.bestScore);
+}
+
+// Original findMainWindowForProcess, now calls the new version and discards score for compatibility
+HWND SystemInteractionModule::findMainWindowForProcess(DWORD processId, const QJsonObject& windowHints) {
+    return findMainWindowForProcessWithScore(processId, windowHints).first;
 }
 
 HWND SystemInteractionModule::findMainWindowForProcessOrChildren(DWORD initialPid, const QString& executableNameHint) {
@@ -734,8 +747,9 @@ QStringList SystemInteractionModule::getCurrentAdminLoginHotkeyStrings() const
 
 QIcon SystemInteractionModule::getIconForExecutable(const QString& executablePath)
 {
+    qDebug() << "[SIM::getIcon] Attempting to get icon for:" << executablePath;
     if (executablePath.isEmpty() || !QFile::exists(executablePath)) {
-        qWarning() << "SystemInteractionModule::getIconForExecutable - Path is empty or file does not exist:" << executablePath;
+        qWarning() << "[SIM::getIcon] Path is empty or file does not exist:" << executablePath;
         return QIcon();
     }
 
@@ -743,62 +757,80 @@ QIcon SystemInteractionModule::getIconForExecutable(const QString& executablePat
     QFileIconProvider provider;
     QFileInfo fileInfo(executablePath);
     QIcon icon = provider.icon(fileInfo);
+    qDebug() << "[SIM::getIcon] QFileIconProvider.icon(fileInfo) called.";
 
     if (!icon.isNull()) {
-        qDebug() << "SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for:" << executablePath;
-        // Check if the icon actually has a pixmap, QFileIconProvider might return a "default" icon
-        if (!icon.availableSizes().isEmpty() && !icon.pixmap(icon.availableSizes().first()).isNull()) {
-             return icon;
+        qDebug() << "[SIM::getIcon] QFileIconProvider returned a non-null icon.";
+        if (!icon.availableSizes().isEmpty()) {
+            QPixmap pix = icon.pixmap(icon.availableSizes().first());
+            if (!pix.isNull()) {
+                qDebug() << "[SIM::getIcon] Successfully got icon using QFileIconProvider for:" << executablePath << "Pixmap size:" << pix.size();
+                return icon;
+            }
+            qDebug() << "[SIM::getIcon] QFileIconProvider icon.pixmap() was null.";
+        } else {
+            qDebug() << "[SIM::getIcon] QFileIconProvider icon has no availableSizes.";
         }
-        qDebug() << "SystemInteractionModule::getIconForExecutable - QFileIconProvider returned an icon, but it seems to be a default/empty one for:" << executablePath;
-        // Fall through to SHGetFileInfoW if QFileIconProvider gives a default/empty icon
+        qDebug() << "[SIM::getIcon] QFileIconProvider returned an icon, but it seems to be a default/empty one for:" << executablePath;
     } else {
-        qDebug() << "SystemInteractionModule::getIconForExecutable - QFileIconProvider failed to get icon for:" << executablePath << "Trying SHGetFileInfoW.";
+        qWarning() << "[SIM::getIcon] QFileIconProvider returned a null icon for:" << executablePath << "Trying SHGetFileInfoW.";
     }
 
-    // --- Attempt 2: Using SHGetFileInfoW (with COM initialization) --- 
+    // --- Attempt 2: Using SHGetFileInfoW (with COM initialization) ---
+    qDebug() << "[SIM::getIcon] Attempting SHGetFileInfoW for:" << executablePath;
     HRESULT comInitResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     bool comInitializedHere = SUCCEEDED(comInitResult);
-    // ... (rest of the SHGetFileInfoW logic remains the same as previously modified) ...
-    // Ensure the icon variable is reset if SHGetFileInfoW is attempted after QFileIconProvider
+    if (!comInitializedHere && comInitResult != RPC_E_CHANGED_MODE) {
+        qWarning() << "[SIM::getIcon] CoInitializeEx failed with HRESULT:" << QString::number(comInitResult, 16);
+        // It might be okay to proceed if COM is already initialized in a compatible way.
+    } else if (comInitializedHere) {
+        qDebug() << "[SIM::getIcon] CoInitializeEx successful or already initialized in a compatible way.";
+    }
+
     icon = QIcon(); // Reset icon before trying SHGetFileInfoW
 
     SHFILEINFOW sfi = {0};
-    UINT flags = SHGFI_ICON | SHGFI_LARGEICON;
+    UINT flags = SHGFI_ICON | SHGFI_LARGEICON | SHGFI_USEFILEATTRIBUTES; // Added SHGFI_USEFILEATTRIBUTES based on previous findings
 
     std::wstring filePathStdW = executablePath.toStdWString();
     const wchar_t* filePathW = filePathStdW.c_str();
+    DWORD fileAttributes = FILE_ATTRIBUTE_NORMAL; // Common attribute
 
-    if (SHGetFileInfoW(filePathW, 0, &sfi, sizeof(sfi), flags)) {
+    qDebug() << "[SIM::getIcon] Calling SHGetFileInfoW with flags:" << QString::number(flags, 16);
+    if (SHGetFileInfoW(filePathW, fileAttributes, &sfi, sizeof(sfi), flags)) {
+        qDebug() << "[SIM::getIcon] SHGetFileInfoW call succeeded.";
         if (sfi.hIcon) {
+            qDebug() << "[SIM::getIcon] SHGetFileInfoW returned valid hIcon:" << sfi.hIcon;
             QImage image = QImage::fromHICON(sfi.hIcon);
-            DestroyIcon(sfi.hIcon);
+            DestroyIcon(sfi.hIcon); // IMPORTANT: Destroy the icon handle
 
             if (!image.isNull()) {
+                qDebug() << "[SIM::getIcon] QImage::fromHICON successful. Image size:" << image.size();
                 QPixmap pixmap = QPixmap::fromImage(image);
                 if (!pixmap.isNull()) {
                     icon = QIcon(pixmap);
-                    qDebug() << "SystemInteractionModule::getIconForExecutable - Successfully got icon using SHGetFileInfoW for:" << executablePath;
+                    qDebug() << "[SIM::getIcon] Successfully got icon using SHGetFileInfoW for:" << executablePath << "Pixmap size:" << pixmap.size();
                 } else {
-                    qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW: Failed to convert QImage to QPixmap for:" << executablePath;
+                    qWarning() << "[SIM::getIcon] SHGetFileInfoW: Failed to convert QImage to QPixmap for:" << executablePath;
                 }
             } else {
-                qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW: QImage::fromHICON failed for:" << executablePath;
+                qWarning() << "[SIM::getIcon] SHGetFileInfoW: QImage::fromHICON failed for:" << executablePath;
             }
         } else {
-            qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW succeeded but hIcon was null for:" << executablePath;
+            qWarning() << "[SIM::getIcon] SHGetFileInfoW succeeded but hIcon was null for:" << executablePath;
         }
     } else {
         DWORD error = GetLastError();
-        qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW failed for:" << executablePath << "Error:" << error;
+        qWarning() << "[SIM::getIcon] SHGetFileInfoW failed for:" << executablePath << "Error code:" << error;
     }
 
     if (comInitializedHere && comInitResult != RPC_E_CHANGED_MODE) {
          CoUninitialize();
+         qDebug() << "[SIM::getIcon] CoUninitialize called.";
     }
 
     if(icon.isNull()){
-        qWarning() << "SystemInteractionModule::getIconForExecutable - All attempts failed for:" << executablePath;
+        qWarning() << "[SIM::getIcon] All attempts to get icon FAILED for:" << executablePath;
     }
     return icon;
 }
@@ -870,6 +902,12 @@ void SystemInteractionModule::monitorAndActivateApplication(
         qDebug() << "SystemInteractionModule: mainExecutableHint is empty, using originalAppPath's filename as target:" << targetExecutableName;
     }
 
+    // Ensure targetExecutableName ends with .exe
+    if (!targetExecutableName.isEmpty() && !targetExecutableName.endsWith(QStringLiteral(".exe"), Qt::CaseInsensitive)) {
+        qDebug() << "[SIM::monitorAndActivateApplication] Appending .exe to targetExecutableName:" << targetExecutableName;
+        targetExecutableName.append(QStringLiteral(".exe"));
+    }
+
     DWORD targetPid = findProcessIdByName(targetExecutableName);
     HWND hwnd = nullptr;
 
@@ -906,13 +944,13 @@ void SystemInteractionModule::monitorAndActivateApplication(
                 delete infoToDel; // Delete the MonitoringInfo object
                 qDebug() << "SystemInteractionModule: Removed monitoring entry for" << originalAppPath << "after successful immediate activation.";
             }
-            return;
+        return;
                 } else {
             qDebug() << "SystemInteractionModule: Found PID" << targetPid << "for" << targetExecutableName << "but failed to find its window even with fallbacks.";
         }
     }
 
-    if (forceActivateOnly) {
+        if (forceActivateOnly) {
         qDebug() << "SystemInteractionModule: Force activate only mode, but window not found immediately for" << targetExecutableName << "(PID:" << targetPid << "). Aborting.";
         emit applicationActivationFailed(originalAppPath, "Window not found in force activate mode");
         return;
@@ -978,7 +1016,7 @@ void SystemInteractionModule::onMonitoringTimerTimeout() {
         if (it_null_check != m_monitoringApps.end()) {
              m_monitoringApps.erase(it_null_check);
         }
-        return;
+                    return;
     }
     
     currentInfoPtr->attempts++;
@@ -988,25 +1026,43 @@ void SystemInteractionModule::onMonitoringTimerTimeout() {
     if (targetExeName.isEmpty()) {
         targetExeName = QFileInfo(currentInfoPtr->originalLauncherPath).fileName();
     }
+    // Ensure targetExeName ends with .exe for consistency during monitoring lookup
+    if (!targetExeName.isEmpty() && !targetExeName.endsWith(QStringLiteral(".exe"), Qt::CaseInsensitive)) {
+        qDebug() << "[SIM::onMonitoringTimerTimeout] Appending .exe to targetExeName:" << targetExeName;
+        targetExeName.append(QStringLiteral(".exe"));
+    }
 
+    qDebug() << "[SIM::onMonitoringTimerTimeout] Attempting to find PID for:" << targetExeName;
     DWORD targetPid = findProcessIdByName(targetExeName);
     HWND targetHwnd = nullptr;
 
     if (targetPid != 0) {
+        qDebug() << "[SIM::onMonitoringTimerTimeout] Found target process" << targetExeName << "with PID:" << targetPid;
         QJsonObject windowHints = QJsonDocument::fromJson(currentInfoPtr->windowHintsJson.toUtf8()).object();
-        if (!windowHints.isEmpty()) {
-            targetHwnd = findMainWindowForProcess(targetPid, windowHints);
+        
+        qDebug() << "[SIM::onMonitoringTimerTimeout] Calling findMainWindowForProcessWithScore with PID:" << targetPid << "and hints:" << currentInfoPtr->windowHintsJson;
+        QPair<HWND, int> windowResult = findMainWindowForProcessWithScore(targetPid, windowHints);
+        targetHwnd = windowResult.first;
+        int score = windowResult.second;
+        qDebug() << "[SIM::onMonitoringTimerTimeout] findMainWindowForProcessWithScore returned HWND:" << targetHwnd << "Score:" << score;
+        
+        if (!targetHwnd) { // If hints didn't find it, try generic (already part of findMainWindowForProcessWithScore logic, but explicit log is fine)
+            qDebug() << "[SIM::onMonitoringTimerTimeout] Window not found with specific hints, trying generic findMainWindowForProcess for PID:" << targetPid;
+            // The findMainWindowForProcessWithScore already incorporates a fallback if hints lead to no score or a low score
+            // So, this explicit call might be redundant if findMainWindowForProcessWithScore's fallback is robust.
+            // However, for logging clarity or if specific conditions are needed:
+            // targetHwnd = findMainWindowForProcess(targetPid); 
+            // qDebug() << "[SIM::onMonitoringTimerTimeout] Generic findMainWindowForProcess returned HWND:" << targetHwnd;
         }
-        if (!targetHwnd) {
-            targetHwnd = findMainWindowForProcess(targetPid); // Fallback
-        }
+        } else {
+        qDebug() << "[SIM::onMonitoringTimerTimeout] Target process" << targetExeName << "not found (PID is 0).";
     }
 
     if (targetHwnd) {
         qDebug() << "SystemInteractionModule: Found window" << targetHwnd << "for" << targetExeName << "(PID:" << targetPid << ") during monitoring. Activating.";
         activateWindow(targetHwnd);
-        emit applicationActivated(originalAppPath); 
-        
+                    emit applicationActivated(originalAppPath);
+
         currentInfoPtr->timer->stop(); 
         auto it_success = m_monitoringApps.find(originalAppPath);
         if (it_success != m_monitoringApps.end()) {
@@ -1077,7 +1133,7 @@ void SystemInteractionModule::activateWindow(HWND hwnd) {
         qDebug() << "[SystemInteractionModule] Calling SetForegroundWindow.";
         if (SetForegroundWindow(hwnd)) {
             qDebug() << "[SystemInteractionModule] SetForegroundWindow successful on attempt" << attempt;
-        } else {
+    } else {
             DWORD error = GetLastError();
             qWarning() << "[SystemInteractionModule] SetForegroundWindow failed on attempt" << attempt << "GetLastError:" << error;
             
@@ -1091,12 +1147,12 @@ void SystemInteractionModule::activateWindow(HWND hwnd) {
                     qDebug() << "[SystemInteractionModule] AttachThreadInput successful. Retrying SetForegroundWindow.";
                     if (SetForegroundWindow(hwnd)) {
                          qDebug() << "[SystemInteractionModule] SetForegroundWindow successful after AttachThreadInput.";
-                    } else {
+        } else {
                          qWarning() << "[SystemInteractionModule] SetForegroundWindow STILL failed after AttachThreadInput. GetLastError:" << GetLastError();
-                    }
+            }
                     AttachThreadInput(foregroundThreadId, currentThreadId, FALSE);
                     qDebug() << "[SystemInteractionModule] Detached thread input.";
-                } else {
+        } else {
                     qWarning() << "[SystemInteractionModule] AttachThreadInput failed. GetLastError:" << GetLastError();
                 }
             }
@@ -1144,4 +1200,328 @@ bool SystemInteractionModule::nativeEventFilter(const QByteArray &eventType, voi
     Q_UNUSED(message);
     Q_UNUSED(result);
     return false;
-} 
+}
+
+// Make sure this function is defined before startExecutableDetection or called appropriately.
+SuggestedWindowHints SystemInteractionModule::performExecutableDetectionLogic(const QString& executablePath, const QString& initialAppName) {
+    qDebug() << "[SIM::performExeDetectLogic] Path:" << executablePath << "App Name:" << initialAppName;
+    SuggestedWindowHints hints;
+    hints.isValid = false;
+    hints.detectedExecutableName = QFileInfo(executablePath).fileName(); // Initial exe name
+
+    QProcess process;
+    process.setProgram(executablePath);
+    QDateTime launcherStartTime = QDateTime::currentDateTimeUtc(); // Record launcher start time
+    process.start();
+
+    DWORD initialPid = 0;
+    if (!process.waitForStarted(15000)) { // Increased timeout
+        qWarning() << "[SIM::performExeDetectLogic] Failed to start process:" << executablePath << "Error:" << process.errorString();
+        hints.errorString = tr("无法启动目标程序: %1").arg(process.errorString());
+        return hints;
+    }
+    initialPid = process.processId();
+    qDebug() << "[SIM::performExeDetectLogic] Initial process started. PID:" << initialPid << "Exe:" << QFileInfo(executablePath).fileName();
+
+    qDebug() << "[SIM::performExeDetectLogic] Waiting" << HINT_DETECTION_DELAY_MS << "ms for app to initialize...";
+    QThread::msleep(HINT_DETECTION_DELAY_MS); // Wait for app to potentially launch its main window or child process
+
+    QPair<HWND, int> windowResult = qMakePair(nullptr, -1); // HWND and score
+    DWORD targetPid = initialPid; // Initially assume the launched process is the target
+    
+    bool initialProcessStillRunning = isProcessRunning(initialPid);
+    qDebug() << "[SIM::performExeDetectLogic] Initial process PID" << initialPid << "still running:" << initialProcessStillRunning;
+    
+    QString actualDetectedExeName = QFileInfo(executablePath).fileName();
+
+    if (initialProcessStillRunning) {
+        qDebug() << "[SIM::performExeDetectLogic] Attempt 1: Finding window for initial PID:" << initialPid;
+        // Pass an empty QJsonObject() if no specific hints are available for this call
+        windowResult = findMainWindowForProcessWithScore(initialPid, QJsonObject()); 
+        if (windowResult.first) {
+            targetPid = initialPid; 
+            actualDetectedExeName = getProcessNameByPid(targetPid);
+            qDebug() << "[SIM::performExeDetectLogic] Window found for initial PID:" << initialPid << "HWND:" << windowResult.first << "Score:" << windowResult.second;
+        }
+    }
+
+    if (!windowResult.first && !initialProcessStillRunning) {
+        qDebug() << "[SIM::performExeDetectLogic] Initial process exited or no window found. Assuming launcher, searching for newer processes.";
+        QList<DWORD> allPids = getAllProcessIds();
+        QList<QPair<QDateTime, DWORD>> recentProcesses;
+
+        for (DWORD pid : allPids) {
+            if (pid == 0 || pid == initialPid) continue;
+            QDateTime creationTime = getProcessCreationTime(pid);
+            if (creationTime.isValid() && creationTime >= launcherStartTime.addMSecs(-2000) && creationTime <= QDateTime::currentDateTimeUtc().addMSecs(2000) ) {
+                QString procName = getProcessNameByPid(pid);
+                if (!procName.isEmpty() && 
+                    !procName.contains("explorer.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("svchost.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("conhost.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("dwm.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("ctfmon.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("rundll32.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("ShellExperienceHost.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("StartMenuExperienceHost.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("SearchApp.exe", Qt::CaseInsensitive) &&
+                    !procName.contains("TextInputHost.exe", Qt::CaseInsensitive) &&
+                    !procName.contains(QFileInfo(executablePath).fileName(), Qt::CaseInsensitive)
+                    ) {
+                     recentProcesses.append({creationTime, pid});
+                } else if (procName.contains(initialAppName, Qt::CaseInsensitive) && !initialAppName.isEmpty()){
+                     recentProcesses.append({creationTime, pid});
+                }
+            }
+        }
+        std::sort(recentProcesses.begin(), recentProcesses.end(), [](const QPair<QDateTime, DWORD>& a, const QPair<QDateTime, DWORD>& b){
+            return a.first > b.first;
+        });
+        qDebug() << "[SIM::performExeDetectLogic] Found" << recentProcesses.count() << "potential recent processes.";
+
+        for (const auto& pair : recentProcesses) {
+            DWORD potentialPid = pair.second;
+            QString potentialExeName = getProcessNameByPid(potentialPid);
+            qDebug() << "[SIM::performExeDetectLogic] Checking PID:" << potentialPid << "(" << potentialExeName << ")";
+            // Pass an empty QJsonObject() if no specific hints are available for this call
+            windowResult = findMainWindowForProcessWithScore(potentialPid, QJsonObject()); 
+            if (windowResult.first) {
+                targetPid = potentialPid;
+                actualDetectedExeName = potentialExeName;
+                qDebug() << "[SIM::performExeDetectLogic] Window found for recent PID:" << targetPid << "HWND:" << windowResult.first << "Exe:" << actualDetectedExeName << "Score:" << windowResult.second;
+                break; 
+            }
+        }
+    }
+
+    if (windowResult.first) { // if HWND is not null
+        hints.isValid = true;
+        hints.processId = targetPid;
+        hints.windowHandle = windowResult.first;
+        // Ensure both detectedExecutableName and detectedMainExecutableName are set to the actual target exe
+        hints.detectedExecutableName = actualDetectedExeName; 
+        hints.detectedMainExecutableName = actualDetectedExeName; // <-- Explicitly set this
+        hints.bestScoreDuringDetection = windowResult.second; // <<< STORE THE SCORE
+
+        wchar_t className[256];
+        GetClassName(hints.windowHandle, className, 256);
+        hints.detectedClassName = QString::fromWCharArray(className);
+
+        wchar_t windowTitle[256];
+        GetWindowText(hints.windowHandle, windowTitle, 256);
+        hints.exampleTitle = QString::fromWCharArray(windowTitle);
+
+        LONG style = GetWindowLong(hints.windowHandle, GWL_STYLE);
+        LONG exStyle = GetWindowLong(hints.windowHandle, GWL_EXSTYLE);
+
+        hints.isTopLevel = (style & WS_CHILD) == 0; 
+        hints.hasAppWindowStyle = (exStyle & WS_EX_APPWINDOW) != 0;
+        
+        qDebug() << "[SIM::performExeDetectLogic] Success! Detected Hints:" << hints.toString() << "Achieved Score:" << hints.bestScoreDuringDetection;
+
+    } else {
+        qWarning() << "[SIM::performExeDetectLogic] Could not find main window for:" << executablePath
+                   << "(Initial PID:" << initialPid << ", Searched PID:" << targetPid << ")";
+        hints.errorString = tr("未能找到 '%1' 的主窗口。").arg(initialAppName);
+        hints.isValid = false;
+    }
+
+    if (initialPid != 0 && ( (initialPid != targetPid && isProcessRunning(initialPid)) || !windowResult.first) ) {
+        qDebug() << "[SIM::performExeDetectLogic] Terminating initial process:" << QFileInfo(executablePath).fileName() << "(PID:" << initialPid << ")";
+        process.kill(); 
+        process.waitForFinished(2000); 
+    }
+    
+    qDebug() << "[SIM::performExeDetectLogic] Finished. isValid:" << hints.isValid;
+    return hints;
+}
+
+// This is the start of the existing startExecutableDetection function
+void SystemInteractionModule::startExecutableDetection(const QString& executablePath, const QString& appName)
+{
+    qDebug() << "[SystemInteractionModule] Received request to detect executable parameters for:" << executablePath << "App Name:" << appName;
+
+    // Use QtConcurrent::run to execute performExecutableDetectionLogic in a separate thread
+    QFuture<void> future = QtConcurrent::run([this, executablePath, appName]() {
+        qDebug() << "[SystemInteractionModule] Starting detection task in thread:" << QThread::currentThreadId();
+        // Assuming performExecutableDetectionLogic is a member function
+        // and it's thread-safe or primarily calls external processes/APIs.
+        SuggestedWindowHints hints = this->performExecutableDetectionLogic(executablePath, appName);
+        
+        bool success = hints.isValid;
+        QString errorString;
+        if (!success) {
+            // Construct a more meaningful error string if possible, 
+            // or rely on performExecutableDetectionLogic to populate some part of hints even on failure.
+            errorString = QString("Failed to detect main executable or window for '%1'.").arg(appName.isEmpty() ? executablePath : appName);
+            qWarning() << "[SystemInteractionModule] Detection task failed for:" << executablePath << errorString;
+        }
+
+        qDebug() << "[SystemInteractionModule] Detection task finished for:" << executablePath << "Success:" << success;
+        if (success) {
+            qDebug() << "[SystemInteractionModule] Detected hints:" << hints.toString();
+        }
+
+        // Emit the signal. This will be marshalled to the main thread if the receiver lives there.
+        emit detectionCompleted(hints, success, errorString);
+    });
+    // We don't explicitly wait for 'future' here to keep it non-blocking.
+    // You can use QFutureWatcher if you need to monitor its progress/cancellation from the calling thread,
+    // but for this task, emitting a signal upon completion is sufficient.
+}
+
+// इंप्लीमेंटेशन को SystemInteractionModule.cpp में जोड़ा जाना है।
+void SystemInteractionModule::installHookAsync()
+{
+    qDebug() << "[SystemInteractionModule] installHookAsync() called.";
+    if (installKeyboardHook()) {
+        qDebug() << "[SystemInteractionModule] Keyboard hook installed asynchronously.";
+            } else {
+        qWarning() << "[SystemInteractionModule] Failed to install keyboard hook asynchronously.";
+    }
+}
+
+void SystemInteractionModule::uninstallHookAsync()
+{
+    qDebug() << "[SystemInteractionModule] uninstallHookAsync() called.";
+    uninstallKeyboardHook();
+    qDebug() << "[SystemInteractionModule] Keyboard hook uninstalled asynchronously (or attempt was made).";
+}
+
+// Implementation for getAllProcessIds
+QList<DWORD> SystemInteractionModule::getAllProcessIds() {
+    QList<DWORD> pids;
+    HANDLE hProcessSnap;
+    PROCESSENTRY32 pe32;
+
+    hProcessSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hProcessSnap == INVALID_HANDLE_VALUE) {
+        qWarning() << "[SIM::getAllProcessIds] CreateToolhelp32Snapshot failed. Error:" << GetLastError();
+        return pids;
+    }
+
+    pe32.dwSize = sizeof(PROCESSENTRY32);
+
+    if (!Process32First(hProcessSnap, &pe32)) {
+        qWarning() << "[SIM::getAllProcessIds] Process32First failed. Error:" << GetLastError();
+        CloseHandle(hProcessSnap);
+        return pids;
+    }
+
+    do {
+        pids.append(pe32.th32ProcessID);
+    } while (Process32Next(hProcessSnap, &pe32));
+
+    CloseHandle(hProcessSnap);
+    return pids;
+}
+
+// Implementation for getProcessCreationTime
+QDateTime SystemInteractionModule::getProcessCreationTime(DWORD processId) {
+    HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+    if (hProcess == NULL) {
+        // qWarning() << "[SIM::getProcessCreationTime] OpenProcess failed for PID" << processId << ". Error:" << GetLastError();
+        return QDateTime(); // Return invalid QDateTime
+    }
+
+    FILETIME ftCreation, ftExit, ftKernel, ftUser;
+    if (!GetProcessTimes(hProcess, &ftCreation, &ftExit, &ftKernel, &ftUser)) {
+        // qWarning() << "[SIM::getProcessCreationTime] GetProcessTimes failed for PID" << processId << ". Error:" << GetLastError();
+        CloseHandle(hProcess);
+        return QDateTime(); // Return invalid QDateTime
+    }
+
+    CloseHandle(hProcess);
+
+    // Convert FILETIME to QDateTime
+    ULARGE_INTEGER ull;
+    ull.LowPart = ftCreation.dwLowDateTime;
+    ull.HighPart = ftCreation.dwHighDateTime;
+    
+    // FILETIME is in 100-nanosecond intervals since January 1, 1601 (UTC).
+    // QDateTime expects milliseconds since January 1, 1970 (UTC).
+    // First, convert to seconds from epoch (1601-01-01).
+    // Then, adjust for the difference between 1601 and 1970 epochs.
+    // The number of 100-nanosecond intervals between 1601-01-01 and 1970-01-01 is 116444736000000000.
+    qint64 fileTimeEpoch = static_cast<qint64>(ull.QuadPart);
+    qint64 qtEpochDiff = 116444736000000000LL; // 100-nanosecond intervals
+    
+    if (fileTimeEpoch < qtEpochDiff) { // Should not happen for valid creation times
+        return QDateTime();
+    }
+
+    qint64 msecsSince1970 = (fileTimeEpoch - qtEpochDiff) / 10000; // Convert 100-ns to ms
+
+    return QDateTime::fromMSecsSinceEpoch(msecsSince1970, Qt::UTC);
+}
+
+// ADDED: Implementation for isProcessRunning
+bool SystemInteractionModule::isProcessRunning(DWORD pid) {
+    if (pid == 0) return false; // System Idle Process is not what we usually mean
+    HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+    if (process != NULL) {
+        DWORD exitCode;
+        // GetExitCodeProcess returns TRUE if the process has not terminated
+        // and also if it has terminated but the exit code is available.
+        // If it returns TRUE and exitCode is STILL_ACTIVE, it's running.
+        if (GetExitCodeProcess(process, &exitCode) && exitCode == STILL_ACTIVE) {
+            CloseHandle(process);
+            return true;
+        }
+        CloseHandle(process);
+    }
+    // If OpenProcess failed or exitCode is not STILL_ACTIVE
+    return false;
+}
+
+// ADDED: Implementation for getProcessNameByPid
+QString SystemInteractionModule::getProcessNameByPid(DWORD pid) {
+    if (pid == 0) return QString();
+
+    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (hSnapshot == INVALID_HANDLE_VALUE) {
+        qWarning() << "[SIM::getProcessNameByPid] CreateToolhelp32Snapshot failed. Error:" << GetLastError();
+        return QString();
+    }
+
+    PROCESSENTRY32W pe32; // Use PROCESSENTRY32W for Unicode
+    pe32.dwSize = sizeof(PROCESSENTRY32W);
+    QString processName;
+
+    if (Process32FirstW(hSnapshot, &pe32)) { // Use Process32FirstW
+        do {
+            if (pe32.th32ProcessID == pid) {
+                processName = QString::fromWCharArray(pe32.szExeFile);
+                break; // Found the process
+            }
+        } while (Process32NextW(hSnapshot, &pe32)); // Use Process32NextW
+    } else {
+        qWarning() << "[SIM::getProcessNameByPid] Process32FirstW failed. Error:" << GetLastError();
+    }
+
+    CloseHandle(hSnapshot);
+    if (processName.isEmpty()) {
+       // qWarning() << "[SIM::getProcessNameByPid] Could not find process name for PID:" << pid;
+    }
+    return processName;
+}
+
+// Add the new function definition here
+void SystemInteractionModule::stopMonitoringProcess(const QString& appPath) {
+    qDebug() << "SystemInteractionModule::stopMonitoringProcess called for:" << appPath;
+    if (m_monitoringApps.contains(appPath)) {
+        MonitoringInfo* info = m_monitoringApps.take(appPath); // Remove from map and get the pointer
+        if (info) {
+            if (info->timer) {
+                info->timer->stop();
+                // Timer is assumed to be parented and auto-deleted, or handled by MonitoringInfo destructor if it owned it.
+            }
+            delete info; // Delete the MonitoringInfo struct itself
+            qDebug() << "SystemInteractionModule: Stopped monitoring and cleaned up for" << appPath;
+        }
+    } else {
+        qDebug() << "SystemInteractionModule: No active monitoring found for" << appPath << "to stop.";
+    }
+}
+
+// ... (rest of the SystemInteractionModule.cpp file) ... 

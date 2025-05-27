@@ -1,437 +1,175 @@
---- Log started at 2025-05-27 09:44:45 ---
-2025-05-27 09:44:45.831 DEBUG:   Application started.
-2025-05-27 09:44:45.831 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数开始。
-2025-05-27 09:44:45.831 DEBUG:   剑鞘核心(JianqiaoCoreShell): 初始化核心应用设置。
-2025-05-27 09:44:45.831 DEBUG:   SystemInteractionModule: Config path set to: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-27 09:44:45.831 DEBUG:   SystemInteractionModule (loadConfiguration): Attempting to load config from: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-27 09:44:45.831 DEBUG:   管理员登录热键已从配置文件加载: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:44:45.831 DEBUG:   配置文件中未找到 'user_mode_settings'。不拦截用户模式按键。
-2025-05-27 09:44:45.831 DEBUG:   系统交互模块(SystemInteractionModule): 已创建。
-2025-05-27 09:44:45.831 DEBUG:   剑鞘核心(JianqiaoCoreShell): 底层系统交互模块已实例化。
-2025-05-27 09:44:45.831 DEBUG:   用户视图(UserView): 已创建。
-2025-05-27 09:44:45.831 DEBUG:   管理员仪表盘(AdminDashboardView): 已创建。
-2025-05-27 09:44:45.837 DEBUG:   剑鞘核心外壳: UI设置完成 (QStackedWidget), 视图实例已创建。
-2025-05-27 09:44:45.837 DEBUG:   管理员登录视图(AdminLoginView): 成功加载 AdminLoginView.qss
-2025-05-27 09:44:45.837 DEBUG:   管理员登录视图(AdminLoginView): 已创建。
-2025-05-27 09:44:45.837 DEBUG:   管理员模块(AdminModule): 构造函数开始。
-2025-05-27 09:44:45.837 DEBUG:   管理员模块(AdminModule): 尝试从以下路径加载配置文件: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-27 09:44:45.837 DEBUG:   管理员模块(AdminModule): 已加载管理员密码哈希。
-2025-05-27 09:44:45.837 DEBUG:   管理员模块(AdminModule): 已加载管理员登录热键: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:44:45.837 DEBUG:   SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe"
-2025-05-27 09:44:45.904 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "balenaEtcher" Path: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Hint: ""
-2025-05-27 09:44:45.904 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":false,\"minScore\":55,\"primaryClassName\":\"Chrome_WidgetWin_1\",\"titleContains\":\"balenaEtcher\"}"
-2025-05-27 09:44:45.904 DEBUG:   SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-2025-05-27 09:44:45.911 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "wps" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
-2025-05-27 09:44:45.911 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":80,\"primaryClassName\":\"OpusApp\",\"titleContains\":\"WPS\"}"
-2025-05-27 09:44:45.911 DEBUG:   SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for: "D:/BaiduNetdisk/BaiduNetdisk.exe"
-2025-05-27 09:44:45.914 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "BaiduNetdisk" Path: "D:/BaiduNetdisk/BaiduNetdisk.exe" Hint: ""
-2025-05-27 09:44:45.914 DEBUG:   管理员模块(AdminModule): 共加载 3 个白名单应用。
-2025-05-27 09:44:45.914 DEBUG:   管理员模块(AdminModule): 准备填充管理员仪表盘数据。
-2025-05-27 09:44:45.914 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 09:44:45.914 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
-2025-05-27 09:44:45.914 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:44:45.914 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 09:44:45.914 DEBUG:   管理员模块(AdminModule): 配置文件加载完成。
-2025-05-27 09:44:45.914 DEBUG:   管理员模块(AdminModule): 构造函数结束。
-2025-05-27 09:44:45.914 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "balenaEtcher" Path: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Hint: ""
-2025-05-27 09:44:45.914 DEBUG:   SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe"
-2025-05-27 09:44:45.921 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "wps" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
-2025-05-27 09:44:45.921 DEBUG:   SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-2025-05-27 09:44:45.923 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "BaiduNetdisk" Path: "D:/BaiduNetdisk/BaiduNetdisk.exe" Hint: ""
-2025-05-27 09:44:45.923 DEBUG:   SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for: "D:/BaiduNetdisk/BaiduNetdisk.exe"
-2025-05-27 09:44:45.923 INFO:    Configuration loaded, 3 apps in whitelist.
-2025-05-27 09:44:45.923 INFO:    UserModeModule initialized.
-2025-05-27 09:44:45.923 DEBUG:   键盘钩子: 安装成功。
-2025-05-27 09:44:45.923 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 SystemInteractionModule::adminLoginRequested 信号。
-2025-05-27 09:44:45.923 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。
-2025-05-27 09:44:45.923 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-27 09:44:45.923 DEBUG:   JianqiaoCoreShell: Fetched 3 apps from AdminModule's current state for UserModeModule.
-2025-05-27 09:44:45.923 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 3
-2025-05-27 09:44:45.923 DEBUG:   UserView: App list cached with 3 apps.
-2025-05-27 09:44:45.923 INFO:    UserView: Populating with 3 apps.
-2025-05-27 09:44:45.942 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
-2025-05-27 09:44:45.942 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 09:44:45.942 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-27 09:44:45.942 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-27 09:44:45.942 DEBUG:   剑鞘核心(JianqiaoCoreShell): 用户视图已显示 (初始状态)。
-2025-05-27 09:44:45.942 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数结束。
-2025-05-27 09:44:45.944 DEBUG:   UserView: First showEvent, populating list with 3 cached apps.
-2025-05-27 09:44:45.944 INFO:    UserView: Populating with 3 apps.
-2025-05-27 09:44:47.426 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-27 09:44:47.426 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-27 09:44:47.433 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-27 09:44:47.433 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-27 09:44:47.712 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-27 09:44:47.712 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-27 09:44:47.887 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
-2025-05-27 09:44:47.887 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
-2025-05-27 09:44:47.887 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
-2025-05-27 09:44:47.887 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
-2025-05-27 09:44:47.887 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
-2025-05-27 09:44:47.887 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:44:47.889 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
-2025-05-27 09:44:47.893 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
-2025-05-27 09:44:47.893 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
-2025-05-27 09:44:50.137 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
-2025-05-27 09:44:50.137 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
-2025-05-27 09:44:50.137 DEBUG:   管理员模块(AdminModule): 验证密码 - 失败
-2025-05-27 09:44:50.137 DEBUG:   管理员模块(AdminModule): 密码验证失败。
-2025-05-27 09:44:50.137 DEBUG:   管理员登录视图(AdminLoginView): 登录失败，UI已更新。
-2025-05-27 09:44:50.137 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:44:54.703 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
-2025-05-27 09:44:54.703 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
-2025-05-27 09:44:54.703 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
-2025-05-27 09:44:54.703 DEBUG:   管理员模块(AdminModule): 密码验证成功。
-2025-05-27 09:44:54.703 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
-2025-05-27 09:44:54.703 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:44:54.703 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
-2025-05-27 09:44:54.703 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
-2025-05-27 09:44:54.703 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
-2025-05-27 09:44:54.703 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
-2025-05-27 09:44:54.703 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
-2025-05-27 09:44:54.703 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 09:44:54.703 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
-2025-05-27 09:44:54.703 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:44:54.703 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 09:44:54.703 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
-2025-05-27 09:44:54.703 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
-2025-05-27 09:44:54.703 DEBUG:   AdminDashboardView::setWhitelistedApps called with 3 apps.
-2025-05-27 09:44:54.703 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:44:54.712 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
-2025-05-27 09:44:54.712 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
-2025-05-27 09:44:55.868 DEBUG:   AdminDashboardView::onAddAppClicked INVOKED.
-2025-05-27 09:44:55.868 DEBUG:   AdminDashboardView: Add App button clicked.
-2025-05-27 09:45:02.452 DEBUG:   剑鞘核心外壳: 窗口激活事件, 但有模态对话框 ( "" ) 活动。不强制前景。
-2025-05-27 09:45:06.351 WARNING: AdminDashboardView: Could not load icon for "D:/Microsoft VS Code/Code.exe" during add.
-2025-05-27 09:45:06.351 DEBUG:   AdminDashboardView: Emitting whitelistChanged with 4 apps.
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 白名单已更新，包含 4 个应用。
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 处理来自视图的应用: "balenaEtcher" 路径: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe"
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 应用  "balenaEtcher"  的 mainExecutableHint: ' "" '
-2025-05-27 09:45:06.351 DEBUG:     WindowFindingHints: "{\"allowNonTopLevel\":false,\"minScore\":55,\"primaryClassName\":\"Chrome_WidgetWin_1\",\"titleContains\":\"balenaEtcher\"}"
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 处理来自视图的应用: "wps" 路径: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 应用  "wps"  的 mainExecutableHint: ' "wps.exe" '
-2025-05-27 09:45:06.351 DEBUG:     WindowFindingHints: "{\"allowNonTopLevel\":true,\"minScore\":80,\"primaryClassName\":\"OpusApp\",\"titleContains\":\"WPS\"}"
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 处理来自视图的应用: "BaiduNetdisk" 路径: "D:/BaiduNetdisk/BaiduNetdisk.exe"
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 应用  "BaiduNetdisk"  的 mainExecutableHint: ' "" '
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 处理来自视图的应用: "vscode" 路径: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 应用  "vscode"  的 mainExecutableHint: ' "" '
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 准备将白名单保存到: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-27 09:45:06.351 DEBUG:   管理员模块(AdminModule): 4 个应用已序列化到JSON。
-2025-05-27 09:45:06.357 DEBUG:   管理员模块(AdminModule): 白名单已成功保存到配置文件。
-2025-05-27 09:45:06.357 DEBUG:   管理员模块(AdminModule): 更新后的白名单已成功保存到 config.json。
-2025-05-27 09:45:09.344 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
-2025-05-27 09:45:09.344 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
-2025-05-27 09:45:09.344 DEBUG:   管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。
-2025-05-27 09:45:09.344 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
-2025-05-27 09:45:09.344 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 09:45:09.344 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-27 09:45:09.344 DEBUG:   JianqiaoCoreShell: Fetched 4 apps from AdminModule's current state for UserModeModule.
-2025-05-27 09:45:09.344 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 4
-2025-05-27 09:45:09.344 DEBUG:   UserView: App list cached with 4 apps.
-2025-05-27 09:45:09.344 INFO:    UserView: Populating with 4 apps.
-2025-05-27 09:45:09.354 WARNING: UserView: Failed to get pixmap for "vscode" Path: "D:/Microsoft VS Code/Code.exe" Original icon was null: true
-2025-05-27 09:45:09.354 WARNING: HoverIconWidget: Received a null icon for "vscode"
-2025-05-27 09:45:09.354 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
-2025-05-27 09:45:09.354 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 09:45:09.354 DEBUG:   UserView: Subsequent showEvent.
-2025-05-27 09:45:09.354 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-27 09:45:09.354 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-27 09:45:09.354 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
-2025-05-27 09:45:12.669 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-27 09:45:12.669 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-27 09:45:12.674 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-27 09:45:12.674 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-27 09:45:12.770 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-27 09:45:12.770 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-27 09:45:12.871 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
-2025-05-27 09:45:12.871 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
-2025-05-27 09:45:12.871 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
-2025-05-27 09:45:12.871 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
-2025-05-27 09:45:12.871 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
-2025-05-27 09:45:12.871 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:45:12.871 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
-2025-05-27 09:45:12.878 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
-2025-05-27 09:45:12.878 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
-2025-05-27 09:45:15.184 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
-2025-05-27 09:45:15.184 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
-2025-05-27 09:45:15.184 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
-2025-05-27 09:45:15.184 DEBUG:   管理员模块(AdminModule): 密码验证成功。
-2025-05-27 09:45:15.184 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
-2025-05-27 09:45:15.184 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:45:15.195 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
-2025-05-27 09:45:15.195 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
-2025-05-27 09:45:15.195 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
-2025-05-27 09:45:15.195 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
-2025-05-27 09:45:15.195 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
-2025-05-27 09:45:15.195 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 09:45:15.195 DEBUG:   AdminDashboardView::setWhitelistedApps called with 4 apps.
-2025-05-27 09:45:15.195 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:45:15.195 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 09:45:15.195 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
-2025-05-27 09:45:15.195 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
-2025-05-27 09:45:15.195 DEBUG:   AdminDashboardView::setWhitelistedApps called with 4 apps.
-2025-05-27 09:45:15.195 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:45:15.195 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
-2025-05-27 09:45:15.195 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
-2025-05-27 09:45:16.596 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
-2025-05-27 09:45:16.596 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
-2025-05-27 09:45:16.596 DEBUG:   管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。
-2025-05-27 09:45:16.596 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
-2025-05-27 09:45:16.596 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 09:45:16.596 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-27 09:45:16.596 DEBUG:   JianqiaoCoreShell: Fetched 4 apps from AdminModule's current state for UserModeModule.
-2025-05-27 09:45:16.596 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 4
-2025-05-27 09:45:16.596 DEBUG:   UserView: App list cached with 4 apps.
-2025-05-27 09:45:16.596 INFO:    UserView: Populating with 4 apps.
-2025-05-27 09:45:16.608 WARNING: UserView: Failed to get pixmap for "vscode" Path: "D:/Microsoft VS Code/Code.exe" Original icon was null: true
-2025-05-27 09:45:16.608 WARNING: HoverIconWidget: Received a null icon for "vscode"
-2025-05-27 09:45:16.608 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
-2025-05-27 09:45:16.608 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 09:45:16.610 DEBUG:   UserView: Subsequent showEvent.
-2025-05-27 09:45:16.610 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-27 09:45:16.610 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-27 09:45:16.610 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
-2025-05-27 09:45:17.110 DEBUG:   用户视图(UserView): 图标点击，请求启动应用: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:17.110 DEBUG:   UserView::setAppIconLaunching - Launch timer started for "D:/Microsoft VS Code/Code.exe" ( 30000 ms). Icon state: launching.
-2025-05-27 09:45:17.110 INFO:    Application launch requested for path: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:17.110 INFO:    UserModeModule: Attempting to launch "vscode" from path: "D:/Microsoft VS Code/Code.exe" MainExe Hint: ""
-2025-05-27 09:45:17.110 DEBUG:   UserModeModule: Added "D:/Microsoft VS Code/Code.exe" to pending activation apps: QSet("D:/Microsoft VS Code/Code.exe")
-2025-05-27 09:45:17.110 DEBUG:   UserModeModule: Starting process: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:17.141 INFO:    UserModeModule: Process for "D:/Microsoft VS Code/Code.exe" ( "vscode" ) started successfully. PID: 30892
-2025-05-27 09:45:17.141 DEBUG:   UserView::setAppIconLaunching - Launch timer started for "D:/Microsoft VS Code/Code.exe" ( 30000 ms). Icon state: launching.
-2025-05-27 09:45:17.141 DEBUG:   SystemInteractionModule::monitorAndActivateApplication for "D:/Microsoft VS Code/Code.exe" LauncherPID: 30892 MainExeHint: "" ForceActivateOnly: false WindowHints: "{}"
-2025-05-27 09:45:17.141 DEBUG:   SystemInteractionModule: mainExecutableHint is empty, using originalAppPath's filename as target: "Code.exe"
-2025-05-27 09:45:17.151 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:17.151 DEBUG:   SystemInteractionModule: Found target process "Code.exe" with PID: 30892
-2025-05-27 09:45:17.151 DEBUG:   SystemInteractionModule: Window not found with hints (or hints were empty). Trying generic findMainWindowForProcess for PID: 30892
-2025-05-27 09:45:17.151 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:17.151 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:17.151 DEBUG:   SystemInteractionModule: Found PID 30892 for "Code.exe" but failed to find its window even with fallbacks.
-2025-05-27 09:45:17.151 DEBUG:   SystemInteractionModule: Target process/window for "Code.exe" not found immediately. Starting/Resetting monitoring timer for "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:17.151 DEBUG:   SystemInteractionModule: Monitoring timer started for "D:/Microsoft VS Code/Code.exe" to find "Code.exe"
-2025-05-27 09:45:17.151 INFO:    Application launch requested for path: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:17.151 DEBUG:   UserModeModule::onApplicationLaunchRequested - Application "D:/Microsoft VS Code/Code.exe" is already pending activation. Ignoring duplicate request.
-2025-05-27 09:45:18.158 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 1
-2025-05-27 09:45:18.167 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:18.167 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:18.168 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:18.168 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:19.157 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 2
-2025-05-27 09:45:19.165 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:19.165 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:19.165 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:19.167 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:20.150 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 3
-2025-05-27 09:45:20.154 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:20.154 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:20.154 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:20.154 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:21.158 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 4
-2025-05-27 09:45:21.167 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:21.167 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:21.167 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:21.167 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:22.157 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 5
-2025-05-27 09:45:22.157 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:22.157 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:22.157 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:22.157 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:23.149 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 6
-2025-05-27 09:45:23.157 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:23.157 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:23.157 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:23.157 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:24.148 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 7
-2025-05-27 09:45:24.153 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:24.153 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:24.153 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:24.153 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:25.147 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 8
-2025-05-27 09:45:25.152 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:25.152 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:25.152 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:25.152 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:26.160 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 9
-2025-05-27 09:45:26.168 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:26.168 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:26.169 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:26.169 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:27.152 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 10
-2025-05-27 09:45:27.160 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:27.160 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:27.160 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:27.160 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:28.154 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 11
-2025-05-27 09:45:28.154 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:28.154 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:28.154 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:28.154 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:28.981 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-27 09:45:28.981 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-27 09:45:28.991 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-27 09:45:28.991 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-27 09:45:29.104 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-27 09:45:29.104 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-27 09:45:29.151 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 12
-2025-05-27 09:45:29.152 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:29.152 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:29.152 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:29.152 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:29.265 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
-2025-05-27 09:45:29.265 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
-2025-05-27 09:45:29.265 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
-2025-05-27 09:45:29.265 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
-2025-05-27 09:45:29.265 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
-2025-05-27 09:45:29.265 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:45:29.265 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
-2025-05-27 09:45:29.271 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
-2025-05-27 09:45:29.271 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
-2025-05-27 09:45:30.152 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 13
-2025-05-27 09:45:30.152 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:30.152 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:30.152 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:30.152 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:31.161 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 14
-2025-05-27 09:45:31.162 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:31.162 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:31.162 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:31.162 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:32.149 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 15
-2025-05-27 09:45:32.153 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:32.153 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:32.153 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:32.153 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:32.468 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
-2025-05-27 09:45:32.468 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
-2025-05-27 09:45:32.468 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
-2025-05-27 09:45:32.468 DEBUG:   管理员模块(AdminModule): 密码验证成功。
-2025-05-27 09:45:32.468 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
-2025-05-27 09:45:32.468 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:45:32.468 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
-2025-05-27 09:45:32.468 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
-2025-05-27 09:45:32.468 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
-2025-05-27 09:45:32.468 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
-2025-05-27 09:45:32.468 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
-2025-05-27 09:45:32.468 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 09:45:32.468 DEBUG:   AdminDashboardView::setWhitelistedApps called with 4 apps.
-2025-05-27 09:45:32.468 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:45:32.468 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 09:45:32.468 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
-2025-05-27 09:45:32.468 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
-2025-05-27 09:45:32.468 DEBUG:   AdminDashboardView::setWhitelistedApps called with 4 apps.
-2025-05-27 09:45:32.468 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:45:32.468 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
-2025-05-27 09:45:32.468 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
-2025-05-27 09:45:33.153 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 16
-2025-05-27 09:45:33.154 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:33.154 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:33.154 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:33.154 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:33.518 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
-2025-05-27 09:45:33.518 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
-2025-05-27 09:45:33.518 DEBUG:   管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。
-2025-05-27 09:45:33.518 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
-2025-05-27 09:45:33.518 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 09:45:33.518 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-27 09:45:33.518 DEBUG:   JianqiaoCoreShell: Fetched 4 apps from AdminModule's current state for UserModeModule.
-2025-05-27 09:45:33.518 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 4
-2025-05-27 09:45:33.518 DEBUG:   UserView: App list cached with 4 apps.
-2025-05-27 09:45:33.518 INFO:    UserView: Populating with 4 apps.
-2025-05-27 09:45:33.527 WARNING: UserView: Failed to get pixmap for "vscode" Path: "D:/Microsoft VS Code/Code.exe" Original icon was null: true
-2025-05-27 09:45:33.527 WARNING: HoverIconWidget: Received a null icon for "vscode"
-2025-05-27 09:45:33.527 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
-2025-05-27 09:45:33.527 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 09:45:33.527 DEBUG:   UserView: Subsequent showEvent.
-2025-05-27 09:45:33.527 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-27 09:45:33.527 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-27 09:45:33.527 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
-2025-05-27 09:45:34.164 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 17
-2025-05-27 09:45:34.166 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:34.166 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:34.166 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:34.166 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:34.557 DEBUG:   用户视图(UserView): 图标点击，请求启动应用: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:34.557 DEBUG:   UserView::setAppIconLaunching - Launch timer started for "D:/Microsoft VS Code/Code.exe" ( 30000 ms). Icon state: launching.
-2025-05-27 09:45:34.557 INFO:    Application launch requested for path: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:34.557 DEBUG:   UserModeModule::onApplicationLaunchRequested - Application "D:/Microsoft VS Code/Code.exe" is already pending activation. Ignoring duplicate request.
-2025-05-27 09:45:34.557 INFO:    Application launch requested for path: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:34.557 DEBUG:   UserModeModule::onApplicationLaunchRequested - Application "D:/Microsoft VS Code/Code.exe" is already pending activation. Ignoring duplicate request.
-2025-05-27 09:45:35.163 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 18
-2025-05-27 09:45:35.171 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:35.171 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:35.171 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:35.171 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:36.164 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 19
-2025-05-27 09:45:36.167 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:36.167 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:36.167 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:36.167 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:36.392 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-27 09:45:36.392 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-27 09:45:36.581 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-27 09:45:36.581 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-27 09:45:36.621 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-27 09:45:36.621 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-27 09:45:36.852 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
-2025-05-27 09:45:36.853 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
-2025-05-27 09:45:36.853 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
-2025-05-27 09:45:36.853 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
-2025-05-27 09:45:36.853 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
-2025-05-27 09:45:36.853 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:45:36.853 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
-2025-05-27 09:45:36.857 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
-2025-05-27 09:45:36.857 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
-2025-05-27 09:45:37.165 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 20
-2025-05-27 09:45:37.167 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:37.167 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:37.167 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:37.167 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:38.162 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 21
-2025-05-27 09:45:38.164 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:38.164 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:38.164 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:38.164 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:38.983 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
-2025-05-27 09:45:38.983 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
-2025-05-27 09:45:38.983 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
-2025-05-27 09:45:38.983 DEBUG:   管理员模块(AdminModule): 密码验证成功。
-2025-05-27 09:45:38.983 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
-2025-05-27 09:45:38.983 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 09:45:38.985 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
-2025-05-27 09:45:38.985 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
-2025-05-27 09:45:38.985 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
-2025-05-27 09:45:38.985 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
-2025-05-27 09:45:38.985 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
-2025-05-27 09:45:38.985 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 09:45:38.985 DEBUG:   AdminDashboardView::setWhitelistedApps called with 4 apps.
-2025-05-27 09:45:38.985 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:45:38.985 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 09:45:38.985 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
-2025-05-27 09:45:38.985 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
-2025-05-27 09:45:38.985 DEBUG:   AdminDashboardView::setWhitelistedApps called with 4 apps.
-2025-05-27 09:45:38.985 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 09:45:38.985 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
-2025-05-27 09:45:38.985 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
-2025-05-27 09:45:39.164 DEBUG:   SystemInteractionModule::onMonitoringTimerTimeout for "D:/Microsoft VS Code/Code.exe" Attempt: 22
-2025-05-27 09:45:39.170 DEBUG:   SystemInteractionModule::findProcessIdByName - Found process: "Code.exe" with PID: 30892
-2025-05-27 09:45:39.170 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 30892 with hints: "{}"
-2025-05-27 09:45:39.172 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x1e0a14 PID: 30892 Class: ' "Chrome_WidgetWin_1" ' Title: ' "config.json - Visual Studio Code" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 60 )
-2025-05-27 09:45:39.172 DEBUG:   [SystemInteractionModule] No suitable window found for PID 30892 with given hints and logic.
-2025-05-27 09:45:39.962 DEBUG:   AdminDashboardView::onExitApplicationClicked INVOKED.
-2025-05-27 09:45:39.962 DEBUG:   管理员仪表盘(AdminDashboardView): '退出整个程序' 按钮被点击。应用程序将退出。
-2025-05-27 09:45:39.977 DEBUG:   Application finished with exit code: 0
---- Log finished at 2025-05-27 09:45:39 ---
-2025-05-27 09:45:39.977 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已销毁。
-2025-05-27 09:45:39.977 DEBUG:   键盘钩子: 卸载成功。
-2025-05-27 09:45:39.977 DEBUG:   [SystemInteractionModule] SystemInteractionModule destroyed.
-2025-05-27 09:45:39.977 DEBUG:   用户视图(UserView): 已销毁。
-2025-05-27 09:45:39.977 DEBUG:   管理员仪表盘(AdminDashboardView): 已销毁。
-2025-05-27 09:45:39.977 DEBUG:   管理员模块(AdminModule): 销毁。
-2025-05-27 09:45:39.977 INFO:    UserModeModule destroyed.
-2025-05-27 09:45:40.330 INFO:    UserModeModule: Process for "D:/Microsoft VS Code/Code.exe" ( "vscode" ) finished. Exit code: 0 Status: QProcess::NormalExit
-2025-05-27 09:45:40.330 DEBUG:   UserModeModule (finished): "vscode" has no mainExecutableHint.
-2025-05-27 09:45:40.330 DEBUG:   UserModeModule: Removed "D:/Microsoft VS Code/Code.exe" from pending activation apps (no hint, process finished): QSet()
-2025-05-27 09:45:40.330 DEBUG:   UserModeModule (finished): Resetting icon for "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:40.330 DEBUG:   UserView::resetAppIconState - Resetting icon state for "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:40.330 WARNING: UserView::setAppIconLaunching - Could not find app card for path: "D:/Microsoft VS Code/Code.exe"
-2025-05-27 09:45:40.330 DEBUG:   UserModeModule (finished): QProcess for "D:/Microsoft VS Code/Code.exe" marked for deletion.
+--- Log started at 2025-05-27 11:32:43 ---
+2025-05-27 11:32:43.689 DEBUG:   Application started.
+2025-05-27 11:32:43.689 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数开始。
+2025-05-27 11:32:43.689 DEBUG:   剑鞘核心(JianqiaoCoreShell): 初始化核心应用设置。
+2025-05-27 11:32:43.690 DEBUG:   SystemInteractionModule: Config path set to: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 11:32:43.690 DEBUG:   SystemInteractionModule (loadConfiguration): Attempting to load config from: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 11:32:43.690 DEBUG:   管理员登录热键已从配置文件加载: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 11:32:43.690 DEBUG:   配置文件中未找到 'user_mode_settings'。不拦截用户模式按键。
+2025-05-27 11:32:43.690 DEBUG:   系统交互模块(SystemInteractionModule): 已创建。
+2025-05-27 11:32:43.690 DEBUG:   剑鞘核心(JianqiaoCoreShell): 底层系统交互模块已实例化。
+2025-05-27 11:32:43.690 DEBUG:   用户视图(UserView): 已创建。
+2025-05-27 11:32:43.691 DEBUG:   管理员仪表盘(AdminDashboardView): 已创建。
+2025-05-27 11:32:43.693 DEBUG:   剑鞘核心外壳: UI设置完成 (QStackedWidget), 视图实例已创建。
+2025-05-27 11:32:43.693 DEBUG:   管理员登录视图(AdminLoginView): 成功加载 AdminLoginView.qss
+2025-05-27 11:32:43.693 DEBUG:   管理员登录视图(AdminLoginView): 已创建。
+2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 构造函数开始。
+2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 尝试从以下路径加载配置文件: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 已加载管理员密码哈希。
+2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 已加载管理员登录热键: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 11:32:43.693 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
+2025-05-27 11:32:43.693 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
+2025-05-27 11:32:43.693 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
+2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Pixmap size: QSize(48, 48)
+2025-05-27 11:32:43.747 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "wps" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
+2025-05-27 11:32:43.747 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":50,\"primaryClassName\":\"OpusApp\",\"titleContains\":\"WPS Office\"}"
+2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe"
+2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
+2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Pixmap size: QSize(48, 48)
+2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "balenaEtcher" Path: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Hint: "balenaEtcher.exe"
+2025-05-27 11:32:43.749 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":50,\"primaryClassName\":\"Chrome_WidgetWin_1\",\"titleContains\":\"balenaEtcher\"}"
+2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 共加载 2 个白名单应用。
+2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 准备填充管理员仪表盘数据。
+2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-27 11:32:43.749 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
+2025-05-27 11:32:43.749 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 配置文件加载完成。
+2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 构造函数结束。
+2025-05-27 11:32:43.749 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "wps" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Pixmap size: QSize(48, 48)
+2025-05-27 11:32:43.749 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "balenaEtcher" Path: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Hint: "balenaEtcher.exe"
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe"
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
+2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Pixmap size: QSize(48, 48)
+2025-05-27 11:32:43.749 INFO:    Configuration loaded, 2 apps in whitelist.
+2025-05-27 11:32:43.749 INFO:    UserModeModule initialized and connected to UserView.
+2025-05-27 11:32:43.749 DEBUG:   键盘钩子: 安装成功。
+2025-05-27 11:32:43.749 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 SystemInteractionModule::adminLoginRequested 信号。
+2025-05-27 11:32:43.749 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。
+2025-05-27 11:32:43.749 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
+2025-05-27 11:32:43.749 DEBUG:   JianqiaoCoreShell: Fetched 2 apps from AdminModule's current state for UserModeModule.
+2025-05-27 11:32:43.749 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 2
+2025-05-27 11:32:43.764 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
+2025-05-27 11:32:43.771 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
+2025-05-27 11:32:43.771 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
+2025-05-27 11:32:43.771 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
+2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
+2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): 用户视图已显示 (初始状态)。
+2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数结束。
+2025-05-27 11:32:43.774 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
+2025-05-27 11:32:43.774 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
+2025-05-27 11:32:47.241 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-27 11:32:47.241 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-27 11:32:47.252 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-27 11:32:47.252 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-27 11:32:47.452 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
+2025-05-27 11:32:47.452 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
+2025-05-27 11:32:47.687 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-27 11:32:47.687 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-27 11:32:47.687 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-27 11:32:47.687 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-27 11:32:47.687 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-27 11:32:47.687 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 11:32:47.687 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-27 11:32:47.687 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-27 11:32:47.687 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-27 11:32:50.136 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
+2025-05-27 11:32:50.136 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
+2025-05-27 11:32:50.137 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
+2025-05-27 11:32:50.137 DEBUG:   管理员模块(AdminModule): 密码验证成功。
+2025-05-27 11:32:50.137 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
+2025-05-27 11:32:50.137 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 11:32:50.138 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
+2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
+2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
+2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
+2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
+2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-27 11:32:50.138 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
+2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
+2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
+2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
+2025-05-27 11:32:50.139 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
+2025-05-27 11:32:52.277 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
+2025-05-27 11:32:52.277 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
+2025-05-27 11:32:52.277 DEBUG:   管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。
+2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
+2025-05-27 11:32:52.277 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
+2025-05-27 11:32:52.277 DEBUG:   JianqiaoCoreShell: Fetched 2 apps from AdminModule's current state for UserModeModule.
+2025-05-27 11:32:52.277 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 2
+2025-05-27 11:32:52.277 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
+2025-05-27 11:32:52.277 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
+2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
+2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
+2025-05-27 11:32:55.999 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-27 11:32:55.999 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-27 11:32:58.810 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-27 11:32:58.810 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-27 11:32:58.854 DEBUG:   "用户模式下按键: VK_LWIN (VK: 0x5b), m_userModeActive: 1"
+2025-05-27 11:32:58.854 DEBUG:   "用户模式下按键 VK_LWIN 未被任何规则拦截。"
+2025-05-27 11:32:59.114 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
+2025-05-27 11:32:59.114 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
+2025-05-27 11:33:02.467 DEBUG:   "用户模式下按键: VK_LWIN (VK: 0x5b), m_userModeActive: 1"
+2025-05-27 11:33:02.467 DEBUG:   "用户模式下按键 VK_LWIN 未被任何规则拦截。"
+2025-05-27 11:33:03.723 DEBUG:   "用户模式下按键: VK_ESCAPE (VK: 0x1b), m_userModeActive: 1"
+2025-05-27 11:33:03.723 DEBUG:   "用户模式下按键 VK_ESCAPE 未被任何规则拦截。"
+2025-05-27 11:33:04.440 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-27 11:33:04.440 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-27 11:33:04.532 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-27 11:33:04.532 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-27 11:33:04.654 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
+2025-05-27 11:33:04.654 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
+2025-05-27 11:33:04.775 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-27 11:33:04.775 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-27 11:33:04.775 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-27 11:33:04.775 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-27 11:33:04.775 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-27 11:33:04.775 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 11:33:04.775 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-27 11:33:04.776 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-27 11:33:04.776 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-27 11:33:07.258 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
+2025-05-27 11:33:07.258 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
+2025-05-27 11:33:07.258 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
+2025-05-27 11:33:07.258 DEBUG:   管理员模块(AdminModule): 密码验证成功。
+2025-05-27 11:33:07.258 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
+2025-05-27 11:33:07.258 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 11:33:07.269 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
+2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
+2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
+2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
+2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
+2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-27 11:33:07.269 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
+2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
+2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
+2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
+2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
+2025-05-27 11:33:08.099 DEBUG:   AdminDashboardView::onExitApplicationClicked INVOKED.
+2025-05-27 11:33:08.099 DEBUG:   管理员仪表盘(AdminDashboardView): '退出整个程序' 按钮被点击。应用程序将退出。
+2025-05-27 11:33:08.105 DEBUG:   Application finished with exit code: 0
+--- Log finished at 2025-05-27 11:33:08 ---
+2025-05-27 11:33:08.105 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已销毁。
+2025-05-27 11:33:08.106 DEBUG:   键盘钩子: 卸载成功。
+2025-05-27 11:33:08.106 DEBUG:   [SystemInteractionModule] SystemInteractionModule destroyed.
+2025-05-27 11:33:08.106 DEBUG:   用户视图(UserView): 已销毁。
+2025-05-27 11:33:08.106 DEBUG:   管理员仪表盘(AdminDashboardView): 已销毁。
+2025-05-27 11:33:08.106 DEBUG:   管理员模块(AdminModule): 销毁。
+2025-05-27 11:33:08.106 INFO:    UserModeModule destroyed.

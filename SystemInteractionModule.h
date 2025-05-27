@@ -22,6 +22,7 @@
 #include <QFileIconProvider>
 #include <QDebug>
 #include <memory> // Keep for now, might be used elsewhere or for comparison
+#include "common_types.h" // Ensure SuggestedWindowHints is known
 
 #if defined(Q_OS_WIN)
 #include <windows.h> // For HWND, DWORD, etc.
@@ -64,8 +65,15 @@ public:
     bool loadConfiguration();
     void bringToFrontAndActivate(WId windowId);
     HWND findMainWindowForProcess(DWORD processId, const QJsonObject& windowHints = QJsonObject());
+    QPair<HWND, int> findMainWindowForProcessWithScore(DWORD processId, const QJsonObject& windowHints = QJsonObject());
     HWND findMainWindowForProcessOrChildren(DWORD initialPid, const QString& executableNameHint);
-    void monitorAndActivateApplication(const QString& originalAppPath, quint32 launcherPid, const QString& mainExecutableHint, const QJsonObject& windowHints, bool forceActivateOnly = false);
+    void monitorAndActivateApplication(
+        const QString& originalAppPath,
+        quint32 launcherPid,
+        const QString& mainExecutableHint = QString(),
+        const QJsonObject& windowHints = QJsonObject(),
+        bool forceActivateOnly = false
+    );
     void setUserModeActive(bool active);
     bool isUserModeActive() const;
     DWORD stringToVkCode(const QString& keyString);
@@ -73,39 +81,58 @@ public:
     QIcon getIconForExecutable(const QString& executablePath);
     QStringList getCurrentAdminLoginHotkeyStrings() const;
     bool isMonitoring(const QString& appPath) const;
+    void stopMonitoringProcess(const QString& appPath);
 
     virtual bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
 
+signals:
+    void adminLoginRequested();
+    void applicationActivated(const QString& appPath);
+    void applicationActivationFailed(const QString& appPath, const QString& reason);
+    void detectionCompleted(const SuggestedWindowHints& hints, bool success, const QString& errorString);
+
+public slots:
+    void installHookAsync();
+    void uninstallHookAsync();
+    void startExecutableDetection(const QString& executablePath, const QString& appName);
+
+// private slots section
+private slots:
+    void onMonitoringTimerTimeout();
+
+// private members and methods (non-slots)
 private:
     static HHOOK keyboardHook_;
     static SystemInteractionModule* instance_; // For emitting signals from static callback
     static LRESULT CALLBACK LowLevelKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-
-    QList<DWORD> m_adminLoginHotkey;
-    QString m_configPath;
-    bool m_userModeActive; // To track if user mode is active
-    bool m_isHookInstalled; // Added declaration
-    QSet<DWORD> m_pressedKeys; // Tracks all currently pressed keys
-    QSet<DWORD> m_userModeBlockedVkCodes; // Added: Keys to block in user mode
-
-    // QMap<QString, std::unique_ptr<MonitoringInfo>> m_monitoringApps; // Old unique_ptr version
-    QMap<QString, MonitoringInfo*> m_monitoringApps; // New raw pointer version
-
     static QMap<QString, DWORD> initializeVkCodeMap();
     static const QMap<QString, DWORD> VK_CODE_MAP;
+    static BOOL CALLBACK EnumWindowsProcWithHints(HWND hwnd, LPARAM lParam); // Moved static callback here
+
+    // Regular private methods
+    SuggestedWindowHints performExecutableDetectionLogic(const QString& executablePath, const QString& initialAppName);
+    bool isKeyInteresting(DWORD vkCode, bool isKeyDown);
+    void updateCurrentHotkeyState(DWORD vkCode, bool isKeyDown);
+    bool checkAdminLoginHotkey();
+    void saveConfiguration();
+    bool isProcessRunning(DWORD pid);
+    QList<DWORD> findChildProcesses(DWORD parentPid);
+    QString getProcessNameByPid(DWORD pid);
+    DWORD findProcessIdByName(const QString& processName);
+    QDateTime getProcessCreationTime(DWORD processId);
+    QList<DWORD> getAllProcessIds();
     bool isModifierKey(DWORD vkCode) const;
+    void activateWindow(HWND hwnd); // Moved here
 
-    DWORD findProcessIdByName(const QString& executableName);
-    void activateWindow(HWND hwnd);
-
-private slots:
-    void onMonitoringTimerTimeout();
-
-signals:
-    void keyPressed(DWORD vkCode);
-    void adminLoginRequested();
-    void applicationActivated(const QString& appPath);
-    void applicationActivationFailed(const QString& appPath, const QString& reason);
+    // Private member variables
+    QList<DWORD> m_adminLoginHotkey;
+    QString m_configPath;
+    bool m_userModeActive;
+    bool m_isHookInstalled;
+    QSet<DWORD> m_pressedKeys;
+    QSet<DWORD> m_userModeBlockedVkCodes;
+    QMap<QString, MonitoringInfo*> m_monitoringApps;
+    QList<DWORD> m_adminLoginHotkeySequence; // Now clearly in private section
 
 };
 

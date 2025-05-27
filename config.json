@@ -13,30 +13,14 @@
     },
     "whitelist_apps": [
         {
-            "name": "balenaEtcher",
-            "path": "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe",
-            "mainExecutableHint": "",
-            "windowFindingHints": {
-                "primaryClassName": "Chrome_WidgetWin_1",
-                "titleContains": "balenaEtcher",
-                "minScore": 55,
-                "allowNonTopLevel": false
-            }
-        },
-        {
-            "name": "wps",
+            "name": "WPS",
             "path": "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe",
-            "mainExecutableHint": "wps.exe",
             "windowFindingHints": {
-                "primaryClassName": "OpusApp",
-                "titleContains": "WPS",
                 "allowNonTopLevel": true,
-                "minScore": 80
+                "minScore": 50,
+                "primaryClassName": "OpusApp",
+                "titleContains": "WPS Office"
             }
-        },
-        {
-            "name": "BaiduNetdisk",
-            "path": "D:/BaiduNetdisk/BaiduNetdisk.exe"
         }
     ]
 }

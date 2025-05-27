@@ -39,35 +39,50 @@ template <> constexpr inline auto SystemInteractionModule::qt_create_metaobjectd
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "SystemInteractionModule",
-        "keyPressed",
-        "",
-        "DWORD",
-        "vkCode",
         "adminLoginRequested",
+        "",
         "applicationActivated",
         "appPath",
         "applicationActivationFailed",
         "reason",
+        "detectionCompleted",
+        "SuggestedWindowHints",
+        "hints",
+        "success",
+        "errorString",
+        "installHookAsync",
+        "uninstallHookAsync",
+        "startExecutableDetection",
+        "executablePath",
+        "appName",
         "onMonitoringTimerTimeout"
     };
 
     QtMocHelpers::UintData qt_methods {
-        // Signal 'keyPressed'
-        QtMocHelpers::SignalData<void(DWORD)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 3, 4 },
-        }}),
         // Signal 'adminLoginRequested'
-        QtMocHelpers::SignalData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SignalData<void()>(1, 2, QMC::AccessPublic, QMetaType::Void),
         // Signal 'applicationActivated'
-        QtMocHelpers::SignalData<void(const QString &)>(6, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 7 },
+        QtMocHelpers::SignalData<void(const QString &)>(3, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 4 },
         }}),
         // Signal 'applicationActivationFailed'
-        QtMocHelpers::SignalData<void(const QString &, const QString &)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 7 }, { QMetaType::QString, 9 },
+        QtMocHelpers::SignalData<void(const QString &, const QString &)>(5, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 4 }, { QMetaType::QString, 6 },
+        }}),
+        // Signal 'detectionCompleted'
+        QtMocHelpers::SignalData<void(const SuggestedWindowHints &, bool, const QString &)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 8, 9 }, { QMetaType::Bool, 10 }, { QMetaType::QString, 11 },
+        }}),
+        // Slot 'installHookAsync'
+        QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'uninstallHookAsync'
+        QtMocHelpers::SlotData<void()>(13, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'startExecutableDetection'
+        QtMocHelpers::SlotData<void(const QString &, const QString &)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 15 }, { QMetaType::QString, 16 },
         }}),
         // Slot 'onMonitoringTimerTimeout'
-        QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(17, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -91,22 +106,37 @@ void SystemInteractionModule::qt_static_metacall(QObject *_o, QMetaObject::Call 
     auto *_t = static_cast<SystemInteractionModule *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->keyPressed((*reinterpret_cast< std::add_pointer_t<DWORD>>(_a[1]))); break;
-        case 1: _t->adminLoginRequested(); break;
-        case 2: _t->applicationActivated((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 3: _t->applicationActivationFailed((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 4: _t->onMonitoringTimerTimeout(); break;
+        case 0: _t->adminLoginRequested(); break;
+        case 1: _t->applicationActivated((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 2: _t->applicationActivationFailed((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 3: _t->detectionCompleted((*reinterpret_cast< std::add_pointer_t<SuggestedWindowHints>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
+        case 4: _t->installHookAsync(); break;
+        case 5: _t->uninstallHookAsync(); break;
+        case 6: _t->startExecutableDetection((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 7: _t->onMonitoringTimerTimeout(); break;
         default: ;
         }
     }
+    if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        switch (_id) {
+        default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
+        case 3:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
+            case 0:
+                *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< SuggestedWindowHints >(); break;
+            }
+            break;
+        }
+    }
     if (_c == QMetaObject::IndexOfMethod) {
-        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(DWORD )>(_a, &SystemInteractionModule::keyPressed, 0))
+        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)()>(_a, &SystemInteractionModule::adminLoginRequested, 0))
             return;
-        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)()>(_a, &SystemInteractionModule::adminLoginRequested, 1))
+        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(const QString & )>(_a, &SystemInteractionModule::applicationActivated, 1))
             return;
-        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(const QString & )>(_a, &SystemInteractionModule::applicationActivated, 2))
+        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(const QString & , const QString & )>(_a, &SystemInteractionModule::applicationActivationFailed, 2))
             return;
-        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(const QString & , const QString & )>(_a, &SystemInteractionModule::applicationActivationFailed, 3))
+        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(const SuggestedWindowHints & , bool , const QString & )>(_a, &SystemInteractionModule::detectionCompleted, 3))
             return;
     }
 }
@@ -132,39 +162,39 @@ int SystemInteractionModule::qt_metacall(QMetaObject::Call _c, int _id, void **_
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 8;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 5)
-            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 5;
+        if (_id < 8)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= 8;
     }
     return _id;
 }
 
 // SIGNAL 0
-void SystemInteractionModule::keyPressed(DWORD _t1)
+void SystemInteractionModule::adminLoginRequested()
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1);
+    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }
 
 // SIGNAL 1
-void SystemInteractionModule::adminLoginRequested()
+void SystemInteractionModule::applicationActivated(const QString & _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
+    QMetaObject::activate<void>(this, &staticMetaObject, 1, nullptr, _t1);
 }
 
 // SIGNAL 2
-void SystemInteractionModule::applicationActivated(const QString & _t1)
+void SystemInteractionModule::applicationActivationFailed(const QString & _t1, const QString & _t2)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 2, nullptr, _t1);
+    QMetaObject::activate<void>(this, &staticMetaObject, 2, nullptr, _t1, _t2);
 }
 
 // SIGNAL 3
-void SystemInteractionModule::applicationActivationFailed(const QString & _t1, const QString & _t2)
+void SystemInteractionModule::detectionCompleted(const SuggestedWindowHints & _t1, bool _t2, const QString & _t3)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 3, nullptr, _t1, _t2);
+    QMetaObject::activate<void>(this, &staticMetaObject, 3, nullptr, _t1, _t2, _t3);
 }
 QT_WARNING_POP

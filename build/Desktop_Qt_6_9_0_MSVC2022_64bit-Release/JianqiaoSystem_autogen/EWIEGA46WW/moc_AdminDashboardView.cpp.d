@@ -1,6 +1,8 @@
 C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/EWIEGA46WW/moc_AdminDashboardView.cpp: C:/Users/13027/Desktop/Jianqiaov2/AdminDashboardView.h \
+  C:/Users/13027/Desktop/Jianqiaov2/DetectionResultDialog.h \
   C:/Users/13027/Desktop/Jianqiaov2/common_types.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMetaType \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/q17memory.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/q20functional.h \
@@ -176,10 +178,17 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qvalidator.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs_win.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QCheckBox \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QDialog \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QDialogButtonBox \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFormLayout \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QHBoxLayout \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLabel \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLayout \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLineEdit \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QListWidget \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QPushButton \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QSpinBox \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QTabWidget \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QVBoxLayout \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QWidget \
@@ -190,6 +199,10 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qabstractslider.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qabstractspinbox.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qboxlayout.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qcheckbox.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qdialog.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qdialogbuttonbox.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qformlayout.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qframe.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qgridlayout.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlabel.h \
@@ -202,6 +215,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qrubberband.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qsizepolicy.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qslider.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qspinbox.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qstyle.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qstyleoption.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtabbar.h \

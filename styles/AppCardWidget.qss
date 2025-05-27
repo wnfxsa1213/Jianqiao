@@ -1,0 +1,45 @@
+QWidget#appCard {
+    min-width: 68px; /* 略大于内部图标，给padding空间 */
+    max-width: 68px;
+    min-height: 68px;
+    max-height: 68px;
+    background-color: rgba(255, 255, 255, 0.1); /* 比之前更透明一些，或者根据Dock背景调整 */
+    border-radius: 12px; /* 圆角调整 */
+    padding: 6px; /* 内边距，让图标和边框有距离 */
+    margin: 2px; /* 卡片之间的间距，如果Dock布局需要的话 */
+}
+
+QWidget#appCard:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+QWidget#appCard:pressed {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Name label will be hidden via C++, so no specific QSS needed to hide it for now,
+   but can be styled here if made visible later */
+QLabel#nameLabel {
+    color: white;
+    font-size: 9px; /* 如果显示，则非常小 */
+    qproperty-alignment: 'AlignCenter';
+    background-color: transparent; /*确保背景透明*/
+}
+
+QLabel#iconLabel {
+    qproperty-alignment: 'AlignCenter';
+    background-color: transparent; /*确保背景透明*/
+}
+
+/* Styling for loading state */
+QWidget#appCard[loading=\"true\"] {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+QLabel#loadingIndicatorLabel { /* If using a text label for loading */
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    qproperty-alignment: 'AlignCenter';
+    background-color: transparent;
+}

@@ -8,7 +8,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui GuiPrivate CoreTools)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Core Gui GuiPrivate CoreTools Concurrent)
+
+set(PROJECT_RESOURCES
+    resources.qrc
+)
 
 set(PROJECT_SOURCES
     main.cpp
@@ -20,9 +24,10 @@ set(PROJECT_SOURCES
     WhitelistManagerView.cpp
     UserView.cpp
     UserModeModule.cpp
-    HotkeyEditDialog.cpp
+    HotkeyEditDialog.cpp # Consider removing if AppCardWidget is fully replaced
     AppCardWidget.cpp # Consider removing if AppCardWidget is fully replaced
     HoverIconWidget.cpp 
+    DetectionResultDialog.cpp
 )
 
 set(PROJECT_HEADERS
@@ -38,18 +43,18 @@ set(PROJECT_HEADERS
     HotkeyEditDialog.h
     AppCardWidget.h # Consider removing if AppCardWidget is fully replaced
     HoverIconWidget.h
+    DetectionResultDialog.h
 )
 
-add_executable(JianqiaoSystem
+add_executable(JianqiaoSystem WIN32
     ${PROJECT_SOURCES}
-    # PROJECT_HEADERS are generally not listed directly in add_executable for compilation
-    # CMAKE_AUTOMOC will scan sources for includes of headers with Q_OBJECT.
-    # common_types.h # If it has Q_GADGET or similar it might need to be explicitly handled or just included by other moc'd headers.
+    ${PROJECT_HEADERS}
+    ${PROJECT_RESOURCES}
 )
 
 target_include_directories(JianqiaoSystem PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(JianqiaoSystem PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::GuiPrivate dwmapi)
+target_link_libraries(JianqiaoSystem PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::GuiPrivate Qt6::Concurrent dwmapi)
 
 # Copy config.json to the output directory
 set(CONFIG_FILE_NAME "config.json")

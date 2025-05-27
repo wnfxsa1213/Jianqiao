@@ -8,6 +8,8 @@ JianqiaoSystem_autogen/timestamp: \
 	C:/Users/13027/Desktop/Jianqiaov2/AppCardWidget.cpp \
 	C:/Users/13027/Desktop/Jianqiaov2/AppCardWidget.h \
 	C:/Users/13027/Desktop/Jianqiaov2/CMakeLists.txt \
+	C:/Users/13027/Desktop/Jianqiaov2/DetectionResultDialog.cpp \
+	C:/Users/13027/Desktop/Jianqiaov2/DetectionResultDialog.h \
 	C:/Users/13027/Desktop/Jianqiaov2/HotkeyEditDialog.cpp \
 	C:/Users/13027/Desktop/Jianqiaov2/HotkeyEditDialog.h \
 	C:/Users/13027/Desktop/Jianqiaov2/HoverIconWidget.cpp \
@@ -28,6 +30,7 @@ JianqiaoSystem_autogen/timestamp: \
 	C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/CMakeFiles/3.30.5/CMakeSystem.cmake \
 	C:/Users/13027/Desktop/Jianqiaov2/common_types.h \
 	C:/Users/13027/Desktop/Jianqiaov2/main.cpp \
+	C:/Users/13027/Desktop/Jianqiaov2/resources.qrc \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QAbstractNativeEventFilter \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QDebug \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QEvent \
@@ -38,6 +41,7 @@ JianqiaoSystem_autogen/timestamp: \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMap \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMargins \
+	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMetaType \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QObject \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QProcess \
 	D:/QT6/6.9.0/msvc2022_64/include/QtCore/QPropertyAnimation \
@@ -257,15 +261,20 @@ JianqiaoSystem_autogen/timestamp: \
 	D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindow.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs_win.h \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QCheckBox \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QDialog \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QDialogButtonBox \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFileIconProvider \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFormLayout \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFrame \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QHBoxLayout \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLabel \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLayout \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLineEdit \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QListWidget \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QMainWindow \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QPushButton \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QSpinBox \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QStackedWidget \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QTabWidget \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QVBoxLayout \
@@ -277,8 +286,11 @@ JianqiaoSystem_autogen/timestamp: \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qabstractslider.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qabstractspinbox.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qboxlayout.h \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qcheckbox.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qdialog.h \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qdialogbuttonbox.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qfileiconprovider.h \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qformlayout.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qframe.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qgridlayout.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlabel.h \
@@ -292,6 +304,7 @@ JianqiaoSystem_autogen/timestamp: \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qrubberband.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qsizepolicy.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qslider.h \
+	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qspinbox.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qstackedwidget.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qstyle.h \
 	D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qstyleoption.h \
@@ -341,6 +354,22 @@ JianqiaoSystem_autogen/timestamp: \
 	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6/QtPublicToolHelpers.cmake \
 	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake \
 	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6/QtPublicWindowsHelpers.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentAdditionalTargetInfo.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfig.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfigVersion.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfigVersionImpl.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentDependencies.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets-debug.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets-relwithdebinfo.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentVersionlessAliasTargets.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateAdditionalTargetInfo.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateConfig.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateConfigVersion.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateConfigVersionImpl.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateDependencies.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateTargets.cmake \
+	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateVersionlessAliasTargets.cmake \
 	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake \
 	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake \
 	D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreConfigExtras.cmake \

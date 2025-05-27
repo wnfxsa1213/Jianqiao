@@ -42,13 +42,19 @@ template <> constexpr inline auto AppCardWidget::qt_create_metaobjectdata<qt_met
         "launchAppRequested",
         "",
         "appPath",
-        "appName"
+        "appName",
+        "setLoadingState",
+        "loading"
     };
 
     QtMocHelpers::UintData qt_methods {
         // Signal 'launchAppRequested'
         QtMocHelpers::SignalData<void(const QString &, const QString &)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 3 }, { QMetaType::QString, 4 },
+        }}),
+        // Slot 'setLoadingState'
+        QtMocHelpers::SlotData<void(bool)>(5, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Bool, 6 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -74,6 +80,7 @@ void AppCardWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->launchAppRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 1: _t->setLoadingState((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
         default: ;
         }
     }
@@ -102,14 +109,14 @@ int AppCardWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 2)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
 }

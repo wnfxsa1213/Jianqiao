@@ -1,265 +1,264 @@
 #include "UserView.h"
-#include <QVBoxLayout>
-#include <QScrollArea>
-#include <QGridLayout>
-#include <QLabel> // For empty message
-#include <QDebug>
 #include "AppCardWidget.h" // Ensure this is included
-#include <QIcon>       // For QIcon to QPixmap conversion
-#include <QPixmap> // <--- 添加 QPixmap include
-#include <QPushButton>
-#include <QCoreApplication>
-#include <QPainter> // ADDED for custom painting
-#include <QTimer> // Ensure QTimer is included for implementation
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QFrame>
+#include <QScrollArea>
+#include <QLabel>       // For empty message (if needed)
+#include <QDebug>
+#include <QPainter>     // For custom painting
+#include <QTimer>       // For launch timers
+#include <QResizeEvent> // For resizeEvent
 
 UserView::UserView(QWidget *parent)
     : QWidget(parent),
       m_mainLayout(nullptr),
       m_dockFrame(nullptr),
-      m_dockLayout(nullptr),
+      m_dockScrollArea(nullptr),
+      m_dockScrollContentWidget(nullptr),
+      m_dockItemsLayout(nullptr),
       m_isFirstShow(true)
 {
     qDebug() << "用户视图(UserView): 已创建。";
     setupUi();
+    this->setObjectName("userView"); 
+    // Ensure background is transparent if not painting image, so QSS on parent or paint event can control it.
+    // setAttribute(Qt::WA_StyledBackground, false); // Let paintEvent handle background
 }
 
 UserView::~UserView()
 {
     qDebug() << "用户视图(UserView): 已销毁。";
-    clearAppIcons(); 
+    clearAppCards(); 
 }
 
 void UserView::setupUi() {
     m_mainLayout = new QVBoxLayout(this);
-    setLayout(m_mainLayout);
-    m_mainLayout->setContentsMargins(0, 0, 0, 0); 
+    m_mainLayout->setContentsMargins(0, 0, 0, 0);
+    m_mainLayout->setSpacing(0);
 
-    m_dockFrame = new QFrame(this);
-    m_dockFrame->setObjectName("dockFrame");
-    m_dockFrame->setStyleSheet(
-        "#dockFrame {"            
-        "  background-color: rgba(45, 45, 45, 190);" 
-        "  border-radius: 22px;"                 
+    m_mainLayout->addStretch(1); // Pushes the dock to the bottom
+
+    // Centering layout for the dock panel
+    QHBoxLayout* centeringLayout = new QHBoxLayout();
+    centeringLayout->setContentsMargins(0,0,0,0); // Control margins via QSS on dockPanel or here
+    centeringLayout->setSpacing(0);
+    centeringLayout->addStretch(1);
+
+    m_dockFrame = new QFrame(this); 
+    m_dockFrame->setObjectName("dockPanel");
+    m_dockFrame->setFixedHeight(90); 
+    // Width will be content-driven up to a point, or can be constrained by UserView's width
+    m_dockFrame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    // margins for dockPanel relative to UserView edges are set in QSS
+    // internal padding for scrollArea from dockFrame edges are set in QSS for dockPanel
+
+    QVBoxLayout* dockFrameInternalLayout = new QVBoxLayout(m_dockFrame); // Layout for m_dockScrollArea within m_dockFrame
+    dockFrameInternalLayout->setContentsMargins(0, 5, 0, 5); // Top/Bottom padding inside dock frame for scroll area
+    
+    m_dockScrollArea = new QScrollArea(m_dockFrame); 
+    m_dockScrollArea->setObjectName("dockScrollArea");
+    m_dockScrollArea->setWidgetResizable(true);
+    m_dockScrollArea->setFrameShape(QFrame::NoFrame);
+    m_dockScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    m_dockScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_dockScrollArea->setFixedHeight(70); // Height for the scrollable content area
+
+    m_dockScrollContentWidget = new QWidget(); 
+    m_dockScrollContentWidget->setObjectName("dockScrollContentWidget");
+    m_dockScrollArea->setWidget(m_dockScrollContentWidget);
+
+    m_dockItemsLayout = new QHBoxLayout(m_dockScrollContentWidget);
+    m_dockItemsLayout->setContentsMargins(10, 0, 10, 0); // Left/Right padding for the first/last card from scroll area edge
+    m_dockItemsLayout->setSpacing(10); 
+    m_dockItemsLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    // m_dockItemsLayout->addStretch(); // So cards align left, and don't spread if few
+
+    dockFrameInternalLayout->addWidget(m_dockScrollArea);
+    m_dockFrame->setLayout(dockFrameInternalLayout);
+
+    centeringLayout->addWidget(m_dockFrame);
+    centeringLayout->addStretch(1);
+    m_mainLayout->addLayout(centeringLayout);
+
+    setLayout(m_mainLayout);
+
+    // Apply QSS for the dock panel and scroll area
+    // It's better to load this from a UserView.qss file if it gets complex
+    QString userViewStyleSheet = QString(
+        "QFrame#dockPanel {"
+        "    background-color: rgba(45, 45, 45, 0.88);"
+        "    border-radius: 20px;"
+        "    margin-left: 20px;"
+        "    margin-right: 20px;"
+        "    margin-bottom: 10px;"
+        "    padding: 0px 10px;" /* Horizontal padding inside dock for scroll area */
+        "}"
+        "QScrollArea#dockScrollArea {"
+        "    background-color: transparent;"
+        "    border: none;"
+        "}"
+        "QWidget#dockScrollContentWidget {"
+        "    background-color: transparent;"
+        "}"
+        "QScrollBar:horizontal {"
+        "    height: 8px;"
+        "    background: rgba(0,0,0,0.1);"
+        "    margin: 0px 0px 2px 0px;" /* margin from bottom of scroll area */
+        "    border-radius: 4px;"
+        "}"
+        "QScrollBar::handle:horizontal {"
+        "    background: rgba(255,255,255,0.35);"
+        "    min-width: 25px;"
+        "    border-radius: 4px;"
+        "}"
+        "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {"
+        "    background: none; border: none; width: 0px;"
         "}"
     );
-    m_dockFrame->setFixedHeight(150); 
-    m_dockFrame->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-    m_dockFrame->setMinimumWidth(200); 
-
-    m_dockLayout = new QHBoxLayout(m_dockFrame); 
-    m_dockLayout->setContentsMargins(20, 10, 20, 10); 
-    m_dockLayout->setSpacing(20);                     
-    m_dockLayout->setAlignment(Qt::AlignCenter);      
-    
-    QHBoxLayout *hCenterLayout = new QHBoxLayout(); 
-    hCenterLayout->addStretch(); 
-    hCenterLayout->addWidget(m_dockFrame);
-    hCenterLayout->addStretch(); 
-
-    m_mainLayout->addStretch(); 
-    m_mainLayout->addLayout(hCenterLayout); 
-    m_mainLayout->addStretch(); 
-
-    // Ensure main layout stretch factors are appropriate without exit button
-    m_mainLayout->setStretchFactor(hCenterLayout, 0); // Let hCenterLayout take its preferred size, stretches will center it
+    this->setStyleSheet(userViewStyleSheet);
 }
 
-void UserView::clearAppIcons() {
-    if (!m_dockLayout) return;
-
-    // Stop and delete all pending launch timers
-    for (QTimer* timer : qAsConst(m_launchTimers)) { // Use qAsConst for C++11 range-based for with QHash
-        if (timer) {
-            timer->stop();
-            timer->deleteLater();
+void UserView::clearAppCards() {
+    for (AppCardWidget* card : qAsConst(m_appCards)) {
+        if (card) {
+            m_dockItemsLayout->removeWidget(card);
+            card->deleteLater();
         }
     }
+    m_appCards.clear();
+
+    // Also clear any remaining launch timers, just in case
+    qDeleteAll(m_launchTimers);
     m_launchTimers.clear();
     m_launchingApps.clear();
-
-    QLayoutItem* item;
-    while ((item = m_dockLayout->takeAt(0)) != nullptr) {
-        if (QWidget* widget = item->widget()) {
-            delete widget; 
-        }
-        delete item;
-    }
-    m_appIconWidgets.clear();
 }
 
 void UserView::setAppList(const QList<AppInfo>& apps) {
-    m_cachedAppList = apps;
-    qDebug() << "UserView: App list cached with" << m_cachedAppList.count() << "apps.";
-    // Always populate/re-populate when the list is set.
-    // If the view is invisible, it will be correctly populated when it becomes visible.
-    populateAppList(m_cachedAppList); 
+    m_currentApps = apps;
+    if (isVisible() || m_isFirstShow) { // Populate immediately if view is visible or first show
+        populateAppList(apps);
+    }
+    // If not visible and not first show, populateAppList will be called in showEvent
 }
 
 void UserView::showEvent(QShowEvent *event) {
     QWidget::showEvent(event);
     if (m_isFirstShow) {
-        qDebug() << "UserView: First showEvent, populating list with" << m_cachedAppList.count() << "cached apps.";
-        populateAppList(m_cachedAppList);
+        populateAppList(m_currentApps); // Populate on first show
         m_isFirstShow = false;
-    } else {
-        qDebug() << "UserView: Subsequent showEvent.";
     }
 }
 
-// Make sure AppInfo is a known type here (should be from common_types.h)
+void UserView::resizeEvent(QResizeEvent *event) {
+    QWidget::resizeEvent(event); // Call base class
+    // If m_dockFrame width needs to be dynamically adjusted based on UserView width 
+    // (e.g., to not exceed UserView width), calculations could go here.
+    // For now, it's mostly Preferred size up to UserView boundaries due to centeringLayout.
+    // The QSS margins also help keep it from edges.
+    // repaint(); // May be needed if background calculations depend on size
+}
+
 void UserView::populateAppList(const QList<AppInfo>& apps) {
-    clearAppIcons();
-    qInfo() << "UserView: Populating with" << apps.count() << "apps.";
+    clearAppCards();
+    m_currentApps = apps;
+    
+    if (!m_dockItemsLayout) {
+        qWarning() << "UserView::populateAppList: m_dockItemsLayout is null!";
+        return;
+    }
 
-    const QSize iconSize(64, 64); // Define a standard icon size, adjust as needed
-
-    for (const AppInfo& appInfo : apps) {
-        if (appInfo.path.isEmpty()) {
-            qWarning() << "UserView: Skipping app with empty path:" << appInfo.name;
-            continue;
+    for (const AppInfo& appInfo : qAsConst(m_currentApps)) {
+        QIcon icon = appInfo.icon;
+        if (icon.isNull()) {
+             qWarning() << "UserView: Icon for" << appInfo.name << "is null. AppCardWidget might use its default.";
         }
-        // qInfo() << "Populating UserView with app:" << appInfo.name << "Path:" << appInfo.path << "Icon null:" << appInfo.icon.isNull();
+
+        AppCardWidget *card = new AppCardWidget(appInfo.name, appInfo.path, icon, m_dockScrollContentWidget);
+        connect(card, &AppCardWidget::launchAppRequested, this, &UserView::onCardLaunchRequested);
         
-        QPixmap pixmap = appInfo.icon.pixmap(iconSize); // <--- 将 QIcon 转换为 QPixmap
-        if (pixmap.isNull() && !appInfo.icon.isNull()) {
-            // Fallback if specific size fails, try to get any pixmap
-            QList<QSize> availableSizes = appInfo.icon.availableSizes();
-            if (!availableSizes.isEmpty()) {
-                pixmap = appInfo.icon.pixmap(availableSizes.first());
-            }
-        }
-        if (pixmap.isNull()){
-            qWarning() << "UserView: Failed to get pixmap for" << appInfo.name << "Path:" << appInfo.path << "Original icon was null:" << appInfo.icon.isNull();
-            // Use a default placeholder pixmap if you have one
-            // pixmap = QPixmap(":/icons/default_app_icon.png"); // Example
-        }
-
-        HoverIconWidget* iconWidget = new HoverIconWidget(pixmap, appInfo.name, appInfo.path, this); // <--- 使用 pixmap
-        m_appIconWidgets.append(iconWidget);
-        m_dockLayout->addWidget(iconWidget);
-        connect(iconWidget, &HoverIconWidget::clicked, this, &UserView::onIconClicked);
+        m_dockItemsLayout->addWidget(card);
+        m_appCards.append(card);
     }
-
-    if (m_dockLayout) { // Ensure layout exists
-        m_dockLayout->activate(); // Try to enforce layout update
+    
+    if (m_dockScrollContentWidget) { 
+        m_dockScrollContentWidget->adjustSize();
     }
-    if (m_dockFrame && m_dockFrame->layout()) { // Also try activating frame's layout
-         m_dockFrame->layout()->activate();
-    }
-    update(); // Repaint the UserView itself
 }
 
 void UserView::setCurrentBackground(const QString& imagePath) {
     if (imagePath.isEmpty()) {
-        qDebug() << "UserView: Received empty image path, clearing background.";
-        m_currentBackground = QPixmap(); // Set to a null pixmap
+        m_currentBackground = QPixmap();
+        qDebug() << "UserView: Background image cleared.";
     } else {
-        QPixmap newBg(imagePath);
-        if (newBg.isNull()) {
-            qWarning() << "UserView: Failed to load background image from:" << imagePath;
-            // m_currentBackground = QPixmap(); // Optionally clear or keep old if load fails
-            // Or set a default solid color background in paintEvent if m_currentBackground is null
-        } else {
-            m_currentBackground = newBg;
-            qDebug() << "UserView: Background image loaded from:" << imagePath;
+        if (!m_currentBackground.load(imagePath)) {
+            qWarning() << "UserView: Failed to load background image from" << imagePath;
+            m_currentBackground = QPixmap(); // Clear on failure
         }
+         qDebug() << "UserView: Background image set to" << imagePath;
     }
-    update(); // Trigger a repaint
+    update(); // Request a repaint to show the new background
 }
 
 void UserView::paintEvent(QPaintEvent *event) {
+    Q_UNUSED(event);
     QPainter painter(this);
-
     if (!m_currentBackground.isNull()) {
-        // Draw the background image, scaled to fill the widget
-        painter.drawPixmap(rect(), m_currentBackground);
+        painter.drawPixmap(this->rect(), m_currentBackground);
     } else {
-        // Fallback: If no background image or it failed to load, fill with a default color
-        painter.fillRect(rect(), QColor(30, 30, 30)); // Default dark gray
+        painter.fillRect(this->rect(), QColor(30, 30, 30)); // Default dark background
     }
-
-    // It's VERY IMPORTANT to call the base class paintEvent if you are not handling
-    // all painting for child widgets yourself, OR if UserView itself has Q_OBJECT and uses stylesheets for other properties.
-    // However, since m_dockFrame is a child widget, its painting is generally handled after the parent's paintEvent.
-    // If m_dockFrame (or other children) are not appearing, uncommenting the line below might be necessary,
-    // but it can also interfere if you've fully painted the background.
-    // QWidget::paintEvent(event); 
 }
 
-HoverIconWidget* UserView::findAppCardByPath(const QString& appPath) const {
-    for (HoverIconWidget* iconWidget : m_appIconWidgets) {
-        if (iconWidget && iconWidget->applicationPath() == appPath) {
-            return iconWidget;
+AppCardWidget* UserView::findAppCardByPath(const QString& appPath) const {
+    for (AppCardWidget* card : qAsConst(m_appCards)) {
+        if (card && card->getAppPath() == appPath) {
+            return card;
         }
     }
     return nullptr;
 }
 
-void UserView::onIconClicked(const QString& appPath) {
-    if (m_launchingApps.contains(appPath)) {
-        qDebug() << "UserView::onIconClicked - Application" << appPath << "is already marked as launching. Ignoring click.";
-        return;
-    }
-    qDebug() << "用户视图(UserView): 图标点击，请求启动应用:" << appPath;
-    // Set launching state and start internal timer immediately
-    setAppIconLaunching(appPath, true); 
-    emit applicationLaunchRequested(appPath);
+void UserView::onCardLaunchRequested(const QString& appPath, const QString& appName) {
+    qDebug() << "UserView: Launch requested for" << appName << "at" << appPath;
+    emit applicationLaunchRequested(appPath, appName);
 }
 
-void UserView::setAppIconLaunching(const QString& appPath, bool isLaunching) {
-    HoverIconWidget* iconWidget = findAppCardByPath(appPath);
-    if (!iconWidget) {
-        qWarning() << "UserView::setAppIconLaunching - Could not find app card for path:" << appPath;
-        return;
+void UserView::setAppLoadingState(const QString& appPath, bool isLoading) {
+    AppCardWidget* card = findAppCardByPath(appPath);
+    if (card) {
+        card->setLoadingState(isLoading);
+    } else {
+        qWarning() << "UserView: Could not find app card for path:" << appPath << "to set loading state.";
     }
 
-    iconWidget->setLaunching(isLaunching); // Update visual state of the icon
-
-    if (isLaunching) {
+    if (isLoading) {
         if (!m_launchingApps.contains(appPath)) {
             m_launchingApps.insert(appPath);
-        }
-
-        QTimer* timer = m_launchTimers.value(appPath, nullptr);
-        if (!timer) {
-            timer = new QTimer(this);
+            QTimer* timer = new QTimer(this);
+            timer->setSingleShot(true);
+            connect(timer, &QTimer::timeout, this, [this, appPath]() { this->onLaunchTimerTimeout(appPath); });
             m_launchTimers.insert(appPath, timer);
-            // Use a lambda that captures appPath to call onLaunchTimerTimeout
-            connect(timer, &QTimer::timeout, this, [this, capturedAppPath = appPath]() {
-                onLaunchTimerTimeout(capturedAppPath);
-            });
+            timer->start(LAUNCH_TIMEOUT_MS);
         }
-        timer->start(LAUNCH_TIMEOUT_MS); 
-        qDebug() << "UserView::setAppIconLaunching - Launch timer started for" << appPath << "(" << LAUNCH_TIMEOUT_MS << "ms). Icon state: launching.";
     } else {
-        if (m_launchingApps.contains(appPath)) {
-            m_launchingApps.remove(appPath);
-        }
-
-        QTimer* timer = m_launchTimers.value(appPath, nullptr);
-        if (timer) {
-            timer->stop();
-            // Optionally, remove and delete the timer if it won't be reused soon.
-            // m_launchTimers.remove(appPath);
-            // timer->deleteLater(); 
-            // For now, just stop it. It will be restarted if the app is launched again.
-            qDebug() << "UserView::setAppIconLaunching - Launch timer stopped for" << appPath << ". Icon state: normal.";
+        m_launchingApps.remove(appPath);
+        if (m_launchTimers.contains(appPath)) {
+            QTimer* timer = m_launchTimers.value(appPath);
+            if (timer) {
+                timer->stop();
+                timer->deleteLater();
+            }
+            m_launchTimers.remove(appPath);
         }
     }
-}
-
-void UserView::resetAppIconState(const QString& appPath) {
-    qDebug() << "UserView::resetAppIconState - Resetting icon state for" << appPath;
-    setAppIconLaunching(appPath, false);
 }
 
 void UserView::onLaunchTimerTimeout(const QString& appPath) {
-    qWarning() << "UserView::onLaunchTimerTimeout - Launch timer timed out for" << appPath << ". Resetting icon state.";
-    // Check if the app is still in m_launchingApps, because it might have been successfully launched
-    // and reset by onApplicationActivated just before the timer fired.
-    if(m_launchingApps.contains(appPath)){ // Only reset if it's still considered launching by UserView
-        resetAppIconState(appPath);
+    if (m_launchingApps.contains(appPath)) {
+        qWarning() << "UserView: Launch timed out for" << appPath;
+        this->setAppLoadingState(appPath, false);
     } else {
-        qDebug() << "UserView::onLaunchTimerTimeout - Timer for" << appPath << "fired, but app is no longer in m_launchingApps. State likely already reset.";
+        qWarning() << "UserView: Launch timer for" << appPath << "fired, but app not in launching state or path mismatch.";
     }
 }

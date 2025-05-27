@@ -12,8 +12,11 @@
 #include <QSizePolicy>
 #include <QFrame> // Added for separator line
 #include <QTabWidget>
+#include "SystemInteractionModule.h" // Include the definition for SystemInteractionModule
+#include <QProgressDialog> // For better user feedback during detection
+#include "DetectionResultDialog.h" // Make sure this is included
 
-AdminDashboardView::AdminDashboardView(QWidget *parent)
+AdminDashboardView::AdminDashboardView(SystemInteractionModule* systemInteractionModule, QWidget *parent)
     : QWidget(parent)
     , m_mainLayout(nullptr)
     , m_tabWidget(nullptr)
@@ -21,6 +24,7 @@ AdminDashboardView::AdminDashboardView(QWidget *parent)
     , m_settingsTab(nullptr)
     , m_whitelistListWidget(nullptr)
     , m_addAppButton(nullptr)
+    , m_detectAndAddAppButton(nullptr) // Initialize new button pointer
     , m_removeAppButton(nullptr)
     , m_currentHotkeyTitleLabel(nullptr)
     , m_currentHotkeyDisplayLabel(nullptr)
@@ -34,9 +38,16 @@ AdminDashboardView::AdminDashboardView(QWidget *parent)
     , m_confirmChangePasswordButton(nullptr)
     , m_exitButton(nullptr)
     , m_exitApplicationButton(nullptr)
+    , m_systemInteractionModulePtr(systemInteractionModule) // Initialize the new member
 {
     qDebug() << "管理员仪表盘(AdminDashboardView): 已创建。";
     setupUi();
+
+    // Connect the detectionCompleted signal from SystemInteractionModule
+    if (m_systemInteractionModulePtr) {
+        connect(m_systemInteractionModulePtr, &SystemInteractionModule::detectionCompleted,
+                this, &AdminDashboardView::onDetectionResultsReceived);
+    }
 }
 
 AdminDashboardView::~AdminDashboardView()
@@ -135,15 +146,19 @@ void AdminDashboardView::setupUi()
     m_whitelistListWidget = new QListWidget(whitelistGroup);
     m_whitelistListWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     m_whitelistListWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    m_whitelistListWidget->setIconSize(QSize(32, 32)); // 设置图标大小为 32x32
     whitelistGroupLayout->addWidget(m_whitelistListWidget, 1); // Give list widget stretch factor
 
     QHBoxLayout* whitelistButtonsLayout = new QHBoxLayout();
-    m_addAppButton = new QPushButton("添加应用...", whitelistGroup);
+    m_addAppButton = new QPushButton("手动添加应用...", whitelistGroup);
+    m_detectAndAddAppButton = new QPushButton("探测并添加应用...", whitelistGroup); // Create the new button
     m_removeAppButton = new QPushButton("移除选中", whitelistGroup);
     connect(m_addAppButton, &QPushButton::clicked, this, &AdminDashboardView::onAddAppClicked);
+    connect(m_detectAndAddAppButton, &QPushButton::clicked, this, &AdminDashboardView::onDetectAndAddAppClicked); // Connect new button
     connect(m_removeAppButton, &QPushButton::clicked, this, &AdminDashboardView::onRemoveAppClicked);
     whitelistButtonsLayout->addStretch();
     whitelistButtonsLayout->addWidget(m_addAppButton);
+    whitelistButtonsLayout->addWidget(m_detectAndAddAppButton); // Add new button to layout
     whitelistButtonsLayout->addWidget(m_removeAppButton);
     whitelistGroupLayout->addLayout(whitelistButtonsLayout);
     whitelistTabLayout->addWidget(whitelistGroup);
@@ -261,8 +276,10 @@ void AdminDashboardView::populateWhitelistView()
     if (!m_whitelistListWidget) return;
     m_whitelistListWidget->clear();
     for (const AppInfo& app : m_currentApps) {
-        QListWidgetItem* item = new QListWidgetItem(QString("%1 (%2)").arg(app.name).arg(app.path));
+        QString itemText = QString("%1 (%2)").arg(app.name).arg(app.path);
+        QListWidgetItem* item = new QListWidgetItem(itemText);
         item->setData(Qt::UserRole, app.path); // Store path for easy retrieval
+        item->setToolTip(itemText); // 设置工具提示显示完整文本
         if (!app.icon.isNull()) {
             item->setIcon(app.icon);
         }
@@ -447,6 +464,143 @@ void AdminDashboardView::onConfirmPasswordChangeClicked()
     // Optionally, provide feedback that request was sent, actual success depends on AdminModule
     qDebug() << "AdminDashboardView::onConfirmPasswordChangeClicked INVOKED.";
     qDebug() << "管理员仪表盘(AdminDashboardView): '修改密码' 按钮被点击。";
+}
+
+void AdminDashboardView::onDetectAndAddAppClicked()
+{
+    if (!m_systemInteractionModulePtr) {
+        QMessageBox::critical(this, "错误", "系统交互模块不可用。");
+        return;
+    }
+
+    QString filePath = QFileDialog::getOpenFileName(
+        this,
+        tr("选择应用程序可执行文件"),
+        QString(), // Default directory
+        tr("可执行文件 (*.exe);;所有文件 (*)")
+    );
+
+    if (filePath.isEmpty()) {
+        return; // User cancelled
+    }
+
+    QFileInfo fileInfo(filePath);
+    QString baseName = fileInfo.baseName(); // Suggest app name based on file name
+
+    bool ok;
+    QString appName = QInputDialog::getText(
+        this,
+        tr("输入应用名称"),
+        tr("应用名称:"),
+        QLineEdit::Normal,
+        baseName, // Default to executable base name
+        &ok
+    );
+
+    if (!ok || appName.isEmpty()) {
+        return; // User cancelled or entered empty name
+    }
+
+    m_pendingDetectionAppPath = filePath;
+    m_pendingDetectionAppName = appName;
+
+    // Show progress/busy indicator
+    // For simplicity, we can disable the button and change its text, 
+    // or use a QProgressDialog for better feedback.
+    m_detectAndAddAppButton->setEnabled(false);
+    m_detectAndAddAppButton->setText("正在探测...");
+    // Consider adding a QProgressDialog here for long operations
+
+    qDebug() << "[AdminDashboardView] Requesting detection for:" << filePath << "App Name:" << appName;
+    m_systemInteractionModulePtr->startExecutableDetection(filePath, appName);
+}
+
+void AdminDashboardView::onDetectionResultsReceived(const SuggestedWindowHints& hints, bool success, const QString& errorString)
+{
+    qDebug() << "[AdminDashboardView] Detection results received. Success:" << success;
+    m_detectAndAddAppButton->setText("探测并添加应用..."); // Reset button text
+    m_detectAndAddAppButton->setEnabled(true);    // Re-enable button
+
+    if (!success) {
+        QMessageBox::warning(this, tr("探测失败"), 
+            tr("未能成功探测 '%1' 的参数。错误信息: %2\n请尝试手动添加或检查应用兼容性。").arg(m_pendingDetectionAppName).arg(errorString));
+        m_pendingDetectionAppPath.clear();
+        m_pendingDetectionAppName.clear();
+        return;
+    }
+
+    qDebug() << "[AdminDashboardView] Showing DetectionResultDialog for:" << m_pendingDetectionAppName;
+    DetectionResultDialog dialog(hints, this); // Ensure 'hints' is used
+    
+    disconnect(&dialog, &DetectionResultDialog::suggestionsApplied, this, &AdminDashboardView::onDetectionDialogApplied);
+    connect(&dialog, &DetectionResultDialog::suggestionsApplied, this, &AdminDashboardView::onDetectionDialogApplied);
+
+    if (dialog.exec() == QDialog::Accepted) {
+        qDebug() << "[AdminDashboardView] DetectionResultDialog accepted by user.";
+    } else {
+        qDebug() << "[AdminDashboardView] DetectionResultDialog cancelled by user.";
+        m_pendingDetectionAppPath.clear();
+        m_pendingDetectionAppName.clear();
+    }
+}
+
+void AdminDashboardView::onDetectionDialogApplied(const QString& finalMainExecutableHint, const QJsonObject& finalWindowHints)
+{
+    qDebug() << "[AdminDashboardView] DetectionDialogApplied with MainExe:" << finalMainExecutableHint 
+             << "WindowHints:" << QJsonDocument(finalWindowHints).toJson(QJsonDocument::Compact);
+
+    if (m_pendingDetectionAppPath.isEmpty() || m_pendingDetectionAppName.isEmpty()) {
+        qWarning() << "[AdminDashboardView] onDetectionDialogApplied called but pending app path or name is empty. This should not happen.";
+        return;
+    }
+
+    AppInfo newApp;
+    newApp.name = m_pendingDetectionAppName;
+    newApp.path = m_pendingDetectionAppPath;
+    newApp.mainExecutableHint = finalMainExecutableHint;
+    newApp.windowFindingHints = finalWindowHints; // CORRECTED to windowFindingHints
+    
+    if (m_systemInteractionModulePtr) {
+        newApp.icon = m_systemInteractionModulePtr->getIconForExecutable(newApp.path);
+        if (newApp.icon.isNull()) {
+            qWarning() << "[AdminDashboardView] SystemInteractionModule failed to load icon for" << newApp.path << "when applying detected settings. Falling back to direct QIcon load.";
+            newApp.icon = QIcon(newApp.path); // Fallback if SIM also fails
+            if (newApp.icon.isNull()) {
+                qWarning() << "[AdminDashboardView] Fallback QIcon load also failed for" << newApp.path;
+            }
+        }
+    } else {
+        qWarning() << "[AdminDashboardView] m_systemInteractionModulePtr is null, falling back to direct QIcon load for" << newApp.path;
+        newApp.icon = QIcon(newApp.path);
+        if (newApp.icon.isNull()) {
+            qWarning() << "[AdminDashboardView] Fallback QIcon load failed (SIM was null) for" << newApp.path;
+        }
+    }
+
+    bool appExists = false;
+    for (int i = 0; i < m_currentApps.size(); ++i) {
+        if (m_currentApps[i].path.compare(newApp.path, Qt::CaseInsensitive) == 0) {
+            qDebug() << "[AdminDashboardView] App" << newApp.name << "already exists. Updating its hints.";
+            m_currentApps[i].name = newApp.name;
+            m_currentApps[i].mainExecutableHint = newApp.mainExecutableHint;
+            m_currentApps[i].windowFindingHints = newApp.windowFindingHints; // CORRECTED to windowFindingHints
+            m_currentApps[i].icon = newApp.icon;
+            appExists = true;
+            QMessageBox::information(this, tr("应用已更新"), tr("应用程序 '%1' 的参数已更新。").arg(newApp.name));
+            break;
+        }
+    }
+
+    if (!appExists) {
+        m_currentApps.append(newApp);
+        QMessageBox::information(this, tr("应用已添加"), tr("应用程序 '%1' 已成功添加到白名单。").arg(newApp.name));
+    }
+
+    populateWhitelistView();
+    emit whitelistChanged(m_currentApps);
+
+    m_pendingDetectionAppPath.clear();
+    m_pendingDetectionAppName.clear();
 }
 
 // Implement other methods and slots as functionality is migrated 

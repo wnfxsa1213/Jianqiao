@@ -7,7 +7,6 @@
 *****************************************************************************/
 
 #include "../../../../UserModeModule.h"
-#include <QtGui/qtextcursor.h>
 #include <QtCore/qmetatype.h>
 
 #include <QtCore/qtmochelpers.h>
@@ -72,8 +71,8 @@ template <> constexpr inline auto UserModeModule::qt_create_metaobjectdata<qt_me
             { QMetaType::QString, 5 }, { QMetaType::QString, 6 },
         }}),
         // Slot 'onApplicationLaunchRequested'
-        QtMocHelpers::SlotData<void(const QString &)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 8 },
+        QtMocHelpers::SlotData<void(const QString &, const QString &)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 8 }, { QMetaType::QString, 5 },
         }}),
         // Slot 'onProcessStateChanged'
         QtMocHelpers::SlotData<void(QProcess::ProcessState)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
@@ -125,7 +124,7 @@ void UserModeModule::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 0: _t->userModeActivated(); break;
         case 1: _t->userModeDeactivated(); break;
         case 2: _t->applicationFailedToLaunch((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 3: _t->onApplicationLaunchRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 3: _t->onApplicationLaunchRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
         case 4: _t->onProcessStateChanged((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessState>>(_a[1]))); break;
         case 5: _t->onApplicationActivated((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 6: _t->onApplicationActivationFailed((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;

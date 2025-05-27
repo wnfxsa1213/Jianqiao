@@ -364,7 +364,26 @@
 		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginTargets-debug.cmake",
 		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginTargets-relwithdebinfo.cmake",
 		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginAdditionalTargetInfo.cmake",
-		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessAliasTargets.cmake"
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessAliasTargets.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfigVersion.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfigVersionImpl.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentConfig.cmake",
+		"D:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentDependencies.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets-debug.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentTargets-relwithdebinfo.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentAdditionalTargetInfo.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateConfigVersion.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateConfigVersionImpl.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateConfig.cmake",
+		"D:/QT6/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateDependencies.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateTargets.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateAdditionalTargetInfo.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6ConcurrentPrivate/Qt6ConcurrentPrivateVersionlessAliasTargets.cmake",
+		"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Concurrent/Qt6ConcurrentVersionlessAliasTargets.cmake",
+		"C:/Users/13027/Desktop/Jianqiaov2/resources.qrc"
 	],
 	"CMAKE_SOURCE_DIR" : "C:/Users/13027/Desktop/Jianqiaov2",
 	"CROSS_CONFIG" : false,
@@ -394,6 +413,12 @@
 			"C:/Users/13027/Desktop/Jianqiaov2/AppCardWidget.h",
 			"MU",
 			"EWIEGA46WW/moc_AppCardWidget.cpp",
+			null
+		],
+		[
+			"C:/Users/13027/Desktop/Jianqiaov2/DetectionResultDialog.h",
+			"MU",
+			"EWIEGA46WW/moc_DetectionResultDialog.cpp",
 			null
 		],
 		[
@@ -437,6 +462,12 @@
 			"MU",
 			"EWIEGA46WW/moc_WhitelistManagerView.cpp",
 			null
+		],
+		[
+			"C:/Users/13027/Desktop/Jianqiaov2/common_types.h",
+			"MU",
+			"EWIEGA46WW/moc_common_types.cpp",
+			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
@@ -444,6 +475,7 @@
 	"MOC_COMPILATION_FILE" : "C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
+		"QT_CONCURRENT_LIB",
 		"QT_CORE_LIB",
 		"QT_GUI_LIB",
 		"QT_NO_DEBUG",
@@ -473,7 +505,8 @@
 		"D:/QT6/6.9.0/msvc2022_64/include/QtGui/6.9.0",
 		"D:/QT6/6.9.0/msvc2022_64/include/QtGui/6.9.0/QtGui",
 		"D:/QT6/6.9.0/msvc2022_64/include/QtCore/6.9.0",
-		"D:/QT6/6.9.0/msvc2022_64/include/QtCore/6.9.0/QtCore"
+		"D:/QT6/6.9.0/msvc2022_64/include/QtCore/6.9.0/QtCore",
+		"D:/QT6/6.9.0/msvc2022_64/include/QtConcurrent"
 	],
 	"MOC_MACRO_NAMES" : 
 	[
@@ -508,6 +541,11 @@
 		[ "C:/Users/13027/Desktop/Jianqiaov2/AdminLoginView.cpp", "MU", null ],
 		[ "C:/Users/13027/Desktop/Jianqiaov2/AdminModule.cpp", "MU", null ],
 		[ "C:/Users/13027/Desktop/Jianqiaov2/AppCardWidget.cpp", "MU", null ],
+		[
+			"C:/Users/13027/Desktop/Jianqiaov2/DetectionResultDialog.cpp",
+			"MU",
+			null
+		],
 		[ "C:/Users/13027/Desktop/Jianqiaov2/HotkeyEditDialog.cpp", "MU", null ],
 		[ "C:/Users/13027/Desktop/Jianqiaov2/HoverIconWidget.cpp", "MU", null ],
 		[ "C:/Users/13027/Desktop/Jianqiaov2/JianqiaoCoreShell.cpp", "MU", null ],

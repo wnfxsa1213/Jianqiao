@@ -41,6 +41,7 @@ public:
     bool isAppWhitelisted(const QString& processName) const;
     QString getAppPathForName(const QString& appName) const;
     void updateUserAppList(const QList<AppInfo>& apps); // New method
+    void terminateActiveProcesses(); // Added declaration
 
 signals:
     void userModeActivated();
@@ -48,7 +49,8 @@ signals:
     void applicationFailedToLaunch(const QString& appName, const QString& error); // Consider using this
 
 public slots:
-    void onApplicationLaunchRequested(const QString& appPath);
+    // Changed signature to match cpp
+    void onApplicationLaunchRequested(const QString& appPath, const QString& appName);
     void onProcessStateChanged(QProcess::ProcessState newState);
     void onApplicationActivated(const QString& appPath);
     void onApplicationActivationFailed(const QString& appPath);
@@ -59,7 +61,8 @@ public slots:
     void onProcessError(const QString& appPath, QProcess::ProcessError error);
 
 private:
-    void launchApplication(const AppInfo& appInfo);
+    // Changed signature to match cpp
+    void launchApplication(const QString& appPath, const QString& appName);
     void monitorLaunchedProcess(QProcess* process, const QString& appName);
     QString findExecutableName(const QString& appPath) const;
     void startProcessMonitoringTimer();
@@ -67,10 +70,11 @@ private:
     QString findAppPathForProcess(QProcess* process);
 
     JianqiaoCoreShell *m_coreShellPtr;
-    UserView *m_userViewPtr; // Added UserView pointer
-    SystemInteractionModule *m_systemInteractionModulePtr;
+    UserView *m_userViewPtr; // Renamed to m_userViewPtr
+    SystemInteractionModule *m_systemInteractionModulePtr; // Renamed to m_systemInteractionModulePtr
     QList<AppInfo> m_whitelistedApps;
-    QMap<QProcess*, QString> m_launchedProcesses; // Stores launched QProcess and its original app path
+    // QMap<QProcess*, QString> m_launchedProcesses; // Changed to QHash<QString, QProcess*> in cpp. Let's use QHash in header too for consistency if cpp is the newer version
+    QHash<QString, QProcess*> m_launchedProcesses; // Matched type from latest cpp
     QTimer* m_processMonitoringTimer;
     bool m_configLoaded = false; // ADDED
 
@@ -78,7 +82,7 @@ private:
     // bool m_isActive; // Flag to indicate if user mode is currently active
 
     QString m_configFilePath;
-    QMap<QString, QProcess*> m_runningProcesses;
+    // QMap<QString, QProcess*> m_runningProcesses; // This seems duplicate with m_launchedProcesses, check usage
     QMap<QString, QTimer*> m_launchTimers;      // Timers for launch timeout
     QSet<QString> m_launchingApps;          // Tracks apps currently in the process of launching
     QSet<QString> m_pendingActivationApps; // <<< ADD THIS LINE

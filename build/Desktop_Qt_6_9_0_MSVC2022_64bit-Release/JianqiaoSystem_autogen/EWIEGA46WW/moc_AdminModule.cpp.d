@@ -2,6 +2,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   C:/Users/13027/Desktop/Jianqiaov2/common_types.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMetaType \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QObject \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QStringList \

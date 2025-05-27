@@ -1,39 +1,37 @@
-09:36:17: 为项目JianqiaoSystem执行步骤 ...
-09:36:17: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target clean
+11:31:37: 为项目JianqiaoSystem执行步骤 ...
+11:31:37: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target clean
 
-[1/2 10.3/sec] Cleaning additional files...
-[2/2 15.0/sec] Cleaning all built files...
+[1/2 16.4/sec] Cleaning additional files...
+[2/2 23.8/sec] Cleaning all built files...
 Cleaning... 14 files.
-09:36:17: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"正常退出。
-09:36:17: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target all JianqiaoSystem
+11:31:37: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"正常退出。
+11:31:37: 正在启动 "D:\QT6\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target all JianqiaoSystem
 
-[1/15 1.1/sec] Automatic MOC and UIC for target JianqiaoSystem
-[2/15 0.6/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AppCardWidget.cpp.obj
-[3/15 0.9/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HoverIconWidget.cpp.obj
-[4/15 1.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\main.cpp.obj
-[5/15 1.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserView.cpp.obj
-[6/15 1.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminLoginView.cpp.obj
-[7/15 1.8/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj
-[8/15 1.9/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj
-FAILED: CMakeFiles/JianqiaoSystem.dir/UserModeModule.cpp.obj 
-C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\HostX64\x64\cl.exe  /nologo /TP -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -IC:\Users\13027\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release\JianqiaoSystem_autogen\include -IC:\Users\13027\Desktop\Jianqiaov2 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtWidgets -external:ID:\QT6\6.9.0\msvc2022_64\include -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore -external:ID:\QT6\6.9.0\msvc2022_64\mkspecs\win32-msvc -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui\6.9.0 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtGui\6.9.0\QtGui -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore\6.9.0 -external:ID:\QT6\6.9.0\msvc2022_64\include\QtCore\6.9.0\QtCore -external:W0 /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -Zc:__cplusplus -permissive- -utf-8 /showIncludes /FoCMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj /FdCMakeFiles\JianqiaoSystem.dir\ /FS -c C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp(50): error C2039: "onApplicationActivationFailed": 不是 "UserModeModule" 的成员
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.h(19): note: 参见“UserModeModule”的声明
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp(50): error C2065: “onApplicationActivationFailed”: 未声明的标识符
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp(359): error C2039: "onApplicationActivationFailed": 不是 "UserModeModule" 的成员
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.h(19): note: 参见“UserModeModule”的声明
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp(361): error C2065: “m_pendingActivationApps”: 未声明的标识符
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp(362): error C2065: “m_pendingActivationApps”: 未声明的标识符
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp(363): error C2065: “m_userViewPtr”: 未声明的标识符
-C:\Users\13027\Desktop\Jianqiaov2\UserModeModule.cpp(364): error C2065: “m_userViewPtr”: 未声明的标识符
-[9/15 2.0/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoCoreShell.cpp.obj
-[10/15 2.2/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj
-[11/15 2.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\WhitelistManagerView.cpp.obj
-[12/15 2.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminModule.cpp.obj
-[13/15 2.6/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj
-[14/15 2.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\mocs_compilation.cpp.obj
+[1/18 1.2/sec] Automatic MOC and UIC for target JianqiaoSystem
+[2/18 1.9/sec] Automatic RCC for resources.qrc
+[3/18 2.3/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\EWIEGA46WW\qrc_resources.cpp.obj
+[4/18 1.5/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HoverIconWidget.cpp.obj
+[5/18 1.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\main.cpp.obj
+[6/18 2.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminLoginView.cpp.obj
+[7/18 2.3/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AppCardWidget.cpp.obj
+[8/18 2.5/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\DetectionResultDialog.cpp.obj
+[9/18 2.8/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj
+[10/18 3.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserView.cpp.obj
+[11/18 2.9/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\WhitelistManagerView.cpp.obj
+[12/18 3.2/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoCoreShell.cpp.obj
+[13/18 3.3/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj
+[14/18 3.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminModule.cpp.obj
+[15/18 3.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj
+[16/18 3.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\mocs_compilation.cpp.obj
+[17/18 3.5/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj
+[18/18 3.6/sec] Linking CXX executable JianqiaoSystem.exe
+FAILED: JianqiaoSystem.exe 
+C:\WINDOWS\system32\cmd.exe /C "cd . && D:\QT6\Tools\CMake_64\bin\cmake.exe -E vs_link_exe --intdir=CMakeFiles\JianqiaoSystem.dir --rc=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe --mt=C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\mt.exe --manifests  -- C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\link.exe /nologo CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\mocs_compilation.cpp.obj CMakeFiles\JianqiaoSystem.dir\main.cpp.obj CMakeFiles\JianqiaoSystem.dir\JianqiaoCoreShell.cpp.obj CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj CMakeFiles\JianqiaoSystem.dir\AdminLoginView.cpp.obj CMakeFiles\JianqiaoSystem.dir\AdminModule.cpp.obj CMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj CMakeFiles\JianqiaoSystem.dir\WhitelistManagerView.cpp.obj CMakeFiles\JianqiaoSystem.dir\UserView.cpp.obj CMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj CMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj CMakeFiles\JianqiaoSystem.dir\AppCardWidget.cpp.obj CMakeFiles\JianqiaoSystem.dir\HoverIconWidget.cpp.obj CMakeFiles\JianqiaoSystem.dir\DetectionResultDialog.cpp.obj CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\EWIEGA46WW\qrc_resources.cpp.obj  /out:JianqiaoSystem.exe /implib:JianqiaoSystem.lib /pdb:JianqiaoSystem.pdb /version:0.0 /machine:x64 /INCREMENTAL:NO /subsystem:windows  D:\QT6\6.9.0\msvc2022_64\lib\Qt6Widgets.lib  D:\QT6\6.9.0\msvc2022_64\lib\Qt6Concurrent.lib  dwmapi.lib  D:\QT6\6.9.0\msvc2022_64\lib\Qt6Gui.lib  d3d11.lib  dxgi.lib  dxguid.lib  d3d12.lib  D:\QT6\6.9.0\msvc2022_64\lib\Qt6Core.lib  mpr.lib  userenv.lib  D:\QT6\6.9.0\msvc2022_64\lib\Qt6EntryPoint.lib  shell32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib && C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\13027\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release && D:\QT6\Tools\CMake_64\bin\cmake.exe -E copy_if_different C:/Users/13027/Desktop/Jianqiaov2/config.json C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/config.json && cd /D C:\Users\13027\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release && D:\QT6\Tools\CMake_64\bin\cmake.exe -E copy_if_different C:/Users/13027/Desktop/Jianqiaov2/AdminLoginView.qss C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/AdminLoginView.qss && cd /D C:\Users\13027\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release && D:\QT6\6.9.0\msvc2022_64\bin\windeployqt.exe --dir C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --plugindir C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/plugins C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem.exe""
+LINK: command "C:\PROGRA~1\MIB055~1\2022\COMMUN~1\VC\Tools\MSVC\1443~1.348\bin\Hostx64\x64\link.exe /nologo CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\mocs_compilation.cpp.obj CMakeFiles\JianqiaoSystem.dir\main.cpp.obj CMakeFiles\JianqiaoSystem.dir\JianqiaoCoreShell.cpp.obj CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj CMakeFiles\JianqiaoSystem.dir\AdminLoginView.cpp.obj CMakeFiles\JianqiaoSystem.dir\AdminModule.cpp.obj CMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj CMakeFiles\JianqiaoSystem.dir\WhitelistManagerView.cpp.obj CMakeFiles\JianqiaoSystem.dir\UserView.cpp.obj CMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj CMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj CMakeFiles\JianqiaoSystem.dir\AppCardWidget.cpp.obj CMakeFiles\JianqiaoSystem.dir\HoverIconWidget.cpp.obj CMakeFiles\JianqiaoSystem.dir\DetectionResultDialog.cpp.obj CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\EWIEGA46WW\qrc_resources.cpp.obj /out:JianqiaoSystem.exe /implib:JianqiaoSystem.lib /pdb:JianqiaoSystem.pdb /version:0.0 /machine:x64 /INCREMENTAL:NO /subsystem:windows D:\QT6\6.9.0\msvc2022_64\lib\Qt6Widgets.lib D:\QT6\6.9.0\msvc2022_64\lib\Qt6Concurrent.lib dwmapi.lib D:\QT6\6.9.0\msvc2022_64\lib\Qt6Gui.lib d3d11.lib dxgi.lib dxguid.lib d3d12.lib D:\QT6\6.9.0\msvc2022_64\lib\Qt6Core.lib mpr.lib userenv.lib D:\QT6\6.9.0\msvc2022_64\lib\Qt6EntryPoint.lib shell32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib /MANIFEST:EMBED,ID=1" failed (exit code 1120) with the following output:
+UserModeModule.cpp.obj : error LNK2019: 无法解析的外部符号 "public: void __cdecl SystemInteractionModule::stopMonitoringProcess(class QString const &)" (?stopMonitoringProcess@SystemInteractionModule@@QEAAXAEBVQString@@@Z)，函数 "public: static void __cdecl QtPrivate::FunctorCallable<class `private: void __cdecl UserModeModule::launchApplication(class QString const &,class QString const &)'::`2'::<lambda_1>,int,enum QProcess::ExitStatus>::call<struct QtPrivate::List<int,enum QProcess::ExitStatus>,void>(class `private: void __cdecl UserModeModule::launchApplication(class QString const &,class QString const &)'::`2'::<lambda_1> &,void *,void * *)" (??$call@U?$List@HW4ExitStatus@QProcess@@@QtPrivate@@X@?$FunctorCallable@V<lambda_1>@?1??launchApplication@UserModeModule@@AEAAXAEBVQString@@0@Z@HW4ExitStatus@QProcess@@@QtPrivate@@SAXAEAV<lambda_1>@?1??launchApplication@UserModeModule@@AEAAXAEBVQString@@0@Z@PEAXPEAPEAX@Z) 中引用了该符号
+JianqiaoSystem.exe : fatal error LNK1120: 1 个无法解析的外部命令
 ninja: build stopped: subcommand failed.
-09:36:22: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"退出，退出代码 1 。
-09:36:22: Error while building/deploying project JianqiaoSystem (kit: Desktop Qt 6.9.0 MSVC2022 64bit)
-09:36:22: When executing step "构建"
-09:36:22: Elapsed time: 00:06.
+11:31:42: 进程"D:\QT6\Tools\CMake_64\bin\cmake.exe"退出，退出代码 1 。
+11:31:42: Error while building/deploying project JianqiaoSystem (kit: Desktop Qt 6.9.0 MSVC2022 64bit)
+11:31:42: When executing step "构建"
+11:31:42: Elapsed time: 00:05.

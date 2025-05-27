@@ -10,18 +10,21 @@
 #include <QLineEdit> // Added for QLineEdit
 #include <windows.h> // Added for DWORD type
 #include "common_types.h" // Corrected path
+#include "DetectionResultDialog.h" // <<< Include DetectionResultDialog
 
 // Forward declarations if needed
 // class WhitelistManagerWidget; // If we decide to embed a refactored part
 // class PasswordSettingsWidget;
 // class HotkeySettingsWidget;
+class SystemInteractionModule; // Forward declare
 
 class AdminDashboardView : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit AdminDashboardView(QWidget *parent = nullptr);
+    // Modified constructor to accept SystemInteractionModule pointer
+    explicit AdminDashboardView(SystemInteractionModule* systemInteractionModule, QWidget *parent = nullptr);
     ~AdminDashboardView();
 
     void setWhitelistedApps(const QList<AppInfo>& apps);
@@ -35,14 +38,18 @@ signals:
     void changePasswordRequested(const QString& currentPassword, const QString& newPassword);
     void adminLoginHotkeyChanged(const QList<DWORD>& newHotkeySequence); // Assuming AdminModule provides DWORD list
     // void viewClosed(); // Replaced by userRequestsExitAdminMode for clarity
+    void detectionResultsReceived(const SuggestedWindowHints& hints, bool success, const QString& errorString); // <<< NEW SIGNAL
 
 private slots:
     void onAddAppClicked();    // Added
     void onRemoveAppClicked(); // Added
+    void onDetectAndAddAppClicked(); // <<< NEW SLOT for detection workflow
     void onChangeHotkeyClicked(); // Added slot for changing hotkey
     void onExitApplicationClicked(); // Added slot
     void onConfirmPasswordChangeClicked(); // <--- 新增槽函数
     // void onSomeSettingChanged();
+    void onDetectionResultsReceived(const SuggestedWindowHints& hints, bool success, const QString& errorString); // <<< NEW SLOT
+    void onDetectionDialogApplied(const QString& finalMainExecutableHint, const QJsonObject& finalWindowHints); // <<< NEW SLOT for dialog results
 
 private:
     void setupUi();
@@ -59,6 +66,7 @@ private:
     // Whitelist management UI (will be on m_whitelistTab)
     QListWidget* m_whitelistListWidget;
     QPushButton* m_addAppButton;
+    QPushButton* m_detectAndAddAppButton; // <<< NEW BUTTON for detection
     QPushButton* m_removeAppButton;
     QList<AppInfo> m_currentApps;
 
@@ -89,6 +97,10 @@ private:
     // WhitelistManagerWidget* m_whitelistWidget;
     // PasswordSettingsWidget* m_passwordWidget;
     // HotkeySettingsWidget* m_hotkeyWidget;
+
+    SystemInteractionModule* m_systemInteractionModulePtr; // <<< Pointer to SystemInteractionModule
+    QString m_pendingDetectionAppPath; // To store path while waiting for detection results
+    QString m_pendingDetectionAppName; // To store name while waiting for detection results
 };
 
 #endif // ADMINDASHBOARDVIEW_H 

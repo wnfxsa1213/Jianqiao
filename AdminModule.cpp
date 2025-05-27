@@ -418,12 +418,19 @@ void AdminModule::saveConfig()
             QJsonObject appObj;
             appObj["name"] = app.name;
             appObj["path"] = app.path;
-        if (!app.mainExecutableHint.isEmpty()) {
-            appObj["mainExecutableHint"] = app.mainExecutableHint;
-        }
-        if (!app.windowFindingHints.isEmpty()) {
-            appObj["windowFindingHints"] = app.windowFindingHints;
-        }
+
+            // Serialize mainExecutableHint if it's not empty
+            if (!app.mainExecutableHint.isEmpty()) {
+                appObj["mainExecutableHint"] = app.mainExecutableHint;
+            }
+
+            // Serialize windowFindingHints if it's not empty
+            if (!app.windowFindingHints.isEmpty()) {
+                appObj["windowFindingHints"] = app.windowFindingHints;
+            }
+
+            // Note: Icon is not saved as a path here; it's dynamically loaded.
+            // If a persistent icon_path was desired, it would be saved here.
             appsArray.append(appObj);
         }
         rootObj["whitelist_apps"] = appsArray;
@@ -488,12 +495,17 @@ bool AdminModule::saveWhitelistToConfig(const QList<AppInfo>& apps)
         QJsonObject appObj;
         appObj["name"] = app.name;
         appObj["path"] = app.path;
+
+        // Serialize mainExecutableHint if it's not empty
         if (!app.mainExecutableHint.isEmpty()) {
             appObj["mainExecutableHint"] = app.mainExecutableHint;
         }
+
+        // Serialize windowFindingHints if it's not empty
         if (!app.windowFindingHints.isEmpty()) {
-            appObj["windowFindingHints"] = app.windowFindingHints; // Save the QJsonObject directly
+            appObj["windowFindingHints"] = app.windowFindingHints;
         }
+
         // Note: Icon is not saved as a path here; it's dynamically loaded.
         // If a persistent icon_path was desired, it would be saved here.
         appsArray.append(appObj);

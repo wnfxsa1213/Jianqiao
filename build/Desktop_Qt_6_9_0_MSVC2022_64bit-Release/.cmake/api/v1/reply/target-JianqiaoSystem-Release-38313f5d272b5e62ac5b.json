@@ -33,7 +33,10 @@
 			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake",
 			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6/Qt6Config.cmake",
 			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
-			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake"
+			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
+			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets.cmake",
+			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfig.cmake",
+			"D:/QT6/6.9.0/msvc2022_64/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake"
 		],
 		"nodes" : 
 		[
@@ -43,13 +46,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 43,
+				"line" : 49,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 52,
+				"line" : 57,
 				"parent" : 0
 			},
 			{
@@ -153,9 +156,63 @@
 				"parent" : 20
 			},
 			{
+				"command" : 3,
+				"file" : 9,
+				"line" : 45,
+				"parent" : 18
+			},
+			{
+				"file" : 12,
+				"parent" : 22
+			},
+			{
+				"command" : 6,
+				"file" : 12,
+				"line" : 46,
+				"parent" : 23
+			},
+			{
+				"command" : 5,
+				"file" : 4,
+				"line" : 137,
+				"parent" : 24
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 76,
+				"parent" : 25
+			},
+			{
+				"file" : 11,
+				"parent" : 26
+			},
+			{
+				"command" : 3,
+				"file" : 11,
+				"line" : 55,
+				"parent" : 27
+			},
+			{
+				"file" : 10,
+				"parent" : 28
+			},
+			{
+				"command" : 2,
+				"file" : 10,
+				"line" : 61,
+				"parent" : 29
+			},
+			{
+				"command" : 2,
+				"file" : 10,
+				"line" : 83,
+				"parent" : 29
+			},
+			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 50,
+				"line" : 55,
 				"parent" : 0
 			}
 		]
@@ -183,6 +240,10 @@
 			],
 			"defines" : 
 			[
+				{
+					"backtrace" : 2,
+					"define" : "QT_CONCURRENT_LIB"
+				},
 				{
 					"backtrace" : 2,
 					"define" : "QT_CORE_LIB"
@@ -231,7 +292,7 @@
 					"path" : "C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/include"
 				},
 				{
-					"backtrace" : 22,
+					"backtrace" : 32,
 					"path" : "C:/Users/13027/Desktop/Jianqiaov2"
 				},
 				{
@@ -278,6 +339,11 @@
 					"backtrace" : 2,
 					"isSystem" : true,
 					"path" : "D:/QT6/6.9.0/msvc2022_64/include/QtCore/6.9.0/QtCore"
+				},
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "D:/QT6/6.9.0/msvc2022_64/include/QtConcurrent"
 				}
 			],
 			"language" : "CXX",
@@ -304,18 +370,20 @@
 				9,
 				10,
 				11,
-				12
+				12,
+				13,
+				29
 			]
 		}
 	],
 	"dependencies" : 
 	[
 		{
-			"id" : "JianqiaoSystem_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
-		},
-		{
 			"backtrace" : 0,
 			"id" : "JianqiaoSystem_autogen::@6890427a1f51a3e7e1df"
+		},
+		{
+			"id" : "JianqiaoSystem_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "JianqiaoSystem::@6890427a1f51a3e7e1df",
@@ -328,12 +396,17 @@
 				"role" : "flags"
 			},
 			{
-				"fragment" : "/machine:x64 /INCREMENTAL:NO /subsystem:console",
+				"fragment" : "/machine:x64 /INCREMENTAL:NO /subsystem:windows",
 				"role" : "flags"
 			},
 			{
 				"backtrace" : 2,
 				"fragment" : "D:\\QT6\\6.9.0\\msvc2022_64\\lib\\Qt6Widgets.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "D:\\QT6\\6.9.0\\msvc2022_64\\lib\\Qt6Concurrent.lib",
 				"role" : "libraries"
 			},
 			{
@@ -382,6 +455,16 @@
 				"role" : "libraries"
 			},
 			{
+				"backtrace" : 30,
+				"fragment" : "D:\\QT6\\6.9.0\\msvc2022_64\\lib\\Qt6EntryPoint.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 31,
+				"fragment" : "shell32.lib",
+				"role" : "libraries"
+			},
+			{
 				"fragment" : "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib",
 				"role" : "libraries"
 			}
@@ -413,21 +496,50 @@
 				9,
 				10,
 				11,
-				12
+				12,
+				13,
+				29
+			]
+		},
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26
+			]
+		},
+		{
+			"name" : "Resources",
+			"sourceIndexes" : 
+			[
+				27
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				13
+				28
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				14
+				30,
+				31
 			]
 		}
 	],
@@ -513,16 +625,105 @@
 			"sourceGroupIndex" : 0
 		},
 		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "DetectionResultDialog.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "JianqiaoCoreShell.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "SystemInteractionModule.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "AdminLoginView.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "AdminModule.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "AdminDashboardView.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "WhitelistManagerView.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "UserView.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "UserModeModule.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "common_types.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "HotkeyEditDialog.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "AppCardWidget.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "HoverIconWidget.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "DetectionResultDialog.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "resources.qrc",
+			"sourceGroupIndex" : 2
+		},
+		{
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/timestamp",
-			"sourceGroupIndex" : 1
+			"sourceGroupIndex" : 3
+		},
+		{
+			"backtrace" : 0,
+			"compileGroupIndex" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/EWIEGA46WW/qrc_resources.cpp",
+			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/timestamp.rule",
-			"sourceGroupIndex" : 2
+			"sourceGroupIndex" : 4
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/EWIEGA46WW/qrc_resources.cpp.rule",
+			"sourceGroupIndex" : 4
 		}
 	],
 	"type" : "EXECUTABLE"

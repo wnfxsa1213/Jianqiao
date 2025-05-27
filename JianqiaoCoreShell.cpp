@@ -57,7 +57,10 @@ void JianqiaoCoreShell::setupUi()
     m_mainStackedWidget = new QStackedWidget(this);
 
     m_userViewInstance = new UserView(this);
-    m_adminDashboardInstance = new AdminDashboardView(this);
+    if (!m_systemInteractionModule) {
+        qCritical() << "JianqiaoCoreShell::setupUi - m_systemInteractionModule is null before creating AdminDashboardView!";
+    }
+    m_adminDashboardInstance = new AdminDashboardView(m_systemInteractionModule, this);
 
     m_mainStackedWidget->addWidget(m_userViewInstance);
     m_mainStackedWidget->addWidget(m_adminDashboardInstance);
