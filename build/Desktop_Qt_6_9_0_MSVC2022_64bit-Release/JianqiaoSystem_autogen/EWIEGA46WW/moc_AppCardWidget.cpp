@@ -44,7 +44,8 @@ template <> constexpr inline auto AppCardWidget::qt_create_metaobjectdata<qt_met
         "appPath",
         "appName",
         "setLoadingState",
-        "loading"
+        "loading",
+        "scaleFactor"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -58,6 +59,8 @@ template <> constexpr inline auto AppCardWidget::qt_create_metaobjectdata<qt_met
         }}),
     };
     QtMocHelpers::UintData qt_properties {
+        // property 'scaleFactor'
+        QtMocHelpers::PropertyData<qreal>(7, QMetaType::QReal, QMC::DefaultPropertyFlags | QMC::Writable | QMC::StdCppSet),
     };
     QtMocHelpers::UintData qt_enums {
     };
@@ -88,6 +91,20 @@ void AppCardWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         if (QtMocHelpers::indexOfMethod<void (AppCardWidget::*)(const QString & , const QString & )>(_a, &AppCardWidget::launchAppRequested, 0))
             return;
     }
+    if (_c == QMetaObject::ReadProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: *reinterpret_cast<qreal*>(_v) = _t->scaleFactor(); break;
+        default: break;
+        }
+    }
+    if (_c == QMetaObject::WriteProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: _t->setScaleFactor(*reinterpret_cast<qreal*>(_v)); break;
+        default: break;
+        }
+    }
 }
 
 const QMetaObject *AppCardWidget::metaObject() const
@@ -117,6 +134,12 @@ int AppCardWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         if (_id < 2)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
         _id -= 2;
+    }
+    if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
+            || _c == QMetaObject::ResetProperty || _c == QMetaObject::BindableProperty
+            || _c == QMetaObject::RegisterPropertyMetaType) {
+        qt_static_metacall(this, _c, _id, _a);
+        _id -= 1;
     }
     return _id;
 }

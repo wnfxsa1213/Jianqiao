@@ -47,6 +47,7 @@ signals:
     void userModeActivated();
     void userModeDeactivated();
     void applicationFailedToLaunch(const QString& appName, const QString& error); // Consider using this
+    void userAppListUpdated(const QList<AppInfo>& apps); // Added signal declaration
 
 public slots:
     // Changed signature to match cpp

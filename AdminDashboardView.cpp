@@ -546,59 +546,51 @@ void AdminDashboardView::onDetectionResultsReceived(const SuggestedWindowHints& 
 
 void AdminDashboardView::onDetectionDialogApplied(const QString& finalMainExecutableHint, const QJsonObject& finalWindowHints)
 {
-    qDebug() << "[AdminDashboardView] DetectionDialogApplied with MainExe:" << finalMainExecutableHint 
-             << "WindowHints:" << QJsonDocument(finalWindowHints).toJson(QJsonDocument::Compact);
+    qDebug() << "AdminDashboardView::onDetectionDialogApplied - AppPath:" << m_pendingDetectionAppPath
+             << "AppName:" << m_pendingDetectionAppName
+             << "MainExeHint:" << finalMainExecutableHint
+             << "WindowHints:" << finalWindowHints.keys();
 
     if (m_pendingDetectionAppPath.isEmpty() || m_pendingDetectionAppName.isEmpty()) {
-        qWarning() << "[AdminDashboardView] onDetectionDialogApplied called but pending app path or name is empty. This should not happen.";
+        qWarning() << "AdminDashboardView: Pending detection app path or name is empty. Cannot add app.";
+        QMessageBox::warning(this, "添加失败", "无法添加应用，因为原始应用路径或名称丢失。");
         return;
     }
 
+    // Check for duplicates before adding
+    for (const AppInfo& existingApp : qAsConst(m_currentApps)) {
+        if (existingApp.path == m_pendingDetectionAppPath) {
+            QMessageBox::warning(this, "重复应用", "此应用程序已在白名单中。");
+            return;
+        }
+    }
+
     AppInfo newApp;
-    newApp.name = m_pendingDetectionAppName;
-    newApp.path = m_pendingDetectionAppPath;
+    newApp.name = m_pendingDetectionAppName; // Use the initially proposed name
+    newApp.path = m_pendingDetectionAppPath; // CRITICAL: Use the stored full path
     newApp.mainExecutableHint = finalMainExecutableHint;
-    newApp.windowFindingHints = finalWindowHints; // CORRECTED to windowFindingHints
-    
-    if (m_systemInteractionModulePtr) {
-        newApp.icon = m_systemInteractionModulePtr->getIconForExecutable(newApp.path);
+    newApp.windowFindingHints = finalWindowHints;
+
+    // --- BEGIN MODIFICATION: Get and set the icon ---
+    if (m_systemInteractionModulePtr && !m_pendingDetectionAppPath.isEmpty()) {
+        newApp.icon = m_systemInteractionModulePtr->getIconForExecutable(m_pendingDetectionAppPath);
         if (newApp.icon.isNull()) {
-            qWarning() << "[AdminDashboardView] SystemInteractionModule failed to load icon for" << newApp.path << "when applying detected settings. Falling back to direct QIcon load.";
-            newApp.icon = QIcon(newApp.path); // Fallback if SIM also fails
-            if (newApp.icon.isNull()) {
-                qWarning() << "[AdminDashboardView] Fallback QIcon load also failed for" << newApp.path;
-            }
+            qWarning() << "AdminDashboardView: Failed to get icon for" << m_pendingDetectionAppPath << ". Using default icon.";
+            // Optionally set a default icon here if desired, e.g.:
+            // newApp.icon = QApplication::style()->standardIcon(QStyle::SP_ExecutableFile);
         }
     } else {
-        qWarning() << "[AdminDashboardView] m_systemInteractionModulePtr is null, falling back to direct QIcon load for" << newApp.path;
-        newApp.icon = QIcon(newApp.path);
-        if (newApp.icon.isNull()) {
-            qWarning() << "[AdminDashboardView] Fallback QIcon load failed (SIM was null) for" << newApp.path;
-        }
+        qWarning() << "AdminDashboardView: SystemInteractionModule is null or pending app path is empty, cannot get icon. App will have no icon.";
     }
+    // --- END MODIFICATION ---
 
-    bool appExists = false;
-    for (int i = 0; i < m_currentApps.size(); ++i) {
-        if (m_currentApps[i].path.compare(newApp.path, Qt::CaseInsensitive) == 0) {
-            qDebug() << "[AdminDashboardView] App" << newApp.name << "already exists. Updating its hints.";
-            m_currentApps[i].name = newApp.name;
-            m_currentApps[i].mainExecutableHint = newApp.mainExecutableHint;
-            m_currentApps[i].windowFindingHints = newApp.windowFindingHints; // CORRECTED to windowFindingHints
-            m_currentApps[i].icon = newApp.icon;
-            appExists = true;
-            QMessageBox::information(this, tr("应用已更新"), tr("应用程序 '%1' 的参数已更新。").arg(newApp.name));
-            break;
-        }
-    }
+    m_currentApps.append(newApp);
+    populateWhitelistView(); // Refresh the list widget directly
 
-    if (!appExists) {
-        m_currentApps.append(newApp);
-        QMessageBox::information(this, tr("应用已添加"), tr("应用程序 '%1' 已成功添加到白名单。").arg(newApp.name));
-    }
-
-    populateWhitelistView();
+    qDebug() << "AdminDashboardView: App" << newApp.name << "added/updated. Emitting whitelistChanged.";
     emit whitelistChanged(m_currentApps);
 
+    // Clear pending info
     m_pendingDetectionAppPath.clear();
     m_pendingDetectionAppName.clear();
 }

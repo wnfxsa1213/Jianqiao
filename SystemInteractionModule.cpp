@@ -1319,7 +1319,7 @@ SuggestedWindowHints SystemInteractionModule::performExecutableDetectionLogic(co
         
         qDebug() << "[SIM::performExeDetectLogic] Success! Detected Hints:" << hints.toString() << "Achieved Score:" << hints.bestScoreDuringDetection;
 
-    } else {
+        } else {
         qWarning() << "[SIM::performExeDetectLogic] Could not find main window for:" << executablePath
                    << "(Initial PID:" << initialPid << ", Searched PID:" << targetPid << ")";
         hints.errorString = tr("未能找到 '%1' 的主窗口。").arg(initialAppName);
@@ -1376,7 +1376,7 @@ void SystemInteractionModule::installHookAsync()
     qDebug() << "[SystemInteractionModule] installHookAsync() called.";
     if (installKeyboardHook()) {
         qDebug() << "[SystemInteractionModule] Keyboard hook installed asynchronously.";
-            } else {
+    } else {
         qWarning() << "[SystemInteractionModule] Failed to install keyboard hook asynchronously.";
     }
 }

@@ -7,9 +7,17 @@
 #include <QFile>   // For loading QSS
 #include <QMovie>  // For loading animation
 #include <QStyle> // Added for style()->polish/unpolish
+#include <QEasingCurve> // For animation easing
+#include <QResizeEvent> // For resize event handling
 
 AppCardWidget::AppCardWidget(const QString& appName, const QString& appPath, const QIcon& appIcon, QWidget *parent)
-    : QWidget{parent}, m_appName(appName), m_appPath(appPath), m_appIcon(appIcon), m_isLoading(false)
+    : QWidget{parent}, 
+      m_appName(appName), 
+      m_appPath(appPath), 
+      m_appIcon(appIcon), 
+      m_isLoading(false),
+      m_scaleFactor(DEFAULT_SCALE),
+      m_scaleAnimation(nullptr)
 {
     setupUi();
     setObjectName("appCard"); // ID for QSS
@@ -23,77 +31,118 @@ AppCardWidget::AppCardWidget(const QString& appName, const QString& appPath, con
     } else {
         qWarning() << "AppCardWidget: Could not load QSS file.";
     }
+    
+    // 创建缩放动画
+    m_scaleAnimation = new QPropertyAnimation(this, "scaleFactor");
+    m_scaleAnimation->setDuration(ANIMATION_DURATION);
+    m_scaleAnimation->setEasingCurve(QEasingCurve::OutCubic);
 }
 
 void AppCardWidget::setupUi()
 {
-    m_layout = new QVBoxLayout(this);
-    m_layout->setContentsMargins(0, 0, 0, 0); // QSS controls padding
-    m_layout->setSpacing(2); // Minimal spacing if name were visible
-
+    // 移除使用QVBoxLayout进行垂直居中的方法
+    // 改为直接在widget中放置图标并手动控制位置
+    
+    setFixedSize(68, 68); // 确保AppCardWidget大小固定
+    
     m_iconLabel = new QLabel(this);
     m_iconLabel->setObjectName("iconLabel");
-    m_iconLabel->setPixmap(m_appIcon.pixmap(QSize(56, 56))); // Adjusted icon size
-    m_iconLabel->setFixedSize(QSize(56, 56)); // Ensure icon label takes this size
+    m_iconLabel->setPixmap(m_appIcon.pixmap(QSize(56, 56))); // 调整图标大小
+    m_iconLabel->setFixedSize(QSize(56, 56)); // 确保图标标签大小固定
     m_iconLabel->setAlignment(Qt::AlignCenter);
+    
+    // 取消使用布局，改为手动设置位置
+    m_layout = nullptr;
 
     m_nameLabel = new QLabel(m_appName, this);
     m_nameLabel->setObjectName("nameLabel");
     m_nameLabel->setAlignment(Qt::AlignCenter);
     m_nameLabel->setWordWrap(true);
-    m_nameLabel->setVisible(false); // Hide name label by default for Dock style
+    m_nameLabel->setVisible(false); // 默认隐藏名称标签
 
-    // Loading Indicator (Prefer QMovie if available, else simple text)
-    m_loadingIndicatorLabel = new QLabel(this); // Will hold either text or QMovie
+    m_loadingIndicatorLabel = new QLabel(this);
     m_loadingIndicatorLabel->setObjectName("loadingIndicatorLabel");
     m_loadingIndicatorLabel->setAlignment(Qt::AlignCenter);
-    m_loadingIndicatorLabel->setVisible(false); // Initially hidden
+    m_loadingIndicatorLabel->setVisible(false); // 初始状态为隐藏
 
-    // Attempt to load a GIF for loading animation
-    m_loadingMovie = new QMovie(":/icons/loading_spinner.gif"); // Path to your loading GIF in resources
+    m_loadingMovie = new QMovie(":/icons/loading_spinner.gif");
     if (m_loadingMovie->isValid()) {
         m_loadingIndicatorLabel->setMovie(m_loadingMovie);
-        m_loadingMovie->setScaledSize(QSize(32, 32)); // Adjust size of spinner
+        m_loadingMovie->setScaledSize(QSize(32, 32)); 
     } else {
         qDebug() << "AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.";
-        m_loadingIndicatorLabel->setText("..."); // Fallback text
-        // delete m_loadingMovie; // Optional: delete if not used to save a tiny bit of memory
-        // m_loadingMovie = nullptr;
+        m_loadingIndicatorLabel->setText("..."); 
     }
+    
+    // 初始化图标位置
+    updateIconPosition();
+}
 
-    // Layout: Icon and Name label are usually visible OR loading indicator is visible
-    // We'll use a QStackedLayout if complex, or just manage visibility if simple.
-    // For now, we'll manage visibility and ensure they are centered.
-    // QVBoxLayout will stack them, but only one (icon or loading) should be prominent.
+void AppCardWidget::updateIconPosition()
+{
+    // 计算图标应该放置的位置，使其居中
+    if (m_iconLabel) {
+        int x = (width() - m_iconLabel->width()) / 2;
+        int y = (height() - m_iconLabel->height()) / 2;
+        
+        // 应用缩放因子对图标进行缩放，同时保持居中
+        QSize scaledSize(m_iconLabel->width() * m_scaleFactor, m_iconLabel->height() * m_scaleFactor);
+        int scaledX = (width() - scaledSize.width()) / 2;
+        int scaledY = (height() - scaledSize.height()) / 2;
+        
+        m_iconLabel->setGeometry(scaledX, scaledY, scaledSize.width(), scaledSize.height());
+    }
+    
+    // 加载指示器也需要居中
+    if (m_loadingIndicatorLabel && m_loadingIndicatorLabel->isVisible()) {
+        int x = (width() - m_loadingIndicatorLabel->width()) / 2;
+        int y = (height() - m_loadingIndicatorLabel->height()) / 2;
+        m_loadingIndicatorLabel->move(x, y);
+    }
+}
 
-    m_layout->addStretch(); // Push content to center if VBox is larger
-    m_layout->addWidget(m_iconLabel, 0, Qt::AlignCenter);         // Icon centered
-    m_layout->addWidget(m_nameLabel, 0, Qt::AlignCenter);         // Name centered (but hidden)
-    m_layout->addWidget(m_loadingIndicatorLabel, 0, Qt::AlignCenter); // Loading centered
-    m_layout->addStretch(); // Push content to center
+void AppCardWidget::setScaleFactor(qreal factor)
+{
+    if (qFuzzyCompare(m_scaleFactor, factor))
+        return;
+        
+    m_scaleFactor = factor;
+    updateIconPosition();
+    update();
+}
 
-    setLayout(m_layout);
-    // Size constraints are now primarily from QSS (min/max width/height for appCard object)
-    // setFixedSize can be used if QSS is not sufficient, but QSS is preferred.
+void AppCardWidget::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
+    updateIconPosition();
 }
 
 void AppCardWidget::setLoadingState(bool loading)
 {
     if (m_isLoading == loading) return;
     m_isLoading = loading;
-    setProperty("loading", m_isLoading); // For QSS styling [loading="true"]
-    style()->unpolish(this); // Re-apply QSS
+    setProperty("loading", m_isLoading); 
+    style()->unpolish(this); 
     style()->polish(this);
 
     if (m_isLoading) {
         m_iconLabel->setVisible(false);
-        m_nameLabel->setVisible(false); // Ensure name is also hidden
+        m_nameLabel->setVisible(false); 
+        
+        // 确保加载指示器在AppCardWidget中居中
+        if (m_loadingIndicatorLabel->movie() == m_loadingMovie && m_loadingMovie && m_loadingMovie->isValid()) {
+             m_loadingIndicatorLabel->setFixedSize(m_loadingMovie->currentPixmap().size());
+        } else {
+            m_loadingIndicatorLabel->adjustSize();
+        }
+        // 居中加载指示器
+        int x = (this->width() - m_loadingIndicatorLabel->width()) / 2;
+        int y = (this->height() - m_loadingIndicatorLabel->height()) / 2;
+        m_loadingIndicatorLabel->setGeometry(x, y, m_loadingIndicatorLabel->width(), m_loadingIndicatorLabel->height());
         m_loadingIndicatorLabel->setVisible(true);
+
         if (m_loadingMovie && m_loadingMovie->isValid()) {
             m_loadingMovie->start();
-        } else {
-            // Text is already set in setupUi or ensure it's visible
-            m_loadingIndicatorLabel->setText("..."); 
         }
     } else {
         if (m_loadingMovie && m_loadingMovie->isValid()) {
@@ -101,17 +150,24 @@ void AppCardWidget::setLoadingState(bool loading)
         }
         m_loadingIndicatorLabel->setVisible(false);
         m_iconLabel->setVisible(true);
-        m_nameLabel->setVisible(false); // Keep name hidden for Dock style
+        m_nameLabel->setVisible(false); 
+        
+        // 重置缩放因子
+        if (m_scaleAnimation->state() == QAbstractAnimation::Running) {
+            m_scaleAnimation->stop();
+        }
+        m_scaleFactor = DEFAULT_SCALE;
+        updateIconPosition();
     }
-    update(); // Request a repaint
+    update(); 
 }
 
 void AppCardWidget::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
-        if (!m_isLoading) { // Only emit if not already loading
+        if (!m_isLoading) { // 只有在非加载状态下才发射信号
             qDebug() << "AppCardWidget:" << m_appName << "clicked.";
-            setLoadingState(true); // Visually indicate loading immediately
+            setLoadingState(true); // 立即显示加载状态
             emit launchAppRequested(m_appPath, m_appName);
         }
     }
@@ -120,12 +176,24 @@ void AppCardWidget::mousePressEvent(QMouseEvent *event)
 
 void AppCardWidget::enterEvent(QEnterEvent *event)
 {
-    // Could enhance with property animation for smoother hover effect
-    // For now, QSS :hover handles it.
+    // 鼠标进入时启动放大动画
+    if (!m_isLoading && m_scaleAnimation) {
+        m_scaleAnimation->stop();
+        m_scaleAnimation->setStartValue(m_scaleFactor);
+        m_scaleAnimation->setEndValue(HOVER_SCALE);
+        m_scaleAnimation->start();
+    }
     QWidget::enterEvent(event);
 }
 
 void AppCardWidget::leaveEvent(QEvent *event)
 {
+    // 鼠标离开时启动缩小动画
+    if (!m_isLoading && m_scaleAnimation) {
+        m_scaleAnimation->stop();
+        m_scaleAnimation->setStartValue(m_scaleFactor);
+        m_scaleAnimation->setEndValue(DEFAULT_SCALE);
+        m_scaleAnimation->start();
+    }
     QWidget::leaveEvent(event);
-} 
+}

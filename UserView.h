@@ -14,11 +14,16 @@
 #include <QPixmap> // ADDED for m_currentBackground
 
 // Forward declarations
-// class QLabel; // No longer used
+class QLabel;
+class QFrame;
 class QScrollArea;
-// struct WhitelistedApp; // No longer needed, full definition in common_types.h
+class QHBoxLayout;
+class QVBoxLayout;
+class AppCardWidget;
+struct AppInfo; // Forward declaration
 
 const int LAUNCH_TIMEOUT_MS = 30000; // 30 seconds
+const int APP_MAX_DOCK_WIDTH = 1200; // <-- NEW CONSTANT
 
 class UserView : public QWidget
 {
@@ -54,6 +59,7 @@ private:
     void clearAppCards(); // Renamed from clearAppIcons
     AppCardWidget* findAppCardByPath(const QString& appPath) const; // Type changed
     // void updateGridLayout(); // Removed, grid layout is gone
+    void updateDockFrameOptimalWidth(); // <-- NEW METHOD
 
     QVBoxLayout* m_mainLayout;       
     QFrame* m_dockFrame;            // Dock panel background and container

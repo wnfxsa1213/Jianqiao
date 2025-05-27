@@ -41,7 +41,12 @@ UserModeModule::UserModeModule(JianqiaoCoreShell *coreShell, UserView* userView,
         // Connect to UserView signals (ensure onApplicationLaunchRequested has two QStrings now)
         disconnect(m_userViewPtr, &UserView::applicationLaunchRequested, this, nullptr); // Disconnect any previous to avoid duplicates
         connect(m_userViewPtr, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested);
-        qInfo() << "UserModeModule initialized and connected to UserView.";
+
+        // Connect this module's signal to UserView's slot to update the app list
+        disconnect(this, &UserModeModule::userAppListUpdated, m_userViewPtr, nullptr);
+        connect(this, &UserModeModule::userAppListUpdated, m_userViewPtr, &UserView::setAppList);
+
+        qInfo() << "UserModeModule initialized and connected to UserView (app launch request and app list update).";
     } else {
         qWarning() << "UserModeModule: UserView is null, cannot connect signals.";
     }
@@ -485,14 +490,15 @@ QString UserModeModule::findAppPathForProcess(QProcess* process) {
 
 void UserModeModule::updateUserAppList(const QList<AppInfo>& apps) {
     qDebug() << "UserModeModule::updateUserAppList - Updating apps from provided list. Count:" << apps.count();
-    m_whitelistedApps = apps; // Update internal cache
-
-    if (m_userViewPtr) {
-        m_userViewPtr->setAppList(m_whitelistedApps); // Update UserView
-        qDebug() << "UserModeModule::updateUserAppList - UserView updated with new app list.";
-    } else {
-        qWarning() << "UserModeModule::updateUserAppList - UserView pointer (m_userViewPtr) is null, cannot update view.";
+    m_whitelistedApps.clear(); // Assuming m_whitelistedApps is the correct member
+    for (const AppInfo& app : apps) {
+        m_whitelistedApps.append(app);
     }
-    // After updating from a direct list, we might consider the config "loaded" or synced for this session component.
-    m_configLoaded = true; 
+
+    // Emit the signal to notify UserView or other listeners
+    emit userAppListUpdated(m_whitelistedApps);
+
+    // This log message is now more accurate as the signal has been emitted,
+    // which should trigger the UserView update.
+    qDebug() << "UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.";
 } 

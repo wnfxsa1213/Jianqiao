@@ -8,6 +8,7 @@
 
 #include "../../../../UserModeModule.h"
 #include <QtCore/qmetatype.h>
+#include <QtCore/QList>
 
 #include <QtCore/qtmochelpers.h>
 
@@ -45,6 +46,9 @@ template <> constexpr inline auto UserModeModule::qt_create_metaobjectdata<qt_me
         "applicationFailedToLaunch",
         "appName",
         "error",
+        "userAppListUpdated",
+        "QList<AppInfo>",
+        "apps",
         "onApplicationLaunchRequested",
         "appPath",
         "onProcessStateChanged",
@@ -70,33 +74,37 @@ template <> constexpr inline auto UserModeModule::qt_create_metaobjectdata<qt_me
         QtMocHelpers::SignalData<void(const QString &, const QString &)>(4, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 5 }, { QMetaType::QString, 6 },
         }}),
+        // Signal 'userAppListUpdated'
+        QtMocHelpers::SignalData<void(const QList<AppInfo> &)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 8, 9 },
+        }}),
         // Slot 'onApplicationLaunchRequested'
-        QtMocHelpers::SlotData<void(const QString &, const QString &)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 8 }, { QMetaType::QString, 5 },
+        QtMocHelpers::SlotData<void(const QString &, const QString &)>(10, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 11 }, { QMetaType::QString, 5 },
         }}),
         // Slot 'onProcessStateChanged'
-        QtMocHelpers::SlotData<void(QProcess::ProcessState)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 10, 11 },
+        QtMocHelpers::SlotData<void(QProcess::ProcessState)>(12, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 13, 14 },
         }}),
         // Slot 'onApplicationActivated'
-        QtMocHelpers::SlotData<void(const QString &)>(12, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 8 },
+        QtMocHelpers::SlotData<void(const QString &)>(15, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 11 },
         }}),
         // Slot 'onApplicationActivationFailed'
-        QtMocHelpers::SlotData<void(const QString &)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 8 },
+        QtMocHelpers::SlotData<void(const QString &)>(16, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 11 },
         }}),
         // Slot 'onProcessStarted'
-        QtMocHelpers::SlotData<void(const QString &)>(14, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 8 },
+        QtMocHelpers::SlotData<void(const QString &)>(17, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 11 },
         }}),
         // Slot 'onProcessFinished'
-        QtMocHelpers::SlotData<void(const QString &, int, QProcess::ExitStatus)>(15, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 8 }, { QMetaType::Int, 16 }, { 0x80000000 | 17, 18 },
+        QtMocHelpers::SlotData<void(const QString &, int, QProcess::ExitStatus)>(18, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 11 }, { QMetaType::Int, 19 }, { 0x80000000 | 20, 21 },
         }}),
         // Slot 'onProcessError'
-        QtMocHelpers::SlotData<void(const QString &, QProcess::ProcessError)>(19, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::QString, 8 }, { 0x80000000 | 20, 6 },
+        QtMocHelpers::SlotData<void(const QString &, QProcess::ProcessError)>(22, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 11 }, { 0x80000000 | 23, 6 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -124,13 +132,14 @@ void UserModeModule::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         case 0: _t->userModeActivated(); break;
         case 1: _t->userModeDeactivated(); break;
         case 2: _t->applicationFailedToLaunch((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 3: _t->onApplicationLaunchRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 4: _t->onProcessStateChanged((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessState>>(_a[1]))); break;
-        case 5: _t->onApplicationActivated((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 6: _t->onApplicationActivationFailed((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 7: _t->onProcessStarted((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 8: _t->onProcessFinished((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QProcess::ExitStatus>>(_a[3]))); break;
-        case 9: _t->onProcessError((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QProcess::ProcessError>>(_a[2]))); break;
+        case 3: _t->userAppListUpdated((*reinterpret_cast< std::add_pointer_t<QList<AppInfo>>>(_a[1]))); break;
+        case 4: _t->onApplicationLaunchRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 5: _t->onProcessStateChanged((*reinterpret_cast< std::add_pointer_t<QProcess::ProcessState>>(_a[1]))); break;
+        case 6: _t->onApplicationActivated((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 7: _t->onApplicationActivationFailed((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 8: _t->onProcessStarted((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 9: _t->onProcessFinished((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<int>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QProcess::ExitStatus>>(_a[3]))); break;
+        case 10: _t->onProcessError((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QProcess::ProcessError>>(_a[2]))); break;
         default: ;
         }
     }
@@ -140,6 +149,8 @@ void UserModeModule::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _
         if (QtMocHelpers::indexOfMethod<void (UserModeModule::*)()>(_a, &UserModeModule::userModeDeactivated, 1))
             return;
         if (QtMocHelpers::indexOfMethod<void (UserModeModule::*)(const QString & , const QString & )>(_a, &UserModeModule::applicationFailedToLaunch, 2))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (UserModeModule::*)(const QList<AppInfo> & )>(_a, &UserModeModule::userAppListUpdated, 3))
             return;
     }
 }
@@ -163,14 +174,14 @@ int UserModeModule::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }
@@ -191,5 +202,11 @@ void UserModeModule::userModeDeactivated()
 void UserModeModule::applicationFailedToLaunch(const QString & _t1, const QString & _t2)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 2, nullptr, _t1, _t2);
+}
+
+// SIGNAL 3
+void UserModeModule::userAppListUpdated(const QList<AppInfo> & _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 3, nullptr, _t1);
 }
 QT_WARNING_POP

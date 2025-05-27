@@ -199,41 +199,41 @@ void AdminModule::onAdminLoginHotkeyChanged(const QList<DWORD>& newHotkeySequenc
     }
 }
 
-void AdminModule::onWhitelistUpdated(const QList<AppInfo>& newWhitelist)
-{
-    qDebug() << "管理员模块(AdminModule): 白名单已更新，包含" << newWhitelist.count() << "个应用。";
-    m_whitelistedApps.clear();
-
-    for (const AppInfo& appFromView : newWhitelist) {
-        AppInfo processedApp = appFromView; // Create a mutable copy
-        qDebug() << "管理员模块(AdminModule): 处理来自视图的应用:" << processedApp.name << "路径:" << processedApp.path;
-        
-        // 自动检测逻辑已被移除。我们现在直接使用来自视图的 AppInfo。
-        // 如果视图不直接提供 mainExecutableHint 和 windowFindingHints,
-        // 那么这些字段将依赖于 config.json 中的手动配置。
-        // 当保存时，如果这些字段在 appFromView 中是空的，它们也会被保存为空。
-        // 用户需要在 config.json 中手动填写它们，或者如果 AdminDashboardView 支持，则在那里填写。
-
-        // 只是为了确保从视图过来的 AppInfo 被正确记录
-        qDebug() << "管理员模块(AdminModule): 应用 " << processedApp.name << " 的 mainExecutableHint: '" << processedApp.mainExecutableHint << "'";
-        if (!processedApp.windowFindingHints.isEmpty()) {
-            qDebug() << "  WindowFindingHints:" << QJsonDocument(processedApp.windowFindingHints).toJson(QJsonDocument::Compact);
+void AdminModule::onWhitelistUpdated(const QList<AppInfo>& updatedWhitelist) {
+    qDebug() << "[AdminModule] onWhitelistUpdated CALLED. Received" << updatedWhitelist.count() << "apps.";
+    for (const AppInfo& app : updatedWhitelist) {
+        qDebug() << "  App in updatedWhitelist:" << app.name << "Path:" << app.path << "Hint:" << app.mainExecutableHint;
+        if (!app.windowFindingHints.isEmpty()) {
+            QJsonObject hintsObj = app.windowFindingHints;
+            qDebug() << "    WindowHints: class:" << hintsObj.value("primaryClassName").toString()
+                     << "title:" << hintsObj.value("titleContains").toString()
+                     << "allowNonTop:" << hintsObj.value("allowNonTopLevel").toBool()
+                     << "minScore:" << hintsObj.value("minScore").toInt();
+            } else {
+            qDebug() << "    WindowHints: (empty)";
         }
-
-        m_whitelistedApps.append(processedApp);
     }
 
-    if (saveWhitelistToConfig(m_whitelistedApps)) {
+    // Save the updated list to the configuration file
+    if (saveWhitelistToConfig(updatedWhitelist)) {
         qDebug() << "管理员模块(AdminModule): 更新后的白名单已成功保存到 config.json。";
+        m_whitelistedApps = updatedWhitelist; // Update the internal list as well
         emit configurationChanged(); // 通知 UserModeModule 等其他模块配置已更改
     } else {
-        qWarning() << "管理员模块(AdminModule): 更新白名单后保存到 config.json 失败!";
+        qWarning() << "管理员模块(AdminModule): 保存更新后的白名单到 config.json 失败。";
+        // Optionally, inform the user via a QMessageBox or similar
+        QMessageBox::critical(m_adminDashboardView, "保存失败", "无法将更新的白名单保存到配置文件。");
     }
 }
 
 void AdminModule::loadConfig()
 {
-    QString configPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + "/config.json";
+    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir dirCheck(configDir);
+    if (!dirCheck.exists()) {
+        dirCheck.mkpath(".");
+        }
+    QString configPath = configDir + "/config.json";
     qDebug() << "管理员模块(AdminModule): 尝试从以下路径加载配置文件:" << configPath;
 
     QFile configFile(configPath);
@@ -366,7 +366,7 @@ void AdminModule::loadConfig()
 
 void AdminModule::saveConfig() 
 {
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     QDir dir(configDir);
     if (!dir.exists()) {
         if (!dir.mkpath(".")) {
@@ -465,18 +465,12 @@ void AdminModule::initializeDefaultAdminHotkey() {
 
 bool AdminModule::saveWhitelistToConfig(const QList<AppInfo>& apps)
 {
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    QDir dir(configDir);
-    if (!dir.exists()) {
-        if (!dir.mkpath(".")) {
-            qWarning() << "管理员模块(AdminModule): 无法创建配置目录:" << configDir;
-            return false;
-        }
-    }
-    QString configPath = configDir + "/config.json";
-    qDebug() << "管理员模块(AdminModule): 准备将白名单保存到:" << configPath;
+    QString configPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/config.json";
+    qDebug() << "[AdminModule::saveWhitelistToConfig] Attempting to save" << apps.count() << "apps to:" << configPath;
 
+    QFile configFile(configPath);
     QJsonObject rootObj;
+
     // Try to load existing config to preserve other settings
     QFile configFileRead(configPath);
     if (configFileRead.exists() && configFileRead.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -518,11 +512,23 @@ bool AdminModule::saveWhitelistToConfig(const QList<AppInfo>& apps)
         qWarning() << "管理员模块(AdminModule): 无法打开配置文件进行写入:" << configPath;
         return false;
     }
-    
+
     QJsonDocument newDoc(rootObj);
     configFileWrite.write(newDoc.toJson());
     configFileWrite.close();
-    qDebug() << "管理员模块(AdminModule): 白名单已成功保存到配置文件。";
+    qDebug() << "管理员模块(AdminModule): 白名单已成功写入并通过 configFile.close()。";
+
+    // Re-read and verify
+    QFile verifyFile(configPath);
+    if (verifyFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "[AdminModule::saveWhitelistToConfig] Verification: Successfully re-opened config file for reading.";
+        QByteArray content = verifyFile.readAll();
+        qDebug() << "[AdminModule::saveWhitelistToConfig] Verification: Content after save:\n" << content;
+        verifyFile.close();
+    } else {
+        qWarning() << "[AdminModule::saveWhitelistToConfig] Verification: Failed to re-open config file for reading after save:" << verifyFile.errorString();
+    }
+
     return true;
 }
 
@@ -544,9 +550,10 @@ bool AdminModule::saveAdminPasswordToConfig(const QString& newPassword) {
     }
     m_adminPasswordHash = QString(QCryptographicHash::hash(newPassword.toUtf8(), QCryptographicHash::Sha256).toHex());
     
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    if (configDir.isEmpty()) {
-        configDir = QCoreApplication::applicationDirPath();
+    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir dirCheck(configDir);
+    if (!dirCheck.exists()) {
+        dirCheck.mkpath(".");
     }
     QString configPath = configDir + "/config.json";
     
@@ -580,9 +587,10 @@ bool AdminModule::saveAdminLoginHotkeyToConfig(const QStringList& hotkeyVkString
         return false;
     }
 
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-     if (configDir.isEmpty()) {
-        configDir = QCoreApplication::applicationDirPath();
+    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QDir dirCheck(configDir);
+    if (!dirCheck.exists()) {
+        dirCheck.mkpath(".");
     }
     QString configPath = configDir + "/config.json";
 

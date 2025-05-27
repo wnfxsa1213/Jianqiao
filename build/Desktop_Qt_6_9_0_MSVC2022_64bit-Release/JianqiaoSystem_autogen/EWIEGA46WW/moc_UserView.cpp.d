@@ -5,6 +5,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMetaType \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QPropertyAnimation \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSet \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QTimer \
@@ -15,6 +16,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/q20type_traits.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/q20utility.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/q23utility.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstractanimation.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstracteventdispatcher.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qalgorithms.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qanystringview.h \
@@ -50,6 +52,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdeadlinetimer.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qeasingcurve.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qelapsedtimer.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qendian.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qeventloop.h \
@@ -93,6 +96,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpair.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpoint.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qprocessordetection.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpropertyanimation.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrect.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrefcount.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qregularexpression.h \
@@ -147,6 +151,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariantanimation.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qversiontagging.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qxptype_traits.h \

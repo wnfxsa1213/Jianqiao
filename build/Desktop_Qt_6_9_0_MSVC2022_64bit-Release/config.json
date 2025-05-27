@@ -10,17 +10,5 @@
                 "A"
             ]
         }
-    },
-    "whitelist_apps": [
-        {
-            "name": "WPS",
-            "path": "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe",
-            "windowFindingHints": {
-                "allowNonTopLevel": true,
-                "minScore": 50,
-                "primaryClassName": "OpusApp",
-                "titleContains": "WPS Office"
-            }
-        }
-    ]
+    }
 }

@@ -1,175 +1,243 @@
---- Log started at 2025-05-27 11:32:43 ---
-2025-05-27 11:32:43.689 DEBUG:   Application started.
-2025-05-27 11:32:43.689 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数开始。
-2025-05-27 11:32:43.689 DEBUG:   剑鞘核心(JianqiaoCoreShell): 初始化核心应用设置。
-2025-05-27 11:32:43.690 DEBUG:   SystemInteractionModule: Config path set to: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-27 11:32:43.690 DEBUG:   SystemInteractionModule (loadConfiguration): Attempting to load config from: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-27 11:32:43.690 DEBUG:   管理员登录热键已从配置文件加载: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 11:32:43.690 DEBUG:   配置文件中未找到 'user_mode_settings'。不拦截用户模式按键。
-2025-05-27 11:32:43.690 DEBUG:   系统交互模块(SystemInteractionModule): 已创建。
-2025-05-27 11:32:43.690 DEBUG:   剑鞘核心(JianqiaoCoreShell): 底层系统交互模块已实例化。
-2025-05-27 11:32:43.690 DEBUG:   用户视图(UserView): 已创建。
-2025-05-27 11:32:43.691 DEBUG:   管理员仪表盘(AdminDashboardView): 已创建。
-2025-05-27 11:32:43.693 DEBUG:   剑鞘核心外壳: UI设置完成 (QStackedWidget), 视图实例已创建。
-2025-05-27 11:32:43.693 DEBUG:   管理员登录视图(AdminLoginView): 成功加载 AdminLoginView.qss
-2025-05-27 11:32:43.693 DEBUG:   管理员登录视图(AdminLoginView): 已创建。
-2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 构造函数开始。
-2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 尝试从以下路径加载配置文件: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 已加载管理员密码哈希。
-2025-05-27 11:32:43.693 DEBUG:   管理员模块(AdminModule): 已加载管理员登录热键: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 11:32:43.693 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-2025-05-27 11:32:43.693 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-27 11:32:43.693 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
-2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Pixmap size: QSize(48, 48)
-2025-05-27 11:32:43.747 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "wps" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
-2025-05-27 11:32:43.747 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":50,\"primaryClassName\":\"OpusApp\",\"titleContains\":\"WPS Office\"}"
-2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe"
-2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-27 11:32:43.747 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Pixmap size: QSize(48, 48)
-2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "balenaEtcher" Path: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Hint: "balenaEtcher.exe"
-2025-05-27 11:32:43.749 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":50,\"primaryClassName\":\"Chrome_WidgetWin_1\",\"titleContains\":\"balenaEtcher\"}"
-2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 共加载 2 个白名单应用。
-2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 准备填充管理员仪表盘数据。
-2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 11:32:43.749 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
-2025-05-27 11:32:43.749 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 配置文件加载完成。
-2025-05-27 11:32:43.749 DEBUG:   管理员模块(AdminModule): 构造函数结束。
-2025-05-27 11:32:43.749 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "wps" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Pixmap size: QSize(48, 48)
-2025-05-27 11:32:43.749 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "balenaEtcher" Path: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Hint: "balenaEtcher.exe"
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe"
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
-2025-05-27 11:32:43.749 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe" Pixmap size: QSize(48, 48)
-2025-05-27 11:32:43.749 INFO:    Configuration loaded, 2 apps in whitelist.
-2025-05-27 11:32:43.749 INFO:    UserModeModule initialized and connected to UserView.
-2025-05-27 11:32:43.749 DEBUG:   键盘钩子: 安装成功。
-2025-05-27 11:32:43.749 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 SystemInteractionModule::adminLoginRequested 信号。
-2025-05-27 11:32:43.749 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。
-2025-05-27 11:32:43.749 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-27 11:32:43.749 DEBUG:   JianqiaoCoreShell: Fetched 2 apps from AdminModule's current state for UserModeModule.
-2025-05-27 11:32:43.749 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 2
-2025-05-27 11:32:43.764 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
-2025-05-27 11:32:43.771 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
-2025-05-27 11:32:43.771 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
-2025-05-27 11:32:43.771 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): 用户视图已显示 (初始状态)。
-2025-05-27 11:32:43.771 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数结束。
-2025-05-27 11:32:43.774 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
-2025-05-27 11:32:43.774 DEBUG:   AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.
-2025-05-27 11:32:47.241 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-27 11:32:47.241 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-27 11:32:47.252 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-27 11:32:47.252 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-27 11:32:47.452 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-27 11:32:47.452 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-27 11:32:47.687 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
-2025-05-27 11:32:47.687 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
-2025-05-27 11:32:47.687 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
-2025-05-27 11:32:47.687 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
-2025-05-27 11:32:47.687 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
-2025-05-27 11:32:47.687 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 11:32:47.687 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
-2025-05-27 11:32:47.687 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
-2025-05-27 11:32:47.687 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
-2025-05-27 11:32:50.136 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
-2025-05-27 11:32:50.136 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
-2025-05-27 11:32:50.137 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
-2025-05-27 11:32:50.137 DEBUG:   管理员模块(AdminModule): 密码验证成功。
-2025-05-27 11:32:50.137 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
-2025-05-27 11:32:50.137 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 11:32:50.138 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
-2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
-2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
-2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
-2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
-2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
-2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 11:32:50.138 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 11:32:50.138 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
-2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
-2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
-2025-05-27 11:32:50.138 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 11:32:50.138 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
-2025-05-27 11:32:50.139 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
-2025-05-27 11:32:52.277 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
-2025-05-27 11:32:52.277 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
-2025-05-27 11:32:52.277 DEBUG:   管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。
-2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
-2025-05-27 11:32:52.277 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-27 11:32:52.277 DEBUG:   JianqiaoCoreShell: Fetched 2 apps from AdminModule's current state for UserModeModule.
-2025-05-27 11:32:52.277 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 2
-2025-05-27 11:32:52.277 DEBUG:   UserModeModule::updateUserAppList - UserView updated with new app list.
-2025-05-27 11:32:52.277 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-27 11:32:52.277 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
-2025-05-27 11:32:55.999 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-27 11:32:55.999 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-27 11:32:58.810 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-27 11:32:58.810 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-27 11:32:58.854 DEBUG:   "用户模式下按键: VK_LWIN (VK: 0x5b), m_userModeActive: 1"
-2025-05-27 11:32:58.854 DEBUG:   "用户模式下按键 VK_LWIN 未被任何规则拦截。"
-2025-05-27 11:32:59.114 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-27 11:32:59.114 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-27 11:33:02.467 DEBUG:   "用户模式下按键: VK_LWIN (VK: 0x5b), m_userModeActive: 1"
-2025-05-27 11:33:02.467 DEBUG:   "用户模式下按键 VK_LWIN 未被任何规则拦截。"
-2025-05-27 11:33:03.723 DEBUG:   "用户模式下按键: VK_ESCAPE (VK: 0x1b), m_userModeActive: 1"
-2025-05-27 11:33:03.723 DEBUG:   "用户模式下按键 VK_ESCAPE 未被任何规则拦截。"
-2025-05-27 11:33:04.440 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-27 11:33:04.440 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-27 11:33:04.532 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-27 11:33:04.532 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-27 11:33:04.654 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-27 11:33:04.654 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-27 11:33:04.775 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
-2025-05-27 11:33:04.775 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
-2025-05-27 11:33:04.775 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
-2025-05-27 11:33:04.775 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
-2025-05-27 11:33:04.775 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
-2025-05-27 11:33:04.775 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 11:33:04.775 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
-2025-05-27 11:33:04.776 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
-2025-05-27 11:33:04.776 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
-2025-05-27 11:33:07.258 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
-2025-05-27 11:33:07.258 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
-2025-05-27 11:33:07.258 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
-2025-05-27 11:33:07.258 DEBUG:   管理员模块(AdminModule): 密码验证成功。
-2025-05-27 11:33:07.258 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
-2025-05-27 11:33:07.258 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-27 11:33:07.269 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
-2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
-2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
-2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
-2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
-2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
-2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 11:33:07.269 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-27 11:33:07.269 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
-2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
-2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
-2025-05-27 11:33:07.269 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
-2025-05-27 11:33:07.269 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
-2025-05-27 11:33:08.099 DEBUG:   AdminDashboardView::onExitApplicationClicked INVOKED.
-2025-05-27 11:33:08.099 DEBUG:   管理员仪表盘(AdminDashboardView): '退出整个程序' 按钮被点击。应用程序将退出。
-2025-05-27 11:33:08.105 DEBUG:   Application finished with exit code: 0
---- Log finished at 2025-05-27 11:33:08 ---
-2025-05-27 11:33:08.105 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已销毁。
-2025-05-27 11:33:08.106 DEBUG:   键盘钩子: 卸载成功。
-2025-05-27 11:33:08.106 DEBUG:   [SystemInteractionModule] SystemInteractionModule destroyed.
-2025-05-27 11:33:08.106 DEBUG:   用户视图(UserView): 已销毁。
-2025-05-27 11:33:08.106 DEBUG:   管理员仪表盘(AdminDashboardView): 已销毁。
-2025-05-27 11:33:08.106 DEBUG:   管理员模块(AdminModule): 销毁。
-2025-05-27 11:33:08.106 INFO:    UserModeModule destroyed.
+--- Log started at 2025-05-27 17:09:10 ---
+2025-05-27 17:09:10.964 DEBUG:   Application started.
+2025-05-27 17:09:10.964 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数开始。
+2025-05-27 17:09:10.964 DEBUG:   剑鞘核心(JianqiaoCoreShell): 初始化核心应用设置。
+2025-05-27 17:09:10.964 DEBUG:   SystemInteractionModule: Config path set to: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 17:09:10.964 DEBUG:   SystemInteractionModule (loadConfiguration): Attempting to load config from: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 17:09:10.965 DEBUG:   管理员登录热键已从配置文件加载: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:10.965 DEBUG:   配置文件中未找到 'user_mode_settings'。不拦截用户模式按键。
+2025-05-27 17:09:10.965 DEBUG:   系统交互模块(SystemInteractionModule): 已创建。
+2025-05-27 17:09:10.965 DEBUG:   剑鞘核心(JianqiaoCoreShell): 底层系统交互模块已实例化。
+2025-05-27 17:09:10.965 DEBUG:   用户视图(UserView): 已创建。
+2025-05-27 17:09:10.965 DEBUG:   管理员仪表盘(AdminDashboardView): 已创建。
+2025-05-27 17:09:10.971 DEBUG:   剑鞘核心外壳: UI设置完成 (QStackedWidget), 视图实例已创建。
+2025-05-27 17:09:10.971 DEBUG:   管理员登录视图(AdminLoginView): 成功加载 AdminLoginView.qss
+2025-05-27 17:09:10.971 DEBUG:   管理员登录视图(AdminLoginView): 已创建。
+2025-05-27 17:09:10.971 DEBUG:   管理员模块(AdminModule): 构造函数开始。
+2025-05-27 17:09:10.971 DEBUG:   管理员模块(AdminModule): 尝试从以下路径加载配置文件: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): 已加载管理员密码哈希。
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): 已加载管理员登录热键: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): 共加载 0 个白名单应用。
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): 准备填充管理员仪表盘数据。
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-27 17:09:10.972 DEBUG:   AdminDashboardView::setWhitelistedApps called with 0 apps.
+2025-05-27 17:09:10.972 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): 配置文件加载完成。
+2025-05-27 17:09:10.972 DEBUG:   管理员模块(AdminModule): 构造函数结束。
+2025-05-27 17:09:10.972 INFO:    Configuration loaded, 0 apps in whitelist.
+2025-05-27 17:09:10.972 INFO:    UserModeModule initialized and connected to UserView (app launch request and app list update).
+2025-05-27 17:09:10.972 DEBUG:   键盘钩子: 安装成功。
+2025-05-27 17:09:10.972 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 SystemInteractionModule::adminLoginRequested 信号。
+2025-05-27 17:09:10.972 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。
+2025-05-27 17:09:10.972 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
+2025-05-27 17:09:10.972 DEBUG:   JianqiaoCoreShell: Fetched 0 apps from AdminModule's current state for UserModeModule.
+2025-05-27 17:09:10.972 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 0
+2025-05-27 17:09:10.972 DEBUG:   UserView::populateAppList - Received 0 apps. Clearing existing cards.
+2025-05-27 17:09:10.972 DEBUG:   UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.
+2025-05-27 17:09:10.972 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 17:09:10.972 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
+2025-05-27 17:09:10.972 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
+2025-05-27 17:09:10.972 DEBUG:   剑鞘核心(JianqiaoCoreShell): 用户视图已显示 (初始状态)。
+2025-05-27 17:09:10.972 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数结束。
+2025-05-27 17:09:10.977 DEBUG:   UserView::populateAppList - Received 0 apps. Clearing existing cards.
+2025-05-27 17:09:12.107 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-27 17:09:12.107 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-27 17:09:12.110 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-27 17:09:12.110 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-27 17:09:12.313 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
+2025-05-27 17:09:12.313 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
+2025-05-27 17:09:12.475 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-27 17:09:12.475 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-27 17:09:12.475 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-27 17:09:12.475 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-27 17:09:12.475 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-27 17:09:12.475 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 17:09:12.475 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-27 17:09:12.486 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-27 17:09:12.486 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-27 17:09:16.534 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
+2025-05-27 17:09:16.534 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
+2025-05-27 17:09:16.534 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
+2025-05-27 17:09:16.534 DEBUG:   管理员模块(AdminModule): 密码验证成功。
+2025-05-27 17:09:16.534 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
+2025-05-27 17:09:16.534 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 17:09:16.549 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-27 17:09:16.549 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
+2025-05-27 17:09:16.549 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
+2025-05-27 17:09:16.549 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
+2025-05-27 17:09:16.549 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
+2025-05-27 17:09:16.549 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-27 17:09:16.549 DEBUG:   AdminDashboardView::setWhitelistedApps called with 0 apps.
+2025-05-27 17:09:16.549 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:16.549 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-27 17:09:16.549 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
+2025-05-27 17:09:16.549 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
+2025-05-27 17:09:16.549 DEBUG:   AdminDashboardView::setWhitelistedApps called with 0 apps.
+2025-05-27 17:09:16.549 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:16.549 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
+2025-05-27 17:09:16.549 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
+2025-05-27 17:09:20.464 DEBUG:   剑鞘核心外壳: 窗口激活事件, 但有模态对话框 ( "" ) 活动。不强制前景。
+2025-05-27 17:09:21.671 DEBUG:   [AdminDashboardView] Requesting detection for: "D:/lceda-pro/lceda-pro.exe" App Name: "lceda-pro"
+2025-05-27 17:09:21.671 DEBUG:   [SystemInteractionModule] Received request to detect executable parameters for: "D:/lceda-pro/lceda-pro.exe" App Name: "lceda-pro"
+2025-05-27 17:09:21.671 DEBUG:   [SystemInteractionModule] Starting detection task in thread: 0x32f0
+2025-05-27 17:09:21.671 DEBUG:   [SIM::performExeDetectLogic] Path: "D:/lceda-pro/lceda-pro.exe" App Name: "lceda-pro"
+2025-05-27 17:09:21.691 DEBUG:   [SIM::performExeDetectLogic] Initial process started. PID: 11792 Exe: "lceda-pro.exe"
+2025-05-27 17:09:21.701 DEBUG:   [SIM::performExeDetectLogic] Waiting 5000 ms for app to initialize...
+2025-05-27 17:09:26.704 DEBUG:   [SIM::performExeDetectLogic] Initial process PID 11792 still running: true
+2025-05-27 17:09:26.704 DEBUG:   [SIM::performExeDetectLogic] Attempt 1: Finding window for initial PID: 11792
+2025-05-27 17:09:26.704 DEBUG:   [SystemInteractionModule] Attempting to find main window for PID: 11792 with hints: "{}"
+2025-05-27 17:09:26.704 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x906b4 PID: 11792 Class: ' "Chrome_WidgetWin_1" ' Title: ' "嘉立创EDA(专业版) - V2.2.39.2" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 50 )
+2025-05-27 17:09:26.704 DEBUG:           >>> [EnumWindowsProcWithHints New Best Candidate!] HWND: 0x906b4 Score: 50 (Prev Best: -1 ) Class: "Chrome_WidgetWin_1" Title: "嘉立创EDA(专业版) - V2.2.39.2"
+2025-05-27 17:09:26.704 DEBUG:       [EnumWindowsProcWithHints] HWND: 0x9060e PID: 11792 Class: ' "Chrome_WidgetWin_1" ' Title: ' "嘉立创EDA专业版" ...' Visible: 1 Top-Level: true Score: 50 (Min Required: 50 )
+2025-05-27 17:09:26.704 DEBUG:   [SystemInteractionModule] Best window found for PID 11792 is 0x906b4 with score 50
+2025-05-27 17:09:26.712 DEBUG:   [SIM::performExeDetectLogic] Window found for initial PID: 11792 HWND: 0x906b4 Score: 50
+2025-05-27 17:09:26.712 DEBUG:   [SIM::performExeDetectLogic] Success! Detected Hints: "SuggestedHints: Valid:1, Exe:'lceda-pro.exe'(PID:11792), MainTargetExe:'lceda-pro.exe', HWND:591540, Class:'Chrome_WidgetWin_1', Title:'嘉立创EDA(专业版) - V2.2.39.2', TopLevel:1, AppWindowStyle:0" Achieved Score: 50
+2025-05-27 17:09:26.712 DEBUG:   [SIM::performExeDetectLogic] Finished. isValid: true
+2025-05-27 17:09:26.712 WARNING: QProcess: Destroyed while process ("D:\\lceda-pro\\lceda-pro.exe") is still running.
+2025-05-27 17:09:26.738 DEBUG:   [SystemInteractionModule] Detection task finished for: "D:/lceda-pro/lceda-pro.exe" Success: true
+2025-05-27 17:09:26.738 DEBUG:   [SystemInteractionModule] Detected hints: "SuggestedHints: Valid:1, Exe:'lceda-pro.exe'(PID:11792), MainTargetExe:'lceda-pro.exe', HWND:591540, Class:'Chrome_WidgetWin_1', Title:'嘉立创EDA(专业版) - V2.2.39.2', TopLevel:1, AppWindowStyle:0"
+2025-05-27 17:09:26.738 DEBUG:   [AdminDashboardView] Detection results received. Success: true
+2025-05-27 17:09:26.738 DEBUG:   [AdminDashboardView] Showing DetectionResultDialog for: "lceda-pro"
+2025-05-27 17:09:28.949 DEBUG:   DetectionResultDialog: Applying - MainExe: "lceda-pro.exe" ClassName: "Chrome_WidgetWin_1" TitleContains: "嘉立创EDA(专业版) - V2.2.39.2" AllowNonTop: true MinScore: 50
+2025-05-27 17:09:28.949 DEBUG:   AdminDashboardView::onDetectionDialogApplied - AppPath: "D:/lceda-pro/lceda-pro.exe" AppName: "lceda-pro" MainExeHint: "lceda-pro.exe" WindowHints: QList("allowNonTopLevel", "minScore", "primaryClassName", "titleContains")
+2025-05-27 17:09:28.949 DEBUG:   [SIM::getIcon] Attempting to get icon for: "D:/lceda-pro/lceda-pro.exe"
+2025-05-27 17:09:28.949 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
+2025-05-27 17:09:28.949 DEBUG:   [SIM::getIcon] QFileIconProvider returned a non-null icon.
+2025-05-27 17:09:28.959 DEBUG:   [SIM::getIcon] Successfully got icon using QFileIconProvider for: "D:/lceda-pro/lceda-pro.exe" Pixmap size: QSize(48, 48)
+2025-05-27 17:09:28.959 DEBUG:   AdminDashboardView: App "lceda-pro" added/updated. Emitting whitelistChanged.
+2025-05-27 17:09:28.959 DEBUG:   [AdminModule] onWhitelistUpdated CALLED. Received 1 apps.
+2025-05-27 17:09:28.959 DEBUG:     App in updatedWhitelist: "lceda-pro" Path: "D:/lceda-pro/lceda-pro.exe" Hint: "lceda-pro.exe"
+2025-05-27 17:09:28.959 DEBUG:       WindowHints: class: "Chrome_WidgetWin_1" title: "嘉立创EDA(专业版) - V2.2.39.2" allowNonTop: true minScore: 50
+2025-05-27 17:09:28.959 DEBUG:   [AdminModule::saveWhitelistToConfig] Attempting to save 1 apps to: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 17:09:28.959 DEBUG:   管理员模块(AdminModule): 1 个应用已序列化到JSON。
+2025-05-27 17:09:28.959 DEBUG:   管理员模块(AdminModule): 白名单已成功写入并通过 configFile.close()。
+2025-05-27 17:09:28.959 DEBUG:   [AdminModule::saveWhitelistToConfig] Verification: Successfully re-opened config file for reading.
+2025-05-27 17:09:28.959 DEBUG:   [AdminModule::saveWhitelistToConfig] Verification: Content after save:
+ "{\n    \"admin_password\": \"240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9\",\n    \"admin_password_hash\": \"240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9\",\n    \"shortcuts\": {\n        \"admin_login\": {\n            \"key_sequence\": [\n                \"VK_SHIFT\",\n                \"VK_CONTROL\",\n                \"VK_MENU\",\n                \"A\"\n            ]\n        }\n    },\n    \"whitelist_apps\": [\n        {\n            \"mainExecutableHint\": \"lceda-pro.exe\",\n            \"name\": \"lceda-pro\",\n            \"path\": \"D:/lceda-pro/lceda-pro.exe\",\n            \"windowFindingHints\": {\n                \"allowNonTopLevel\": true,\n                \"minScore\": 50,\n                \"primaryClassName\": \"Chrome_WidgetWin_1\",\n                \"titleContains\": \"\xE5\x98\x89\xE7\xAB\x8B\xE5\x88\x9B""EDA(\xE4\xB8\x93\xE4\xB8\x9A\xE7\x89\x88) - V2.2.39.2\"\n            }\n        }\n    ]\n}\n"
+2025-05-27 17:09:28.959 DEBUG:   管理员模块(AdminModule): 更新后的白名单已成功保存到 config.json。
+2025-05-27 17:09:28.965 DEBUG:   [AdminDashboardView] DetectionResultDialog accepted by user.
+2025-05-27 17:09:28.965 DEBUG:   DetectionResultDialog destroyed.
+2025-05-27 17:09:30.409 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
+2025-05-27 17:09:30.409 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
+2025-05-27 17:09:30.409 DEBUG:   管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。
+2025-05-27 17:09:30.409 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
+2025-05-27 17:09:30.409 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 17:09:30.409 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
+2025-05-27 17:09:30.409 DEBUG:   JianqiaoCoreShell: Fetched 1 apps from AdminModule's current state for UserModeModule.
+2025-05-27 17:09:30.409 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 1
+2025-05-27 17:09:30.409 DEBUG:   UserView::populateAppList - Received 1 apps. Clearing existing cards.
+2025-05-27 17:09:30.409 DEBUG:     App: "lceda-pro" Path: "D:/lceda-pro/lceda-pro.exe" Icon isNull: false
+2025-05-27 17:09:30.419 DEBUG:   UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.
+2025-05-27 17:09:30.419 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 17:09:30.419 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
+2025-05-27 17:09:30.419 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
+2025-05-27 17:09:30.419 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
+2025-05-27 17:09:33.800 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-27 17:09:33.800 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-27 17:09:33.800 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-27 17:09:33.800 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-27 17:09:33.890 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
+2025-05-27 17:09:33.890 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
+2025-05-27 17:09:34.011 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-27 17:09:34.011 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-27 17:09:34.011 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-27 17:09:34.011 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-27 17:09:34.011 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-27 17:09:34.011 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 17:09:34.011 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-27 17:09:34.021 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-27 17:09:34.021 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-27 17:09:36.859 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
+2025-05-27 17:09:36.859 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
+2025-05-27 17:09:36.859 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
+2025-05-27 17:09:36.859 DEBUG:   管理员模块(AdminModule): 密码验证成功。
+2025-05-27 17:09:36.859 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
+2025-05-27 17:09:36.859 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 17:09:36.859 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-27 17:09:36.859 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
+2025-05-27 17:09:36.859 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
+2025-05-27 17:09:36.859 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
+2025-05-27 17:09:36.859 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
+2025-05-27 17:09:36.859 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-27 17:09:36.859 DEBUG:   AdminDashboardView::setWhitelistedApps called with 1 apps.
+2025-05-27 17:09:36.859 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:36.859 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-27 17:09:36.859 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
+2025-05-27 17:09:36.859 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
+2025-05-27 17:09:36.859 DEBUG:   AdminDashboardView::setWhitelistedApps called with 1 apps.
+2025-05-27 17:09:36.859 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:36.859 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
+2025-05-27 17:09:36.859 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
+2025-05-27 17:09:39.450 DEBUG:   AdminDashboardView::onRemoveAppClicked INVOKED.
+2025-05-27 17:09:39.450 DEBUG:   AdminDashboardView: Remove App button clicked.
+2025-05-27 17:09:39.450 DEBUG:   AdminDashboardView: Emitting whitelistChanged with 0 apps.
+2025-05-27 17:09:39.450 DEBUG:   [AdminModule] onWhitelistUpdated CALLED. Received 0 apps.
+2025-05-27 17:09:39.450 DEBUG:   [AdminModule::saveWhitelistToConfig] Attempting to save 0 apps to: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
+2025-05-27 17:09:39.450 DEBUG:   管理员模块(AdminModule): 0 个应用已序列化到JSON。
+2025-05-27 17:09:39.450 DEBUG:   管理员模块(AdminModule): 白名单已成功写入并通过 configFile.close()。
+2025-05-27 17:09:39.450 DEBUG:   [AdminModule::saveWhitelistToConfig] Verification: Successfully re-opened config file for reading.
+2025-05-27 17:09:39.450 DEBUG:   [AdminModule::saveWhitelistToConfig] Verification: Content after save:
+ "{\n    \"admin_password\": \"240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9\",\n    \"admin_password_hash\": \"240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9\",\n    \"shortcuts\": {\n        \"admin_login\": {\n            \"key_sequence\": [\n                \"VK_SHIFT\",\n                \"VK_CONTROL\",\n                \"VK_MENU\",\n                \"A\"\n            ]\n        }\n    },\n    \"whitelist_apps\": [\n    ]\n}\n"
+2025-05-27 17:09:39.450 DEBUG:   管理员模块(AdminModule): 更新后的白名单已成功保存到 config.json。
+2025-05-27 17:09:40.286 DEBUG:   AdminDashboardView: '关闭仪表盘' (m_exitButton) CLICKED internally.
+2025-05-27 17:09:40.286 DEBUG:   管理员仪表盘(AdminDashboardView): '关闭仪表盘'按钮被点击。
+2025-05-27 17:09:40.286 DEBUG:   管理员模块(AdminModule): onUserRequestsExitAdminMode 调用。
+2025-05-27 17:09:40.286 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
+2025-05-27 17:09:40.286 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 17:09:40.286 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
+2025-05-27 17:09:40.286 DEBUG:   JianqiaoCoreShell: Fetched 0 apps from AdminModule's current state for UserModeModule.
+2025-05-27 17:09:40.286 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 0
+2025-05-27 17:09:40.286 DEBUG:   UserView::populateAppList - Received 0 apps. Clearing existing cards.
+2025-05-27 17:09:40.286 DEBUG:   UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.
+2025-05-27 17:09:40.286 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-27 17:09:40.286 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
+2025-05-27 17:09:40.286 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
+2025-05-27 17:09:40.286 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
+2025-05-27 17:09:41.323 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-27 17:09:41.323 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
+2025-05-27 17:09:41.330 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-27 17:09:41.330 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
+2025-05-27 17:09:41.442 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
+2025-05-27 17:09:41.442 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
+2025-05-27 17:09:41.575 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-27 17:09:41.575 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-27 17:09:41.575 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-27 17:09:41.575 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-27 17:09:41.575 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-27 17:09:41.575 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 17:09:41.575 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-27 17:09:41.575 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-27 17:09:41.575 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-27 17:09:44.032 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
+2025-05-27 17:09:44.032 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
+2025-05-27 17:09:44.032 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
+2025-05-27 17:09:44.032 DEBUG:   管理员模块(AdminModule): 密码验证成功。
+2025-05-27 17:09:44.032 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
+2025-05-27 17:09:44.032 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-27 17:09:44.042 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-27 17:09:44.042 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
+2025-05-27 17:09:44.042 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
+2025-05-27 17:09:44.042 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
+2025-05-27 17:09:44.042 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
+2025-05-27 17:09:44.042 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-27 17:09:44.042 DEBUG:   AdminDashboardView::setWhitelistedApps called with 0 apps.
+2025-05-27 17:09:44.042 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:44.042 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-27 17:09:44.042 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
+2025-05-27 17:09:44.042 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
+2025-05-27 17:09:44.042 DEBUG:   AdminDashboardView::setWhitelistedApps called with 0 apps.
+2025-05-27 17:09:44.042 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-27 17:09:44.042 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
+2025-05-27 17:09:44.042 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
+2025-05-27 17:09:45.190 DEBUG:   AdminDashboardView::onExitApplicationClicked INVOKED.
+2025-05-27 17:09:45.190 DEBUG:   管理员仪表盘(AdminDashboardView): '退出整个程序' 按钮被点击。应用程序将退出。
+2025-05-27 17:09:45.205 DEBUG:   Application finished with exit code: 0
+--- Log finished at 2025-05-27 17:09:45 ---
+2025-05-27 17:09:45.205 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已销毁。
+2025-05-27 17:09:45.206 DEBUG:   键盘钩子: 卸载成功。
+2025-05-27 17:09:45.206 DEBUG:   [SystemInteractionModule] SystemInteractionModule destroyed.
+2025-05-27 17:09:45.206 DEBUG:   用户视图(UserView): 已销毁。
+2025-05-27 17:09:45.206 DEBUG:   管理员仪表盘(AdminDashboardView): 已销毁。
+2025-05-27 17:09:45.206 DEBUG:   管理员模块(AdminModule): 销毁。
+2025-05-27 17:09:45.206 INFO:    UserModeModule destroyed.

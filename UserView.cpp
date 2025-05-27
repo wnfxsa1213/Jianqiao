@@ -22,8 +22,6 @@ UserView::UserView(QWidget *parent)
     qDebug() << "用户视图(UserView): 已创建。";
     setupUi();
     this->setObjectName("userView"); 
-    // Ensure background is transparent if not painting image, so QSS on parent or paint event can control it.
-    // setAttribute(Qt::WA_StyledBackground, false); // Let paintEvent handle background
 }
 
 UserView::~UserView()
@@ -41,20 +39,17 @@ void UserView::setupUi() {
 
     // Centering layout for the dock panel
     QHBoxLayout* centeringLayout = new QHBoxLayout();
-    centeringLayout->setContentsMargins(0,0,0,0); // Control margins via QSS on dockPanel or here
+    centeringLayout->setContentsMargins(0,0,0,0); 
     centeringLayout->setSpacing(0);
-    centeringLayout->addStretch(1);
+    // centeringLayout->addStretch(1); // Left stretch - REMOVE or set to 0 if m_dockFrame gets a >0 stretchFactor
 
     m_dockFrame = new QFrame(this); 
     m_dockFrame->setObjectName("dockPanel");
     m_dockFrame->setFixedHeight(90); 
-    // Width will be content-driven up to a point, or can be constrained by UserView's width
-    m_dockFrame->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    // margins for dockPanel relative to UserView edges are set in QSS
-    // internal padding for scrollArea from dockFrame edges are set in QSS for dockPanel
+    m_dockFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed); // Keep Expanding horizontally
 
-    QVBoxLayout* dockFrameInternalLayout = new QVBoxLayout(m_dockFrame); // Layout for m_dockScrollArea within m_dockFrame
-    dockFrameInternalLayout->setContentsMargins(0, 5, 0, 5); // Top/Bottom padding inside dock frame for scroll area
+    QVBoxLayout* dockFrameInternalLayout = new QVBoxLayout(m_dockFrame); 
+    dockFrameInternalLayout->setContentsMargins(0, 5, 0, 5);
     
     m_dockScrollArea = new QScrollArea(m_dockFrame); 
     m_dockScrollArea->setObjectName("dockScrollArea");
@@ -62,58 +57,58 @@ void UserView::setupUi() {
     m_dockScrollArea->setFrameShape(QFrame::NoFrame);
     m_dockScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     m_dockScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_dockScrollArea->setFixedHeight(70); // Height for the scrollable content area
+    m_dockScrollArea->setFixedHeight(70); 
+    m_dockScrollArea->setAlignment(Qt::AlignCenter);
 
     m_dockScrollContentWidget = new QWidget(); 
     m_dockScrollContentWidget->setObjectName("dockScrollContentWidget");
     m_dockScrollArea->setWidget(m_dockScrollContentWidget);
 
     m_dockItemsLayout = new QHBoxLayout(m_dockScrollContentWidget);
-    m_dockItemsLayout->setContentsMargins(10, 0, 10, 0); // Left/Right padding for the first/last card from scroll area edge
-    m_dockItemsLayout->setSpacing(10); 
+    m_dockItemsLayout->setContentsMargins(5, 0, 5, 0);
+    m_dockItemsLayout->setSpacing(5);
     m_dockItemsLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-    // m_dockItemsLayout->addStretch(); // So cards align left, and don't spread if few
 
     dockFrameInternalLayout->addWidget(m_dockScrollArea);
     m_dockFrame->setLayout(dockFrameInternalLayout);
 
-    centeringLayout->addWidget(m_dockFrame);
-    centeringLayout->addStretch(1);
+    // Adjust stretch factors for centeringLayout
+    centeringLayout->addStretch(0); // Minimal stretch on the left
+    centeringLayout->addWidget(m_dockFrame, 1); // Give m_dockFrame higher priority for space
+    centeringLayout->addStretch(0); // Minimal stretch on the right
     m_mainLayout->addLayout(centeringLayout);
 
     setLayout(m_mainLayout);
 
-    // Apply QSS for the dock panel and scroll area
-    // It's better to load this from a UserView.qss file if it gets complex
     QString userViewStyleSheet = QString(
-        "QFrame#dockPanel {"
-        "    background-color: rgba(45, 45, 45, 0.88);"
-        "    border-radius: 20px;"
-        "    margin-left: 20px;"
-        "    margin-right: 20px;"
-        "    margin-bottom: 10px;"
-        "    padding: 0px 10px;" /* Horizontal padding inside dock for scroll area */
-        "}"
-        "QScrollArea#dockScrollArea {"
-        "    background-color: transparent;"
-        "    border: none;"
-        "}"
-        "QWidget#dockScrollContentWidget {"
-        "    background-color: transparent;"
-        "}"
-        "QScrollBar:horizontal {"
-        "    height: 8px;"
+        "QFrame#dockPanel {"\
+        "    background-color: rgba(220, 220, 220, 0.85);"
+        "    border-radius: 18px;"
+        "    margin-left: 50px;"
+        "    margin-right: 50px;"
+        "    margin-bottom: 15px;"
+        "    padding: 2px 8px 8px 8px;"
+        "}"\
+        "QScrollArea#dockScrollArea {"\
+        "    background-color: transparent;"\
+        "    border: none;"\
+        "}"\
+        "QWidget#dockScrollContentWidget {"\
+        "    background-color: transparent;"\
+        "}"\
+        "QScrollBar:horizontal {"\
+        "    height: 6px;"
         "    background: rgba(0,0,0,0.1);"
-        "    margin: 0px 0px 2px 0px;" /* margin from bottom of scroll area */
-        "    border-radius: 4px;"
-        "}"
-        "QScrollBar::handle:horizontal {"
-        "    background: rgba(255,255,255,0.35);"
-        "    min-width: 25px;"
-        "    border-radius: 4px;"
-        "}"
-        "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {"
-        "    background: none; border: none; width: 0px;"
+        "    margin: 0px 0px 0px 0px;"
+        "    border-radius: 3px;"\
+        "}"\
+        "QScrollBar::handle:horizontal {"\
+        "    background: rgba(0,0,0,0.3);"
+        "    min-width: 20px;"\
+        "    border-radius: 3px;"\
+        "}"\
+        "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {"\
+        "    background: none; border: none; width: 0px;"\
         "}"
     );
     this->setStyleSheet(userViewStyleSheet);
@@ -136,10 +131,16 @@ void UserView::clearAppCards() {
 
 void UserView::setAppList(const QList<AppInfo>& apps) {
     m_currentApps = apps;
-    if (isVisible() || m_isFirstShow) { // Populate immediately if view is visible or first show
-        populateAppList(apps);
-    }
+    // Populate immediately if view is visible or first show
+    // if (isVisible() || m_isFirstShow) { 
+    //    populateAppList(apps);
+    // }
     // If not visible and not first show, populateAppList will be called in showEvent
+
+    // Always populate the list when it's set, regardless of visibility or first show status.
+    // The showEvent logic for m_isFirstShow can remain as a fallback for initial population 
+    // if setAppList somehow isn't called before the first show, though it should be.
+    populateAppList(apps); 
 }
 
 void UserView::showEvent(QShowEvent *event) {
@@ -151,7 +152,8 @@ void UserView::showEvent(QShowEvent *event) {
 }
 
 void UserView::resizeEvent(QResizeEvent *event) {
-    QWidget::resizeEvent(event); // Call base class
+    QWidget::resizeEvent(event);
+    updateDockFrameOptimalWidth();
     // If m_dockFrame width needs to be dynamically adjusted based on UserView width 
     // (e.g., to not exceed UserView width), calculations could go here.
     // For now, it's mostly Preferred size up to UserView boundaries due to centeringLayout.
@@ -160,6 +162,10 @@ void UserView::resizeEvent(QResizeEvent *event) {
 }
 
 void UserView::populateAppList(const QList<AppInfo>& apps) {
+    qDebug() << "UserView::populateAppList - Received" << apps.count() << "apps. Clearing existing cards.";
+    for (const AppInfo& app : apps) {
+        qDebug() << "  App:" << app.name << "Path:" << app.path << "Icon isNull:" << app.icon.isNull();
+    }
     clearAppCards();
     m_currentApps = apps;
     
@@ -184,6 +190,42 @@ void UserView::populateAppList(const QList<AppInfo>& apps) {
     if (m_dockScrollContentWidget) { 
         m_dockScrollContentWidget->adjustSize();
     }
+    updateDockFrameOptimalWidth();
+}
+
+void UserView::updateDockFrameOptimalWidth() {
+    if (!m_dockFrame || !m_dockScrollContentWidget || !this->parentWidget()) {
+        // Not fully setup or no parent to get width from, bail out
+        return;
+    }
+
+    // The width of m_dockFrame is now primarily controlled by its SizePolicy (Expanding)
+    // and its QSS margins (e.g., margin-left: 50px; margin-right: 50px;)
+    // when placed within the centeringLayout (QHBoxLayout with stretches).
+    // We should avoid overriding this with setFixedWidth() if we want it to be responsive
+    // to UserView's width while respecting those margins.
+
+    // The main purpose of this function, if not setting a fixed width, 
+    // would be to ensure the scrollable content is correctly sized.
+    // m_dockScrollContentWidget->adjustSize() is called in populateAppList after items are added.
+    // Calling it here again (e.g. on UserView resize) ensures that if the scroll area's
+    // own size changes, the content widget can re-evaluate its ideal size if necessary,
+    // though with m_dockScrollArea->setWidgetResizable(true), this might be handled.
+
+    // For now, let's assume m_dockScrollContentWidget->adjustSize() in populateAppList is sufficient
+    // for content width changes. If UserView resizes, m_dockFrame resizes due to layout,
+    // and QScrollArea should handle its viewport correctly.
+
+    // If specific logic IS needed to adjust m_dockFrame's width dynamically (e.g. based on content
+    // up to a certain max, then allow scrolling), the original complex logic would be needed.
+    // But based on "就达到这种长度和宽度就好" for the provided screenshot, a responsive
+    // width respecting QSS margins seems appropriate. 
+
+    // Therefore, we remove explicit setFixedWidth() calls from here to let the layout manage it.
+    // If m_dockScrollContentWidget's size needs re-evaluation upon UserView resize for some reason:
+    // m_dockScrollContentWidget->adjustSize(); 
+    // However, this is usually for when the content *itself* changes, not just the container.
+    // Given m_dockScrollArea->setWidgetResizable(true), the scroll area should adapt.
 }
 
 void UserView::setCurrentBackground(const QString& imagePath) {
