@@ -70,7 +70,7 @@ void JianqiaoCoreShell::setupUi()
 void JianqiaoCoreShell::initializeConnections()
 {
     m_adminModule = new AdminModule(m_systemInteractionModule, m_adminDashboardInstance, this);
-    m_userModeModule = new UserModeModule(m_userViewInstance, m_systemInteractionModule, this);
+    m_userModeModule = new UserModeModule(this, m_userViewInstance, m_systemInteractionModule, this);
 
     if (m_systemInteractionModule) {
         m_systemInteractionModule->installKeyboardHook();
@@ -90,19 +90,32 @@ void JianqiaoCoreShell::initializeConnections()
 
 void JianqiaoCoreShell::switchToUserModeView()
 {
-    qDebug() << "剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图。";
-    if (m_userModeModule) {
-        m_userModeModule->loadAndSetWhitelist();
+    qDebug() << "剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.";
+
+    if (m_adminModule && m_userModeModule) {
+        QList<AppInfo> currentAdminApps = m_adminModule->getWhitelistedApps();
+        qDebug() << "JianqiaoCoreShell: Fetched" << currentAdminApps.count() << "apps from AdminModule's current state for UserModeModule.";
+        m_userModeModule->updateUserAppList(currentAdminApps);
+    } else {
+        qWarning() << "JianqiaoCoreShell: AdminModule or UserModeModule is null. UserModeModule may load from its own config.";
+        if (m_userModeModule) {
+            m_userModeModule->loadConfiguration(); // Fallback to loading from file if direct sync is not possible
+        }
     }
-    if (m_mainStackedWidget && m_userViewInstance) {
+
+    m_systemInteractionModule->setUserModeActive(true);
+    if (m_userViewInstance) { // Ensure m_userViewInstance is not null
         m_mainStackedWidget->setCurrentWidget(m_userViewInstance);
         qDebug() << "剑鞘核心(JianqiaoCoreShell): UserView is now current widget.";
         this->activateWindow();
         this->raise();
         m_userViewInstance->setFocus(Qt::OtherFocusReason);
     } else {
-        qWarning() << "剑鞘核心(JianqiaoCoreShell): StackedWidget 或 UserView 为空，无法切换!";
+        qCritical() << "剑鞘核心(JianqiaoCoreShell): m_userViewInstance is null, cannot switch widget!";
     }
+    m_currentMode = OperatingMode::UserMode;
+    qDebug() << "剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.";
+    emit userModeActivated(); // Ensure this signal is emitted if other parts of the system need to react.
 }
 
 void JianqiaoCoreShell::switchToAdminDashboard()
@@ -216,7 +229,7 @@ bool JianqiaoCoreShell::event(QEvent *event)
             } else if (m_mainStackedWidget && 
                        (m_mainStackedWidget->currentWidget() == m_userViewInstance || m_mainStackedWidget->currentWidget() == m_adminDashboardInstance)) {
                 qDebug() << "剑鞘核心外壳: 窗口激活事件 (WindowActivate). 尝试将主外壳设为前景。";
-                ::SetForegroundWindow(shellHwnd);
+                // ::SetForegroundWindow(shellHwnd); // 注释掉此行以避免争抢焦点
             }
         }
     }
@@ -231,4 +244,16 @@ void JianqiaoCoreShell::showEvent(QShowEvent *event)
 void JianqiaoCoreShell::closeEvent(QCloseEvent *event)
 {
     QMainWindow::closeEvent(event);
+}
+
+void JianqiaoCoreShell::onAdminRequestsExitAdminMode() {
+    qDebug() << "剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求 (来自AdminModule).";
+    // Ensure AdminModule signals view changes if necessary, or CoreShell manages view stack directly.
+    // m_adminModule->hideViews(); // Example if AdminModule managed its own views directly
+
+    switchToUserModeView(); // Centralized method to switch to user mode
+}
+
+void JianqiaoCoreShell::onAdminLoginSuccessful() {
+    // ... existing code ...
 } 

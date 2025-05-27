@@ -9,6 +9,8 @@
 #include <QTimer>
 #include "UserView.h"       // For m_userView interaction
 #include "SystemInteractionModule.h" // For icon fetching and process interaction
+#include "JianqiaoCoreShell.h"
+#include <QSet> // <<< ADD THIS LINE
 
 // struct WhitelistedApp; // No longer needed, full definition in common_types.h
 class UserView; // Forward declaration
@@ -20,7 +22,7 @@ class UserModeModule : public QObject
 
 public:
     // SystemInteractionModule might be needed later for window management of launched apps
-    explicit UserModeModule(UserView* userView, SystemInteractionModule* systemInteractionModule, QObject *parent = nullptr);
+    explicit UserModeModule(JianqiaoCoreShell *coreShell, UserView* userView, SystemInteractionModule* systemInteraction, QObject *parent = nullptr);
     ~UserModeModule();
 
     void activate();
@@ -38,6 +40,7 @@ public:
     void loadConfiguration(); // Ensure this populates m_whitelistedApps as QList<AppInfo>
     bool isAppWhitelisted(const QString& processName) const;
     QString getAppPathForName(const QString& appName) const;
+    void updateUserAppList(const QList<AppInfo>& apps); // New method
 
 signals:
     void userModeActivated();
@@ -48,6 +51,7 @@ public slots:
     void onApplicationLaunchRequested(const QString& appPath);
     void onProcessStateChanged(QProcess::ProcessState newState);
     void onApplicationActivated(const QString& appPath);
+    void onApplicationActivationFailed(const QString& appPath);
 
     // Corrected slot declarations to match implementations that take appPath
     void onProcessStarted(const QString& appPath);
@@ -55,24 +59,31 @@ public slots:
     void onProcessError(const QString& appPath, QProcess::ProcessError error);
 
 private:
-    void launchApplication(const QString& appPath, const QString& appName = QString());
+    void launchApplication(const AppInfo& appInfo);
     void monitorLaunchedProcess(QProcess* process, const QString& appName);
     QString findExecutableName(const QString& appPath) const;
     void startProcessMonitoringTimer();
     void monitorLaunchedProcesses();
     QString findAppPathForProcess(QProcess* process);
 
-    UserView* m_userView; // UI for user mode
-    QList<AppInfo> m_whitelistedApps; // Changed from m_currentWhitelist
+    JianqiaoCoreShell *m_coreShellPtr;
+    UserView *m_userViewPtr; // Added UserView pointer
+    SystemInteractionModule *m_systemInteractionModulePtr;
+    QList<AppInfo> m_whitelistedApps;
     QMap<QProcess*, QString> m_launchedProcesses; // Stores launched QProcess and its original app path
     QTimer* m_processMonitoringTimer;
-    SystemInteractionModule* m_systemInteractionModulePtr; // Added declaration
     bool m_configLoaded = false; // ADDED
 
     // QPointer<SystemInteractionModule> m_systemInteractionModule; // Using QPointer for safety
     // bool m_isActive; // Flag to indicate if user mode is currently active
 
     QString m_configFilePath;
+    QMap<QString, QProcess*> m_runningProcesses;
+    QMap<QString, QTimer*> m_launchTimers;      // Timers for launch timeout
+    QSet<QString> m_launchingApps;          // Tracks apps currently in the process of launching
+    QSet<QString> m_pendingActivationApps; // <<< ADD THIS LINE
+
+    // QList<AppInfo> m_currentApps; // To store the list of apps - replaced by m_whitelistedApps if that is the main store
 };
 
 #endif // USERMODEMODULE_H 

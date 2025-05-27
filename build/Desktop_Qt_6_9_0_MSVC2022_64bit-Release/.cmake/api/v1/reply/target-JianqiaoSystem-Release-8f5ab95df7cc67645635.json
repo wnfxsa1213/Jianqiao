@@ -338,6 +338,11 @@
 			},
 			{
 				"backtrace" : 2,
+				"fragment" : "dwmapi.lib",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
 				"fragment" : "D:\\QT6\\6.9.0\\msvc2022_64\\lib\\Qt6Gui.lib",
 				"role" : "libraries"
 			},

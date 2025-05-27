@@ -39,25 +39,34 @@ template <> constexpr inline auto JianqiaoCoreShell::qt_create_metaobjectdata<qt
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "JianqiaoCoreShell",
-        "onAdminViewVisibilityChanged",
+        "userModeActivated",
         "",
+        "onAdminViewVisibilityChanged",
         "visible",
         "handleAdminLoginRequested",
         "handleExitAdminModeTriggered",
-        "handleAdminLoginSuccessful"
+        "handleAdminLoginSuccessful",
+        "onAdminRequestsExitAdminMode",
+        "onAdminLoginSuccessful"
     };
 
     QtMocHelpers::UintData qt_methods {
+        // Signal 'userModeActivated'
+        QtMocHelpers::SignalData<void()>(1, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'onAdminViewVisibilityChanged'
-        QtMocHelpers::SlotData<void(bool)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Bool, 3 },
+        QtMocHelpers::SlotData<void(bool)>(3, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Bool, 4 },
         }}),
         // Slot 'handleAdminLoginRequested'
-        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
-        // Slot 'handleExitAdminModeTriggered'
         QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
-        // Slot 'handleAdminLoginSuccessful'
+        // Slot 'handleExitAdminModeTriggered'
         QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'handleAdminLoginSuccessful'
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'onAdminRequestsExitAdminMode'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onAdminLoginSuccessful'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -81,12 +90,19 @@ void JianqiaoCoreShell::qt_static_metacall(QObject *_o, QMetaObject::Call _c, in
     auto *_t = static_cast<JianqiaoCoreShell *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->onAdminViewVisibilityChanged((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
-        case 1: _t->handleAdminLoginRequested(); break;
-        case 2: _t->handleExitAdminModeTriggered(); break;
-        case 3: _t->handleAdminLoginSuccessful(); break;
+        case 0: _t->userModeActivated(); break;
+        case 1: _t->onAdminViewVisibilityChanged((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 2: _t->handleAdminLoginRequested(); break;
+        case 3: _t->handleExitAdminModeTriggered(); break;
+        case 4: _t->handleAdminLoginSuccessful(); break;
+        case 5: _t->onAdminRequestsExitAdminMode(); break;
+        case 6: _t->onAdminLoginSuccessful(); break;
         default: ;
         }
+    }
+    if (_c == QMetaObject::IndexOfMethod) {
+        if (QtMocHelpers::indexOfMethod<void (JianqiaoCoreShell::*)()>(_a, &JianqiaoCoreShell::userModeActivated, 0))
+            return;
     }
 }
 
@@ -109,15 +125,21 @@ int JianqiaoCoreShell::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 7;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 7)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 4;
+        _id -= 7;
     }
     return _id;
+}
+
+// SIGNAL 0
+void JianqiaoCoreShell::userModeActivated()
+{
+    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }
 QT_WARNING_POP

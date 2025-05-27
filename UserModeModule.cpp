@@ -18,23 +18,27 @@
 #include <QPointer> // Keep for QPointer if used, though m_systemInteractionModulePtr is raw now
 
 // Constructor
-UserModeModule::UserModeModule(UserView* userView, SystemInteractionModule* systemInteractionModule, QObject *parent)
+UserModeModule::UserModeModule(JianqiaoCoreShell *coreShell, UserView* userView, SystemInteractionModule* systemInteraction, QObject *parent)
     : QObject(parent),
-      m_userView(userView),
-      m_systemInteractionModulePtr(systemInteractionModule), // Initialize m_systemInteractionModulePtr
+      m_coreShellPtr(coreShell), // Initialize m_coreShellPtr
+      m_userViewPtr(userView),    // Changed m_userView to m_userViewPtr and initialized
+      m_systemInteractionModulePtr(systemInteraction), // Initialize m_systemInteractionModulePtr
       m_processMonitoringTimer(new QTimer(this)),
       m_configLoaded(false)
 {
-    if (!m_systemInteractionModulePtr) {
-        qCritical() << "UserModeModule: SystemInteractionModule pointer is null!";
+    if (!m_coreShellPtr) {
+        qCritical() << "UserModeModule: JianqiaoCoreShell pointer (m_coreShellPtr) is null!";
     }
-    if (!m_userView) {
-        qCritical() << "UserModeModule: UserView pointer is null!";
+    if (!m_systemInteractionModulePtr) {
+        qCritical() << "UserModeModule: SystemInteractionModule pointer (m_systemInteractionModulePtr) is null!";
+    }
+    if (!m_userViewPtr) { // Changed m_userView to m_userViewPtr
+        qCritical() << "UserModeModule: UserView pointer (m_userViewPtr) is null!";
     }
 
     loadConfiguration();
-    if (m_userView) {
-        connect(m_userView, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested);
+    if (m_userViewPtr) { // Changed m_userView to m_userViewPtr
+        connect(m_userViewPtr, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested); // Changed m_userView to m_userViewPtr
         qInfo() << "UserModeModule initialized.";
     } else {
         qWarning() << "UserModeModule: UserView is null, cannot connect signals.";
@@ -43,11 +47,12 @@ UserModeModule::UserModeModule(UserView* userView, SystemInteractionModule* syst
     // Connect to SystemInteractionModule's activation signal
     if (m_systemInteractionModulePtr) {
         connect(m_systemInteractionModulePtr, &SystemInteractionModule::applicationActivated, this, &UserModeModule::onApplicationActivated);
+        connect(m_systemInteractionModulePtr, &SystemInteractionModule::applicationActivationFailed, this, &UserModeModule::onApplicationActivationFailed);
     }
 
     // Connect signals from UserView
-    if (m_userView) {
-        connect(m_userView, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested);
+    if (m_userViewPtr) { // Changed m_userView to m_userViewPtr
+        connect(m_userViewPtr, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested); // Changed m_userView to m_userViewPtr
     } else {
         qWarning() << "UserView is null in UserModeModule constructor.";
     }
@@ -77,10 +82,10 @@ void UserModeModule::activate()
 {
     qInfo() << "User mode activated.";
     loadAndSetWhitelist(); // Refresh app list when activated
-    if(m_userView) {
-        m_userView->show();
-        m_userView->update();      // Force a repaint
-        m_userView->adjustSize();  // Adjust size if necessary due to new content
+    if(m_userViewPtr) { // Changed m_userView to m_userViewPtr
+        m_userViewPtr->show(); // Changed m_userView to m_userViewPtr
+        m_userViewPtr->update();      // Force a repaint // Changed m_userView to m_userViewPtr
+        m_userViewPtr->adjustSize();  // Adjust size if necessary due to new content // Changed m_userView to m_userViewPtr
     }
     emit userModeActivated();
 }
@@ -88,8 +93,8 @@ void UserModeModule::activate()
 void UserModeModule::deactivate()
 {
     qInfo() << "User mode deactivated.";
-    if(m_userView) {
-        m_userView->hide();
+    if(m_userViewPtr) { // Changed m_userView to m_userViewPtr
+        m_userViewPtr->hide(); // Changed m_userView to m_userViewPtr
     }
     // Optionally, could terminate whitelisted apps here, or leave them running
     emit userModeDeactivated();
@@ -97,54 +102,54 @@ void UserModeModule::deactivate()
 
 void UserModeModule::showUserView()
 {
-    if (m_userView) {
+    if (m_userViewPtr) { // Changed m_userView to m_userViewPtr
         qDebug() << "[UserModeModule::showUserView] Preparing to show UserView. Whitelisted app count in UserModeModule:" << m_whitelistedApps.count();
-        m_userView->setAppList(m_whitelistedApps);
+        m_userViewPtr->setAppList(m_whitelistedApps); // Changed m_userView to m_userViewPtr
 
-        m_userView->show();
+        m_userViewPtr->show(); // Changed m_userView to m_userViewPtr
         qInfo() << "UserModeModule: UserView shown.";
     } else {
-        qWarning() << "UserModeModule::showUserView: m_userView is null!";
+        qWarning() << "UserModeModule::showUserView: m_userViewPtr is null!"; // Changed m_userView to m_userViewPtr
     }
 }
 
 void UserModeModule::hideUserView()
 {
-    if (m_userView) {
-        m_userView->hide();
+    if (m_userViewPtr) { // Changed m_userView to m_userViewPtr
+        m_userViewPtr->hide(); // Changed m_userView to m_userViewPtr
         qInfo() << "UserModeModule: UserView hidden.";
     } else {
-        qWarning() << "UserModeModule::hideUserView: m_userView is null!";
+        qWarning() << "UserModeModule::hideUserView: m_userViewPtr is null!"; // Changed m_userView to m_userViewPtr
     }
 }
 
 bool UserModeModule::isUserViewVisible() const
 {
-    if (m_userView) {
-        return m_userView->isVisible();
+    if (m_userViewPtr) { // Changed m_userView to m_userViewPtr
+        return m_userViewPtr->isVisible(); // Changed m_userView to m_userViewPtr
     }
-    qWarning() << "UserModeModule::isUserViewVisible: m_userView is null!";
+    qWarning() << "UserModeModule::isUserViewVisible: m_userViewPtr is null!"; // Changed m_userView to m_userViewPtr
     return false;
 }
 
 QWidget* UserModeModule::getUserViewWidget()
 {
-    return m_userView;
+    return m_userViewPtr; // Changed m_userView to m_userViewPtr
 }
 
 UserView* UserModeModule::getViewInstance()
 {
-    return m_userView;
+    return m_userViewPtr; // Changed m_userView to m_userViewPtr
 }
 
 void UserModeModule::setUserViewInstance(UserView* view)
 {
-    m_userView = view;
-    if (m_userView) {
+    m_userViewPtr = view; // Changed m_userView to m_userViewPtr
+    if (m_userViewPtr) { // Changed m_userView to m_userViewPtr
         // Disconnect any existing connection to avoid duplicates if called multiple times
-        disconnect(m_userView, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested);
+        disconnect(m_userViewPtr, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested); // Changed m_userView to m_userViewPtr
         // Connect the new view instance
-        connect(m_userView, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested);
+        connect(m_userViewPtr, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested); // Changed m_userView to m_userViewPtr
         qInfo() << "UserModeModule: UserView instance set and connected.";
     } else {
         qWarning() << "UserModeModule: setUserViewInstance called with a null view.";
@@ -215,9 +220,9 @@ void UserModeModule::loadConfiguration()
 void UserModeModule::loadAndSetWhitelist()
 {
     loadConfiguration(); // Reloads m_whitelistedApps from config
-    if (m_userView) {
+    if (m_userViewPtr) {
         qInfo() << "UserModeModule: Setting app list for UserView with" << m_whitelistedApps.count() << "apps.";
-        m_userView->setAppList(m_whitelistedApps); // Use m_whitelistedApps
+        m_userViewPtr->setAppList(m_whitelistedApps); // Use m_whitelistedApps
     } else {
         qWarning() << "UserModeModule: UserView is not available to set app list.";
     }
@@ -227,6 +232,11 @@ void UserModeModule::loadAndSetWhitelist()
 void UserModeModule::onApplicationLaunchRequested(const QString& appPath)
 {
     qInfo() << "Application launch requested for path:" << appPath;
+
+    if (m_pendingActivationApps.contains(appPath)) {
+        qDebug() << "UserModeModule::onApplicationLaunchRequested - Application" << appPath << "is already pending activation. Ignoring duplicate request.";
+        return;
+    }
 
     AppInfo targetAppInfo;
     bool appInfoFound = false;
@@ -240,138 +250,127 @@ void UserModeModule::onApplicationLaunchRequested(const QString& appPath)
 
     if (!appInfoFound) {
         qWarning() << "UserModeModule::onApplicationLaunchRequested - App path not found in whitelist:" << appPath;
-        if (m_userView) {
-            m_userView->resetAppIconState(appPath); // Reset icon if launch fails early
+        if (m_userViewPtr) {
+            m_userViewPtr->resetAppIconState(appPath);
         }
         return;
     }
 
-    // Check if a QProcess object already exists and is running for this appPath
-    for (QProcess* existingProcess : m_launchedProcesses.keys()) {
-        if (m_launchedProcesses.value(existingProcess) == appPath && existingProcess->state() != QProcess::NotRunning) {
-            qInfo() << "Application" << appPath << "is already running (PID:" << existingProcess->processId() << "). Attempting to activate.";
-            if (m_userView) {
-                // Optional: Indicate to user view that we are trying to re-activate
-                // m_userView->setAppIconLaunching(appPath, true); // Or similar
-            }
-            if (m_systemInteractionModulePtr) {
-                m_systemInteractionModulePtr->monitorAndActivateApplication(appPath, existingProcess->processId(), targetAppInfo.mainExecutableHint, true); // forceActivateOnly = true
-            } else {
-                 if (m_userView) m_userView->resetAppIconState(appPath);
-            }
-            return;
-        }
-    }
-    
-    // Clean up any old QProcess object for this appPath if it's NotRunning
-    QList<QProcess*> processesToRemove;
-    for (QProcess* p : m_launchedProcesses.keys()) {
-        if (m_launchedProcesses.value(p) == appPath) { // Check if it's for the same app
-            if (p->state() == QProcess::NotRunning) {
-                processesToRemove.append(p);
-            }
-        }
-    }
-    for (QProcess* p : processesToRemove) {
-        qDebug() << "UserModeModule: Cleaning up old, not running QProcess for" << appPath;
-        m_launchedProcesses.remove(p);
-        p->deleteLater();
-    }
+    qInfo() << "UserModeModule: Attempting to launch" << targetAppInfo.name << "from path:" << targetAppInfo.path << "MainExe Hint:" << targetAppInfo.mainExecutableHint;
 
+    QProcess *process = new QProcess(this);
+    m_launchedProcesses.insert(process, appPath); // Store the appPath with the process
 
-    QProcess* process = new QProcess(this);
-    // Store appPath with the process for later identification in finished/error signals
-    // m_launchedProcesses.insert(process, appPath); // Moved to QProcess::started
+    // Add to pending activation set before starting the process
+    m_pendingActivationApps.insert(appPath);
+    qDebug() << "UserModeModule: Added" << appPath << "to pending activation apps:" << m_pendingActivationApps;
 
-    // Capture appPath for lambdas
+    // Capture necessary variables for lambda
     QString capturedAppPath = appPath;
-    AppInfo capturedAppInfo = targetAppInfo;
+    QString capturedAppName = targetAppInfo.name;
+    QString capturedMainHint = targetAppInfo.mainExecutableHint;
+    QJsonObject capturedWindowHints = targetAppInfo.windowFindingHints;
 
-    connect(process, &QProcess::started, this, [this, process, capturedAppPath, capturedAppInfo]() {
-        qInfo() << "[STARTED LAMBDA] Launcher process for" << capturedAppPath << "started. PID:" << process->processId();
-        
-        qDebug() << "[STARTED LAMBDA] Inserting into m_launchedProcesses.";
-        m_launchedProcesses.insert(process, capturedAppPath); 
-        qDebug() << "[STARTED LAMBDA] Successfully inserted into m_launchedProcesses. Map size:" << m_launchedProcesses.size();
-
-        if (m_systemInteractionModulePtr) {
-            qDebug() << "[STARTED LAMBDA] m_systemInteractionModulePtr is VALID. Calling monitorAndActivateApplication.";
-            m_systemInteractionModulePtr->monitorAndActivateApplication(capturedAppPath, process->processId(), capturedAppInfo.mainExecutableHint, false); // forceActivateOnly = false
-             qDebug() << "[STARTED LAMBDA] monitorAndActivateApplication call made for" << capturedAppPath;
+    connect(process, &QProcess::started, this, [this, capturedAppPath, capturedAppName, capturedMainHint, capturedWindowHints, process]() {
+        qInfo() << "UserModeModule: Process for" << capturedAppPath << "(" << capturedAppName << ") started successfully. PID:" << process->processId();
+        // DO NOT remove from m_pendingActivationApps here. SystemInteractionModule will handle activation.
+        if (this->m_userViewPtr) {
+            this->m_userViewPtr->setAppIconLaunching(capturedAppPath, true);
+        }
+        if (this->m_systemInteractionModulePtr) {
+            this->m_systemInteractionModulePtr->monitorAndActivateApplication(
+                capturedAppPath,
+                static_cast<quint32>(process->processId()),
+                capturedMainHint,
+                capturedWindowHints,
+                false
+            );
         } else {
-            qWarning() << "[STARTED LAMBDA] m_systemInteractionModulePtr is NULL. Cannot monitor or activate window for" << capturedAppPath;
-            // If system interaction is not available, we can't do much more.
-            // UserView's timer will eventually reset the icon.
-        }
-        qDebug() << "[STARTED LAMBDA] Finished execution of started lambda for" << capturedAppPath;
-    });
-
-    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this, process, capturedAppPath](int exitCode, QProcess::ExitStatus exitStatus) {
-        qInfo() << "Process for (launcher)" << capturedAppPath << "finished. Exit code:" << exitCode << "Status:" << exitStatus;
-        // Note: Launcher finishing doesn't mean the main app is closed.
-        // The main app's lifecycle is now primarily handled by SystemInteractionModule's polling (if hint was provided)
-        // or UserView's timeout.
-        // We only reset the icon here IF the SystemInteractionModule is NOT actively monitoring
-        // OR if the hint was empty (meaning monitoring never started via polling).
-        
-        bool wasMonitoring = false;
-        if(m_systemInteractionModulePtr){
-            // A bit indirect, but if a timer exists, it means robust monitoring was active or attempted.
-             wasMonitoring = m_systemInteractionModulePtr->isMonitoring(capturedAppPath);
-        }
-
-        AppInfo appInfo;
-        bool appInfoFound = false;
-        for(const auto& currentApp : m_whitelistedApps){
-            if(currentApp.path == capturedAppPath){
-                appInfo = currentApp;
-                appInfoFound = true;
-                break;
+            qWarning() << "UserModeModule: SystemInteractionModule is null, cannot monitor/activate" << capturedAppName;
+            // If SystemInteractionModule is null, we can't monitor, so remove from pending and reset icon
+            this->m_pendingActivationApps.remove(capturedAppPath);
+             qDebug() << "UserModeModule: Removed" << capturedAppPath << "from pending activation apps (SystemInteractionModule was null):" << this->m_pendingActivationApps;
+            if (this->m_userViewPtr) {
+                this->m_userViewPtr->resetAppIconState(capturedAppPath);
             }
         }
+    });
 
-        if (!appInfoFound || appInfo.mainExecutableHint.isEmpty() || !wasMonitoring) {
-             qDebug() << "UserModeModule::onProcessFinished - Launcher for" << capturedAppPath << "ended. No robust monitoring was active (no hint or not monitoring). Resetting icon via UserView.";
-             if (m_userView) {
-                m_userView->resetAppIconState(capturedAppPath); // Also stops UserView's internal timer
-             }
+    connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+        this, [this, process, capturedAppPath, capturedAppName, capturedMainHint]
+        (int exitCode, QProcess::ExitStatus exitStatus) {
+        
+        qInfo() << "UserModeModule: Process for" << capturedAppPath << "(" << capturedAppName << ") finished. Exit code:" << exitCode << "Status:" << exitStatus;
+        m_launchedProcesses.remove(process);
+
+        // If an app has a mainExecutableHint, it means the process that just finished was likely a launcher.
+        // The actual main application's activation state (and thus icon state) will be determined by
+        // SystemInteractionModule emitting either applicationActivated or signals indicating failure/timeout.
+        // If there's no mainExecutableHint, then the process that finished *was* the target application.
+        if (capturedMainHint.isEmpty()) {
+            qDebug() << "UserModeModule (finished):" << capturedAppName << "has no mainExecutableHint.";
+            // Process finished, and it was the main target (no hint). Remove from pending.
+            this->m_pendingActivationApps.remove(capturedAppPath);
+            qDebug() << "UserModeModule: Removed" << capturedAppPath << "from pending activation apps (no hint, process finished):" << this->m_pendingActivationApps;
+            if (exitStatus == QProcess::CrashExit) {
+                qWarning() << "UserModeModule (finished): Monitored application" << capturedAppPath << "crashed.";
+            }
+            if (this->m_userViewPtr) {
+                qDebug() << "UserModeModule (finished): Resetting icon for" << capturedAppPath;
+                this->m_userViewPtr->resetAppIconState(capturedAppPath);
+            }
         } else {
-            qDebug() << "UserModeModule::onProcessFinished - Launcher for" << capturedAppPath << "ended. Robust monitoring is/was active via SystemInteractionModule. Icon reset will be handled by onApplicationActivated or UserView timeout.";
+            qDebug() << "UserModeModule (finished): Launcher" << capturedAppPath << "for" << capturedMainHint << "finished. Main app monitoring continues via SystemInteractionModule.";
+            // For launchers, DO NOT remove from m_pendingActivationApps here.
+            // It will be removed on SystemInteractionModule::applicationActivated or a timeout/failure signal from it.
         }
 
-        m_launchedProcesses.remove(process);
+        process->deleteLater();
+        qDebug() << "UserModeModule (finished): QProcess for" << capturedAppPath << "marked for deletion.";
+    });
+
+    connect(process, &QProcess::errorOccurred, this, [this, process, capturedAppPath, capturedAppName](QProcess::ProcessError error) {
+        qWarning() << "UserModeModule: Error launching" << capturedAppName << "(" << capturedAppPath << ") Error:" << error << process->errorString();
+        this->m_launchedProcesses.remove(process);
+        this->m_pendingActivationApps.remove(capturedAppPath); // Error occurred, remove from pending.
+        qDebug() << "UserModeModule: Removed" << capturedAppPath << "from pending activation apps (error occurred):" << this->m_pendingActivationApps;
+
+        if (this->m_userViewPtr) {
+            this->m_userViewPtr->resetAppIconState(capturedAppPath);
+        }
+        QMessageBox::critical(m_userViewPtr, "Launch Error", QString("Failed to launch %1: %2").arg(capturedAppName, process->errorString()));
         process->deleteLater();
     });
 
-    connect(process, &QProcess::errorOccurred, this, [this, process, capturedAppPath](QProcess::ProcessError error) {
-        qWarning() << "Error launching process for" << capturedAppPath << "Error:" << error;
-        if (m_userView) {
-            m_userView->resetAppIconState(capturedAppPath); // Also stops UserView's internal timer
-        }
-        m_launchedProcesses.remove(process);
-        process->deleteLater();
-    });
-
-    qInfo() << "Starting launcher process:" << appPath;
-    if (m_userView) {
-        m_userView->setAppIconLaunching(appPath, true); // Set icon to launching state and start internal timer
-    }
-    process->start(appPath);
+    process->setProgram(targetAppInfo.path);
+    qDebug() << "UserModeModule: Starting process:" << targetAppInfo.path;
+    process->start();
 }
 
 void UserModeModule::onApplicationActivated(const QString& appPath) {
     qInfo() << "UserModeModule::onApplicationActivated - Application" << appPath << "has been activated.";
-    if (m_userView) {
-        m_userView->resetAppIconState(appPath); // This will set icon to normal and stop UserView's internal timer.
+    m_pendingActivationApps.remove(appPath);
+    qDebug() << "UserModeModule: Removed" << appPath << "from pending activation apps (activated):" << m_pendingActivationApps;
+    if (m_userViewPtr) {
+        m_userViewPtr->resetAppIconState(appPath);
     }
-    // No need to interact with QProcess objects here, their lifecycle is separate (launcher vs main app)
-    // SystemInteractionModule has finished its monitoring for this activation.
+}
+
+void UserModeModule::onApplicationActivationFailed(const QString& appPath) {
+    qWarning() << "UserModeModule::onApplicationActivationFailed - Activation failed for" << appPath;
+    m_pendingActivationApps.remove(appPath);
+    qDebug() << "UserModeModule: Removed" << appPath << "from pending activation apps (activation failed):" << m_pendingActivationApps;
+    if (m_userViewPtr) {
+        m_userViewPtr->resetAppIconState(appPath);
+        // Optionally, show a message to the user in UserView or via QMessageBox
+        // QMessageBox::warning(m_userViewPtr, "Activation Failed", QString("Could not activate the main window for %1.").arg(appPath));
+    }
 }
 
 void UserModeModule::onProcessStarted(const QString& appPath) {
     // This slot might be redundant now due to the lambda in onApplicationLaunchRequested
     // but keeping it for now in case it's connected elsewhere or for future use.
-    qDebug() << "UserModeModule::onProcessStarted (Legacy Slot) - Process started for:" << appPath;
+    qDebug() << "UserModeModule::onProcessStarted (Restored) - Process started for:" << appPath;
 }
 
 void UserModeModule::onProcessFinished(const QString& appPath, int exitCode, QProcess::ExitStatus exitStatus) {
@@ -380,16 +379,16 @@ void UserModeModule::onProcessFinished(const QString& appPath, int exitCode, QPr
               << "finished. Exit code:" << exitCode << "Status:" << exitStatus;
     // It's important that if this slot IS used, it should also reset the icon state.
     // However, the lambda is preferred.
-    if (m_userView) {
-        m_userView->resetAppIconState(appPath);
+    if (m_userViewPtr) { // Changed
+        m_userViewPtr->resetAppIconState(appPath); // Changed
     }
 }
 
 void UserModeModule::onProcessError(const QString& appPath, QProcess::ProcessError error) {
     // This slot might be redundant now due to the lambda in onApplicationLaunchRequested
     qWarning() << "UserModeModule::onProcessError (Legacy Slot) - Error for process" << appPath << "Error:" << error;
-    if (m_userView) {
-        m_userView->resetAppIconState(appPath);
+    if (m_userViewPtr) { // Changed
+        m_userViewPtr->resetAppIconState(appPath); // Changed
     }
 }
 
@@ -465,4 +464,18 @@ void UserModeModule::monitorLaunchedProcesses() {
 
 QString UserModeModule::findAppPathForProcess(QProcess* process) {
     return m_launchedProcesses.value(process, QString());
+}
+
+void UserModeModule::updateUserAppList(const QList<AppInfo>& apps) {
+    qDebug() << "UserModeModule::updateUserAppList - Updating apps from provided list. Count:" << apps.count();
+    m_whitelistedApps = apps; // Update internal cache
+
+    if (m_userViewPtr) {
+        m_userViewPtr->setAppList(m_whitelistedApps); // Update UserView
+        qDebug() << "UserModeModule::updateUserAppList - UserView updated with new app list.";
+    } else {
+        qWarning() << "UserModeModule::updateUserAppList - UserView pointer (m_userViewPtr) is null, cannot update view.";
+    }
+    // After updating from a direct list, we might consider the config "loaded" or synced for this session component.
+    m_configLoaded = true; 
 } 

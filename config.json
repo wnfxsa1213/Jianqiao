@@ -1,39 +1,42 @@
 {
-  "admin_password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-  "shortcuts": {
-      "admin_login": {
-          "key_sequence": [
-              "VK_SHIFT",
-              "VK_CONTROL",
-              "VK_MENU",
-              "A"
-          ]
-      }
-  },
-  "whitelist_apps": [
-      {
-          "name": "WPS",
-          "path": "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-      },
-      {
-          "name": "百度云盘",
-          "path": "D:/BaiduNetdisk/BaiduNetdisk.exe"
-      },
-      {
-          "name": "Photoshop",
-          "path": "D:/PS2024/Adobe Photoshop 2024/Photoshop.exe"
-      },
-      {
-          "name": "QQ",
-          "path": "D:/qq/QQ.exe"
-      },
-      {
-          "name": "betaflight",
-          "path": "D:/BF/betaflight-configurator.exe"
-      },
-      {
-          "name": "微信",
-          "path": "D:/WeChat/WeChat.exe"
-      }
-  ]
+    "admin_password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "admin_password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+    "shortcuts": {
+        "admin_login": {
+            "key_sequence": [
+                "VK_SHIFT",
+                "VK_CONTROL",
+                "VK_MENU",
+                "A"
+            ]
+        }
+    },
+    "whitelist_apps": [
+        {
+            "name": "balenaEtcher",
+            "path": "C:/Users/13027/AppData/Local/Programs/balena-etcher/balenaEtcher.exe",
+            "mainExecutableHint": "",
+            "windowFindingHints": {
+                "primaryClassName": "Chrome_WidgetWin_1",
+                "titleContains": "balenaEtcher",
+                "minScore": 55,
+                "allowNonTopLevel": false
+            }
+        },
+        {
+            "name": "wps",
+            "path": "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe",
+            "mainExecutableHint": "wps.exe",
+            "windowFindingHints": {
+                "primaryClassName": "OpusApp",
+                "titleContains": "WPS",
+                "allowNonTopLevel": true,
+                "minScore": 80
+            }
+        },
+        {
+            "name": "BaiduNetdisk",
+            "path": "D:/BaiduNetdisk/BaiduNetdisk.exe"
+        }
+    ]
 }

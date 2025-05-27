@@ -199,261 +199,250 @@ void AdminModule::onAdminLoginHotkeyChanged(const QList<DWORD>& newHotkeySequenc
     }
 }
 
-void AdminModule::onWhitelistUpdated(const QList<AppInfo>& updatedWhitelist)
+void AdminModule::onWhitelistUpdated(const QList<AppInfo>& newWhitelist)
 {
-    qDebug() << "AdminModule: Whitelist updated in view with" << updatedWhitelist.size() << "apps. Processing and saving to config.";
-    m_whitelistedApps = updatedWhitelist;
+    qDebug() << "管理员模块(AdminModule): 白名单已更新，包含" << newWhitelist.count() << "个应用。";
+    m_whitelistedApps.clear();
 
-    // Attempt to fetch/refresh icons using SystemInteractionModule before saving and updating view further
-    if (m_systemInteractionModulePtr) {
-        qDebug() << "AdminModule: Refreshing icons for the updated whitelist...";
-        for (AppInfo& app : m_whitelistedApps) { // Use reference to modify original AppInfo objects
-            // Only fetch if icon is null or perhaps from a known default/placeholder source if you add such logic
-            // For simplicity, let's always try to get the best icon via SIM here.
-            QIcon newIcon = m_systemInteractionModulePtr->getIconForExecutable(app.path);
-            if (!newIcon.isNull()) {
-                app.icon = newIcon;
-            } else {
-                qWarning() << "AdminModule: SIM failed to get icon for" << app.path << ". Current icon in AppInfo might be from QIcon(path) or null.";
-            }
+    for (const AppInfo& appFromView : newWhitelist) {
+        AppInfo processedApp = appFromView; // Create a mutable copy
+        qDebug() << "管理员模块(AdminModule): 处理来自视图的应用:" << processedApp.name << "路径:" << processedApp.path;
+        
+        // 自动检测逻辑已被移除。我们现在直接使用来自视图的 AppInfo。
+        // 如果视图不直接提供 mainExecutableHint 和 windowFindingHints,
+        // 那么这些字段将依赖于 config.json 中的手动配置。
+        // 当保存时，如果这些字段在 appFromView 中是空的，它们也会被保存为空。
+        // 用户需要在 config.json 中手动填写它们，或者如果 AdminDashboardView 支持，则在那里填写。
+
+        // 只是为了确保从视图过来的 AppInfo 被正确记录
+        qDebug() << "管理员模块(AdminModule): 应用 " << processedApp.name << " 的 mainExecutableHint: '" << processedApp.mainExecutableHint << "'";
+        if (!processedApp.windowFindingHints.isEmpty()) {
+            qDebug() << "  WindowFindingHints:" << QJsonDocument(processedApp.windowFindingHints).toJson(QJsonDocument::Compact);
         }
+
+        m_whitelistedApps.append(processedApp);
     }
 
-    // Now that m_whitelistedApps might have updated icons, update the dashboard view again
-    // This ensures the dashboard shows icons fetched by SystemInteractionModule if they were initially missing or basic.
-    if (m_adminDashboardView) {
-        qDebug() << "AdminModule: Resending app list to dashboard view with potentially updated icons.";
-        m_adminDashboardView->setWhitelistedApps(m_whitelistedApps);
-    }
-
-    if (!saveWhitelistToConfig(m_whitelistedApps)) {
-        qWarning() << "AdminModule: Failed to save updated whitelist to config.";
-        QMessageBox::critical(m_adminDashboardView, "保存失败", "无法将白名单更改保存到配置文件。");
-        if(m_adminDashboardView) {
-             // Re-load from config and set to view to revert any optimistic UI changes
-             loadConfig(); // This already calls m_adminDashboardView->setWhitelistedApps internally if view exists
-        }
+    if (saveWhitelistToConfig(m_whitelistedApps)) {
+        qDebug() << "管理员模块(AdminModule): 更新后的白名单已成功保存到 config.json。";
+        emit configurationChanged(); // 通知 UserModeModule 等其他模块配置已更改
     } else {
-         qDebug() << "AdminModule: Whitelist successfully saved to config.json.";
-         emit configurationChanged(); 
+        qWarning() << "管理员模块(AdminModule): 更新白名单后保存到 config.json 失败!";
     }
 }
 
-void AdminModule::loadConfig() {
-    qDebug() << "管理员模块(AdminModule): 开始加载配置 (密码, 热键, 白名单)...";
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    if (configDir.isEmpty()) {
-        qWarning() << "管理员模块(AdminModule): 无法获取应用配置目录路径!";
-        configDir = QCoreApplication::applicationDirPath(); 
-        qWarning() << "管理员模块(AdminModule): 回退到应用可执行文件目录:" << configDir;
-    }
-    
-    QDir dir(configDir);
-    if (!dir.exists()) {
-        if (!dir.mkpath(".")) {
-            qWarning() << "管理员模块(AdminModule): 无法创建配置目录:" << configDir;
-            initializeDefaultAdminHotkey(); 
-            return;
-        }
-        qDebug() << "管理员模块(AdminModule): 配置目录已创建:" << configDir;
-    }
-
-    QString configPath = configDir + "/config.json";
-    qDebug() << "管理员模块(AdminModule): 完整的配置文件路径:" << configPath;
+void AdminModule::loadConfig()
+{
+    QString configPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + "/config.json";
+    qDebug() << "管理员模块(AdminModule): 尝试从以下路径加载配置文件:" << configPath;
 
     QFile configFile(configPath);
     if (!configFile.exists()) {
-        qWarning() << "管理员模块(AdminModule): 配置文件" << configPath << "不存在。将尝试创建默认配置。";
-        m_adminPasswordHash = QString(QCryptographicHash::hash("admin", QCryptographicHash::Sha256).toHex());
-        initializeDefaultAdminHotkey(); // This sets m_currentAdminLoginHotkeyVkCodes
-        m_whitelistedApps.clear();
-        saveConfig(); 
-        if (!configFile.exists()) {
-             qCritical() << "管理员模块(AdminModule): 无法创建默认配置文件！";
-             return;
+        qWarning() << "管理员模块(AdminModule): 配置文件不存在，将创建默认配置。 Path:" << configPath;
+        initializeDefaultAdminHotkey(); // Ensure hotkey is initialized before save
+        saveConfig(); // Save a default config if it doesn't exist
+        // After saving default, load it again to ensure consistency
+        if (!configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qCritical() << "管理员模块(AdminModule): 无法读取新创建的默认配置文件！ Path:" << configPath;
+            return; // Critical error, can't proceed
         }
-    }
-
-    if (!configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "管理员模块(AdminModule): 无法打开配置文件进行读取: " << configFile.errorString();
-        initializeDefaultAdminHotkey();
+    } else if (!configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "管理员模块(AdminModule): 无法打开配置文件进行读取。 Path:" << configPath;
         return;
     }
 
-    QByteArray jsonData = configFile.readAll();
+    QByteArray configData = configFile.readAll();
     configFile.close();
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
+    QJsonDocument configDoc = QJsonDocument::fromJson(configData);
 
-    if (jsonDoc.isNull() || !jsonDoc.isObject()) {
-        qWarning() << "管理员模块(AdminModule): 解析配置文件JSON失败或不是一个对象。";
-        initializeDefaultAdminHotkey(); // Fallback to defaults
-        m_adminPasswordHash = QString(QCryptographicHash::hash("admin", QCryptographicHash::Sha256).toHex());
-        m_whitelistedApps.clear();
+    if (configDoc.isNull() || !configDoc.isObject()) {
+        qWarning() << "管理员模块(AdminModule): 配置文件格式无效 (不是JSON对象或解析失败)。 Path:" << configPath;
+        // Consider attempting to save a default config here as well or alert user
         return;
     }
 
-    QJsonObject rootObj = jsonDoc.object();
+    QJsonObject rootObj = configDoc.object();
 
-    if (rootObj.contains("admin_password_hash") && rootObj["admin_password_hash"].isString()) {
-        m_adminPasswordHash = rootObj["admin_password_hash"].toString();
-        qDebug() << "管理员模块(AdminModule): 管理员密码哈希已从配置加载。";
+    // Load Admin Password Hash
+    if (rootObj.contains("admin_password") && rootObj["admin_password"].isString()) {
+        m_adminPasswordHash = rootObj["admin_password"].toString();
+        qDebug() << "管理员模块(AdminModule): 已加载管理员密码哈希。";
     } else {
-        qWarning() << "管理员模块(AdminModule): 配置文件中未找到或无效的 'admin_password_hash'。将使用默认密码 'admin'。";
-        m_adminPasswordHash = QString(QCryptographicHash::hash("admin", QCryptographicHash::Sha256).toHex());
+        qWarning() << "管理员模块(AdminModule): 配置文件中未找到或无效的管理员密码哈希，将设置默认密码。";
+        saveAdminPasswordToConfig("123456"); // Sets m_adminPasswordHash and saves
     }
 
+    // Load Admin Login Hotkey
     if (rootObj.contains("shortcuts") && rootObj["shortcuts"].isObject()) {
         QJsonObject shortcutsObj = rootObj["shortcuts"].toObject();
         if (shortcutsObj.contains("admin_login") && shortcutsObj["admin_login"].isObject()) {
             QJsonObject adminLoginObj = shortcutsObj["admin_login"].toObject();
             if (adminLoginObj.contains("key_sequence") && adminLoginObj["key_sequence"].isArray()) {
                 QJsonArray hotkeyArray = adminLoginObj["key_sequence"].toArray();
-                QStringList vkStrings;
+                m_currentAdminLoginHotkeyVkCodes.clear();
+                QStringList hotkeyStringsForLog;
                 for (const QJsonValue& val : hotkeyArray) {
                     if (val.isString()) {
-                        vkStrings.append(val.toString());
-                    }
-                }
-                if (!vkStrings.isEmpty()) {
-                    qDebug() << "管理员模块(AdminModule): 管理员登录热键 (VK字符串) 已从配置加载:" << vkStrings.join(" + ");
-                    // m_currentAdminLoginHotkeyVkCodes 应该由 SystemInteractionModule 自己加载和管理
-                    // AdminModule 主要关心这个字符串序列是否能被SIM正确解析
-                    // 此处可以考虑存储这个 vkStrings 以便传递给 HotkeyEditDialog 进行显示
-                    // m_loadedAdminHotkeyStrings = vkStrings; // 示例：如果需要存储
+                         if(m_systemInteractionModulePtr){
+                            DWORD vkCode = m_systemInteractionModulePtr->stringToVkCode(val.toString());
+                            if (vkCode != 0) {
+                                m_currentAdminLoginHotkeyVkCodes.append(vkCode);
+                                hotkeyStringsForLog.append(val.toString());
                 } else {
-                    qWarning() << "管理员模块(AdminModule): 配置文件中 'shortcuts.admin_login.key_sequence' 为空或无效。";
-                    initializeDefaultAdminHotkey();
+                                qWarning() << "管理员模块(AdminModule): 无法将热键字符串转换为VK代码:" << val.toString();
                 }
             } else {
-                qWarning() << "管理员模块(AdminModule): 配置文件中未找到或无效的 'shortcuts.admin_login.key_sequence'。";
-                initializeDefaultAdminHotkey();
+                             qWarning() << "管理员模块(AdminModule): SystemInteractionModule 未初始化，无法转换热键:" << val.toString();
             }
+                    } else if (val.isDouble()) { // Legacy support for DWORDs directly stored as numbers
+                        DWORD vkCode = static_cast<DWORD>(val.toDouble());
+                         m_currentAdminLoginHotkeyVkCodes.append(vkCode);
+                         if(m_systemInteractionModulePtr){
+                            hotkeyStringsForLog.append(m_systemInteractionModulePtr->vkCodeToString(vkCode));
         } else {
-            qWarning() << "管理员模块(AdminModule): 配置文件中未找到或无效的 'shortcuts.admin_login' 对象。";
-            initializeDefaultAdminHotkey();
-        }
-    } else {
-        qWarning() << "管理员模块(AdminModule): 配置文件中未找到 'shortcuts' 对象。将使用旧的 'admin_login_hotkey_vk_strings' 逻辑或默认热键。";
-        // 保留旧的直接读取 admin_login_hotkey_vk_strings 的逻辑作为回退，或者完全移除
-        if (rootObj.contains("admin_login_hotkey_vk_strings") && rootObj["admin_login_hotkey_vk_strings"].isArray()) {
-            QJsonArray hotkeyArray = rootObj["admin_login_hotkey_vk_strings"].toArray();
-            QStringList vkStrings;
-            for (const QJsonValue& val : hotkeyArray) {
-                if (val.isString()) {
-                    vkStrings.append(val.toString());
+                            hotkeyStringsForLog.append(QString("VK_%1").arg(vkCode));
                 }
             }
-            if (!vkStrings.isEmpty()) {
-                qDebug() << "管理员模块(AdminModule): 管理员登录热键 (VK字符串，旧格式) 已从配置加载:" << vkStrings.join(" + ");
-            } else {
-                qWarning() << "管理员模块(AdminModule): 配置文件中 'admin_login_hotkey_vk_strings' (旧格式) 为空或无效。";
-                initializeDefaultAdminHotkey(); // 确保如果新旧格式都失败，则使用默认
+                }
+                qDebug() << "管理员模块(AdminModule): 已加载管理员登录热键:" << hotkeyStringsForLog.join(" + ");
             }
-        } else {
-             // 如果连旧的字段也没有，并且新的shortcuts方式也失败了
-            qWarning() << "管理员模块(AdminModule): 配置文件中未找到任何管理员登录热键配置。";
-            initializeDefaultAdminHotkey();
         }
     }
-    
+    if (m_currentAdminLoginHotkeyVkCodes.isEmpty()) {
+        qWarning() << "管理员模块(AdminModule): 配置文件中未找到或无效的管理员登录热键，将设置默认热键。";
+        initializeDefaultAdminHotkey(); // Sets m_currentAdminLoginHotkeyVkCodes
+        // No need to save here as saveConfig() will be called if file was just created, or can be triggered by user action
+    }
+
+    // Load Whitelisted Apps
     m_whitelistedApps.clear();
     if (rootObj.contains("whitelist_apps") && rootObj["whitelist_apps"].isArray()) {
         QJsonArray appsArray = rootObj["whitelist_apps"].toArray();
-        for (const QJsonValue &value : appsArray) {
-            QJsonObject appObj = value.toObject();
-            AppInfo app;
-            app.name = appObj["name"].toString();
-            app.path = appObj["path"].toString();
-            
+        for (const QJsonValue &appVal : appsArray) {
+            if (appVal.isObject()) {
+                QJsonObject appObj = appVal.toObject();
+                AppInfo appInfo;
+                appInfo.name = appObj.value("name").toString();
+                appInfo.path = appObj.value("path").toString();
+                
+                // 确保正确读取 mainExecutableHint 和 windowFindingHints
+                appInfo.mainExecutableHint = appObj.value("mainExecutableHint").toString();
+                appInfo.windowFindingHints = appObj.value("windowFindingHints").toObject();
+
+                // Icon loading (priority: SystemInteractionModule, then direct path, then QIcon(appInfo.path))
             if (m_systemInteractionModulePtr) {
-                app.icon = m_systemInteractionModulePtr->getIconForExecutable(app.path);
-            } else if (appObj.contains("icon_path")) { 
-                app.icon = QIcon(appObj["icon_path"].toString());
-                 if (app.icon.isNull()) {
-                    qWarning() << "AdminModule: Failed to load icon from icon_path for" << app.name << ":" << appObj["icon_path"].toString();
+                    appInfo.icon = m_systemInteractionModulePtr->getIconForExecutable(appInfo.path);
+                } else if (appObj.contains("icon_path") && appObj["icon_path"].isString()) {
+                    // This is a fallback if SIM is not available, icon_path was a legacy idea
+                    // For consistency, it's better to rely on SIM or QIcon(path)
+                    appInfo.icon = QIcon(appObj["icon_path"].toString()); 
+            }
+                if (appInfo.icon.isNull() && !appInfo.path.isEmpty()) {
+                     appInfo.icon = QIcon(appInfo.path); // Basic fallback if no icon found yet
+                }
+
+                if (!appInfo.name.isEmpty() && !appInfo.path.isEmpty()) {
+                    m_whitelistedApps.append(appInfo);
+                    qDebug() << "管理员模块(AdminModule): 已加载白名单应用:" << appInfo.name
+                             << "Path:" << appInfo.path
+                             << "Hint:" << appInfo.mainExecutableHint; // 确认Hint是否正确打印
+                    if (!appInfo.windowFindingHints.isEmpty()) {
+                         qDebug() << "  with WindowHints:" << QJsonDocument(appInfo.windowFindingHints).toJson(QJsonDocument::Compact);
+                    }
                 }
             }
-            if (app.icon.isNull()) {
-                 qWarning() << "AdminModule: Icon for" << app.name << "is null after attempting load. Path:" << app.path;
-            }
-            m_whitelistedApps.append(app);
         }
-        qDebug() << "管理员模块(AdminModule): 从配置文件加载了" << m_whitelistedApps.size() << "个白名单应用。";
-    } else {
-        qDebug() << "管理员模块(AdminModule): 配置文件中未找到 'whitelist_apps' 或格式不正确。白名单为空。";
+    }
+    qDebug() << "管理员模块(AdminModule): 共加载" << m_whitelistedApps.size() << "个白名单应用。";
+
+    // After loading all parts, if the dashboard view exists, populate it.
+    if (m_adminDashboardView) {
+        qDebug() << "管理员模块(AdminModule): 准备填充管理员仪表盘数据。";
+        prepareAdminDashboardData(); 
     }
 
-    if (m_adminDashboardView) { // Update view if it exists
-        m_adminDashboardView->setWhitelistedApps(m_whitelistedApps);
-    }
-     qDebug() << "管理员模块(AdminModule): 配置加载完成。";
+    qDebug() << "管理员模块(AdminModule): 配置文件加载完成。";
 }
 
-void AdminModule::saveConfig() {
-    qDebug() << "管理员模块(AdminModule): 准备保存配置到JSON...";
+void AdminModule::saveConfig() 
+{
     QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    if (configDir.isEmpty()) {
-        qWarning() << "管理员模块(AdminModule): 无法获取应用配置目录路径! 将尝试保存到应用可执行文件目录。";
-        configDir = QCoreApplication::applicationDirPath();
+    QDir dir(configDir);
+    if (!dir.exists()) {
+        if (!dir.mkpath(".")) {
+            qWarning() << "管理员模块(AdminModule): 无法创建配置目录:" << configDir;
+            return;
+        }
     }
     QString configPath = configDir + "/config.json";
-    qDebug() << "管理员模块(AdminModule): 配置文件将保存到:" << configPath;
+    qDebug() << "管理员模块(AdminModule): 准备保存完整配置到:" << configPath;
 
-    QFile configFile(configPath);
     QJsonObject rootObj;
 
-    if (configFile.exists() && configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QJsonDocument existingDoc = QJsonDocument::fromJson(configFile.readAll());
-        if (existingDoc.isObject()) {
-            rootObj = existingDoc.object();
-        }
-        configFile.close();
-    } else {
-        qInfo() << "管理员模块(AdminModule): 现有配置文件未找到或无法读取，将创建新的。";
+    // Save Admin Password Hash (ensure it's loaded or default set before this)
+    if (m_adminPasswordHash.isEmpty()) { 
+        qWarning() << "管理员模块(AdminModule): 尝试保存配置时密码哈希为空，将设置并保存默认密码。";
+        // This directly modifies m_adminPasswordHash AND writes only password to config
+        // which might be overwritten by subsequent rootObj write. Better to just set member here.
+        QCryptographicHash hasher(QCryptographicHash::Sha256);
+        hasher.addData("123456"); // Default password
+        m_adminPasswordHash = QString::fromUtf8(hasher.result().toHex());
     }
+    rootObj["admin_password"] = m_adminPasswordHash;
 
-    if (m_adminPasswordHash.isEmpty()){ 
-         m_adminPasswordHash = QString(QCryptographicHash::hash("admin", QCryptographicHash::Sha256).toHex());
-         qWarning() << "管理员模块(AdminModule): 保存配置时发现密码哈希为空，已设置为默认 'admin' 的哈希。";
+    // Save Admin Login Hotkey (ensure it's loaded or default set)
+    if (m_currentAdminLoginHotkeyVkCodes.isEmpty()) {
+         qWarning() << "管理员模块(AdminModule): 尝试保存配置时热键为空，将设置并保存默认热键。";
+        initializeDefaultAdminHotkey(); // This sets m_currentAdminLoginHotkeyVkCodes
     }
-    rootObj["admin_password_hash"] = m_adminPasswordHash;
-
-    // 修改热键保存逻辑
     QJsonObject shortcutsObj;
-    if (rootObj.contains("shortcuts") && rootObj["shortcuts"].isObject()) {
-        shortcutsObj = rootObj["shortcuts"].toObject();
-    }
     QJsonObject adminLoginObj;
-    if (shortcutsObj.contains("admin_login") && shortcutsObj["admin_login"].isObject()) {
-        adminLoginObj = shortcutsObj["admin_login"].toObject(); 
+    QJsonArray hotkeyArray;
+    if (m_systemInteractionModulePtr) {
+        for (DWORD vkCode : m_currentAdminLoginHotkeyVkCodes) {
+            hotkeyArray.append(m_systemInteractionModulePtr->vkCodeToString(vkCode));
+        }
+    } else { // Fallback if SIM is null, save raw VK codes as strings (less ideal)
+        for (DWORD vkCode : m_currentAdminLoginHotkeyVkCodes) {
+            hotkeyArray.append(QString::number(vkCode)); // Or format as VK_XXX if possible without SIM
+        }
+         qWarning() << "管理员模块(AdminModule): SIM为空，热键将以数字形式保存。";
     }
-    // adminLoginObj["key_sequence"] 会在 saveAdminLoginHotkeyToConfig 中更新
-    // 这里确保基本结构存在
+    adminLoginObj["key_sequence"] = hotkeyArray;
     shortcutsObj["admin_login"] = adminLoginObj;
     rootObj["shortcuts"] = shortcutsObj;
 
-    // 移除旧的 admin_login_hotkey_vk_strings 保存逻辑 (如果存在的话)
-    // rootObj.remove("admin_login_hotkey_vk_strings"); 
-
-    if (!rootObj.contains("whitelist_apps")) {
+    // Save Whitelisted Apps
         QJsonArray appsArray;
-        for (const AppInfo& app : m_whitelistedApps) { // Use current m_whitelistedApps
+    for (const AppInfo &app : m_whitelistedApps) { // Use m_whitelistedApps member
             QJsonObject appObj;
             appObj["name"] = app.name;
             appObj["path"] = app.path;
+        if (!app.mainExecutableHint.isEmpty()) {
+            appObj["mainExecutableHint"] = app.mainExecutableHint;
+        }
+        if (!app.windowFindingHints.isEmpty()) {
+            appObj["windowFindingHints"] = app.windowFindingHints;
+        }
             appsArray.append(appObj);
         }
         rootObj["whitelist_apps"] = appsArray;
-    }
 
-    QJsonDocument newDoc(rootObj);
+    QFile configFile(configPath);
     if (!configFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        qWarning() << "管理员模块(AdminModule): 无法打开配置文件进行写入: " << configFile.errorString();
+        qWarning() << "管理员模块(AdminModule): 无法打开配置文件进行写入:" << configPath;
         return;
     }
-    configFile.write(newDoc.toJson(QJsonDocument::Indented));
+    QJsonDocument newDoc(rootObj);
+    configFile.write(newDoc.toJson());
     configFile.close();
-    qDebug() << "管理员模块(AdminModule): 配置已保存到" << configPath;
+    qDebug() << "管理员模块(AdminModule): 完整配置已保存。";
+
+    // After saving, SystemInteractionModule might need to reload its part of config (hotkeys)
+    if (m_systemInteractionModulePtr) {
+        qDebug() << "管理员模块(AdminModule): 通知SystemInteractionModule重新加载配置。";
+        m_systemInteractionModulePtr->loadConfiguration(); // Ensure SIM reloads hotkeys
+    }
 }
 
 void AdminModule::initializeDefaultAdminHotkey() {
@@ -469,50 +458,59 @@ void AdminModule::initializeDefaultAdminHotkey() {
 
 bool AdminModule::saveWhitelistToConfig(const QList<AppInfo>& apps)
 {
-    qDebug() << "管理员模块(AdminModule): 准备将白名单保存到配置文件...";
     QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    if (configDir.isEmpty()) {
-        qWarning() << "管理员模块(AdminModule): 无法获取应用配置目录路径! 将尝试保存到应用可执行文件目录。";
-        configDir = QCoreApplication::applicationDirPath();
+    QDir dir(configDir);
+    if (!dir.exists()) {
+        if (!dir.mkpath(".")) {
+            qWarning() << "管理员模块(AdminModule): 无法创建配置目录:" << configDir;
+            return false;
+        }
     }
     QString configPath = configDir + "/config.json";
-    qDebug() << "管理员模块(AdminModule): 配置文件路径:" << configPath;
+    qDebug() << "管理员模块(AdminModule): 准备将白名单保存到:" << configPath;
 
-    QFile configFile(configPath);
     QJsonObject rootObj;
-
-    if (configFile.exists() && configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QJsonDocument existingDoc = QJsonDocument::fromJson(configFile.readAll());
-        if (existingDoc.isObject()) {
-            rootObj = existingDoc.object();
+    // Try to load existing config to preserve other settings
+    QFile configFileRead(configPath);
+    if (configFileRead.exists() && configFileRead.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QByteArray currentConfigData = configFileRead.readAll();
+        configFileRead.close();
+        QJsonDocument currentConfigDoc = QJsonDocument::fromJson(currentConfigData);
+        if (currentConfigDoc.isObject()) {
+            rootObj = currentConfigDoc.object();
         }
-        configFile.close();
+    } else {
+        qDebug() << "管理员模块(AdminModule): 现有配置文件无法读取或不存在，将创建新的根对象。";
     }
 
     QJsonArray appsArray;
-    for (const AppInfo& app : apps) {
+    for (const AppInfo &app : apps) {
         QJsonObject appObj;
         appObj["name"] = app.name;
         appObj["path"] = app.path;
+        if (!app.mainExecutableHint.isEmpty()) {
+            appObj["mainExecutableHint"] = app.mainExecutableHint;
+        }
+        if (!app.windowFindingHints.isEmpty()) {
+            appObj["windowFindingHints"] = app.windowFindingHints; // Save the QJsonObject directly
+        }
+        // Note: Icon is not saved as a path here; it's dynamically loaded.
+        // If a persistent icon_path was desired, it would be saved here.
         appsArray.append(appObj);
     }
     rootObj["whitelist_apps"] = appsArray; 
+    qDebug() << "管理员模块(AdminModule):" << apps.size() << "个应用已序列化到JSON。";
 
-    QJsonDocument newDoc(rootObj);
-    if (!configFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
-        qWarning() << "管理员模块(AdminModule): 无法打开配置文件进行写入: " << configFile.errorString();
-        return false;
-    }
-
-    qint64 bytesWritten = configFile.write(newDoc.toJson(QJsonDocument::Indented));
-    configFile.close();
-
-    if (bytesWritten == -1) {
-        qWarning() << "管理员模块(AdminModule): 写入配置文件失败!";
+    QFile configFileWrite(configPath);
+    if (!configFileWrite.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        qWarning() << "管理员模块(AdminModule): 无法打开配置文件进行写入:" << configPath;
         return false;
     }
     
-    qDebug() << "管理员模块(AdminModule): 白名单已成功写入配置文件 (" << bytesWritten << "字节)。";
+    QJsonDocument newDoc(rootObj);
+    configFileWrite.write(newDoc.toJson());
+    configFileWrite.close();
+    qDebug() << "管理员模块(AdminModule): 白名单已成功保存到配置文件。";
     return true;
 }
 
@@ -551,7 +549,7 @@ bool AdminModule::saveAdminPasswordToConfig(const QString& newPassword) {
         configFile.close();
     }
 
-    rootObj["admin_password_hash"] = m_adminPasswordHash;
+    rootObj["admin_password"] = m_adminPasswordHash;
 
     QJsonDocument newDoc(rootObj);
     if (!configFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {

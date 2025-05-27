@@ -3,6 +3,7 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminDashboardView.h
  mmc:Q_OBJECT
  mdp:C:/Users/13027/Desktop/Jianqiaov2/AdminDashboardView.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/common_types.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/q17memory.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/q20functional.h
@@ -26,6 +27,9 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminDashboardView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearraylist.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcalendar.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborcommon.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qchar.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare_impl.h
@@ -39,6 +43,7 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminDashboardView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontiguouscache.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatastream.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qendian.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qexceptionhandling.h
@@ -57,6 +62,10 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminDashboardView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qitemselectionmodel.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterable.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterator.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsondocument.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonobject.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlatin1stringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qline.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlist.h
@@ -130,6 +139,7 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminDashboardView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypes.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qurl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qversiontagging.h
@@ -367,6 +377,7 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mmc:Q_OBJECT
  mdp:C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/common_types.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QObject
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString
@@ -392,6 +403,9 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearraylist.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcalendar.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborcommon.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qchar.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare_impl.h
@@ -402,8 +416,12 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainerfwd.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainerinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainertools_impl.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontiguouscache.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatastream.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qendian.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qexceptionhandling.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qflags.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfloat16.h
@@ -413,15 +431,22 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qgenericatomic.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qglobal.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qglobalstatic.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qhash.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qhashfunctions.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevicebase.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterable.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterator.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsondocument.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonobject.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlatin1stringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qline.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlist.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlocale.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlogging.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmalloc.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmap.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmargins.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmath.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmetacontainer.h
@@ -439,9 +464,14 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qprocessordetection.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrect.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrefcount.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qregularexpression.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopedpointer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopeguard.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qset.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qshareddata.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qshareddata_impl.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qsharedpointer.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qsharedpointer_impl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qsize.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qspan.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qstdlibdetection.h
@@ -469,6 +499,7 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtdeprecationdefinitions.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtdeprecationmarkers.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtenvironmentvariables.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtextstream.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtformat_impl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtmetamacros.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtnoop.h
@@ -480,7 +511,11 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtversionchecks.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypeinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypes.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qurl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qversiontagging.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qxptype_traits.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qyieldcpu.h
@@ -504,10 +539,21 @@ C:/Users/13027/Desktop/Jianqiaov2/AdminModule.h
 C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mmc:Q_OBJECT
  mdp:C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QAbstractNativeEventFilter
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QDebug
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QEvent
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonDocument
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonParseError
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMap
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMargins
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QObject
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QProcess
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QRect
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSet
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSize
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSizeF
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QTimer
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QVector
@@ -519,6 +565,7 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/q20utility.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/q23utility.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstracteventdispatcher.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstractnativeeventfilter.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qanystringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qarraydata.h
@@ -534,6 +581,9 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearraylist.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcalendar.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborcommon.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qchar.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare_impl.h
@@ -545,14 +595,21 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainerinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainertools_impl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontiguouscache.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreapplication.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreapplication_platform.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreevent.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatastream.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdeadlinetimer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qelapsedtimer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qendian.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qeventloop.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qexceptionhandling.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfile.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfiledevice.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfileinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qflags.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfloat16.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qforeach.h
@@ -563,12 +620,18 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qglobalstatic.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qhash.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qhashfunctions.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevice.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevicebase.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterable.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterator.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsondocument.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonobject.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlatin1stringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qline.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlist.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlocale.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlogging.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmalloc.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmap.h
@@ -578,6 +641,7 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmetatype.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qminmax.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnamespace.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnativeinterface.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnumeric.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qobject.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qobject_impl.h
@@ -586,9 +650,11 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qoverload.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpair.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpoint.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qprocess.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qprocessordetection.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrect.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrefcount.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qregularexpression.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopedpointer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopeguard.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qset.h
@@ -626,6 +692,7 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtextstream.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtformat_impl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtimer.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtimezone.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtmetamacros.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtnoop.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtpreprocessorsupport.h
@@ -636,7 +703,9 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtversionchecks.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypeinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypes.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qurl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvector.h
@@ -644,6 +713,11 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qxptype_traits.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qyieldcpu.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QIcon
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QPixmap
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QScreen
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QTransform
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QWindow
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qabstractfileiconprovider.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qaction.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qbitmap.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qbrush.h
@@ -653,8 +727,11 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontmetrics.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontvariableaxis.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qguiapplication.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qguiapplication_platform.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qicon.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qimage.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qinputmethod.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qkeysequence.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpaintdevice.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpalette.h
@@ -664,13 +741,20 @@ C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qregion.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgb.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgba64.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qscreen.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qscreen_platform.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qsurface.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qsurfaceformat.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtgui-config.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiexports.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiglobal.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtransform.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindow.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs_win.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFileIconProvider
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QWidget
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qfileiconprovider.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qsizepolicy.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtwidgets-config.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtwidgetsexports.h
@@ -1356,17 +1440,28 @@ C:/Users/13027/Desktop/Jianqiaov2/HoverIconWidget.h
 C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mmc:Q_OBJECT
  mdp:C:/Users/13027/Desktop/Jianqiaov2/HoverIconWidget.h
+ mdp:C:/Users/13027/Desktop/Jianqiaov2/JianqiaoCoreShell.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/common_types.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QAbstractNativeEventFilter
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QDebug
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QEvent
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QHash
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonDocument
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonParseError
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMap
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMargins
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QObject
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QProcess
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QPropertyAnimation
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QRect
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSet
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSize
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSizeF
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QTimer
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QVector
@@ -1379,6 +1474,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/q23utility.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstractanimation.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstracteventdispatcher.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstractnativeeventfilter.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qanystringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qarraydata.h
@@ -1394,6 +1490,9 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearraylist.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcalendar.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborcommon.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qchar.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare_impl.h
@@ -1405,8 +1504,12 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainerinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainertools_impl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontiguouscache.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreapplication.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreapplication_platform.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreevent.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatastream.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdeadlinetimer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qeasingcurve.h
@@ -1414,6 +1517,9 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qendian.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qeventloop.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qexceptionhandling.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfile.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfiledevice.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfileinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qflags.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfloat16.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qforeach.h
@@ -1428,9 +1534,14 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevicebase.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterable.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterator.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsondocument.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonobject.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlatin1stringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qline.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlist.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlocale.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlogging.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmalloc.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmap.h
@@ -1440,6 +1551,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmetatype.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qminmax.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnamespace.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnativeinterface.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnumeric.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qobject.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qobject_impl.h
@@ -1453,6 +1565,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpropertyanimation.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrect.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrefcount.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qregularexpression.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopedpointer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopeguard.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qset.h
@@ -1490,6 +1603,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtextstream.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtformat_impl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtimer.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtimezone.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtmetamacros.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtnoop.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtpreprocessorsupport.h
@@ -1502,6 +1616,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypes.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qurl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariantanimation.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h
@@ -1511,6 +1626,10 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qyieldcpu.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QIcon
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QPixmap
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QScreen
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QTransform
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/QWindow
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qabstractfileiconprovider.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qaction.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qbitmap.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qbrush.h
@@ -1520,8 +1639,11 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontmetrics.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontvariableaxis.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qguiapplication.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qguiapplication_platform.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qicon.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qimage.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qinputmethod.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qkeysequence.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpaintdevice.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpalette.h
@@ -1532,25 +1654,37 @@ C:/Users/13027/Desktop/Jianqiaov2/UserModeModule.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qregion.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgb.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgba64.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qscreen.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qscreen_platform.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qsurface.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qsurfaceformat.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtextdocument.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtgui-config.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiexports.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiglobal.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtransform.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindow.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs_win.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFileIconProvider
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFrame
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QHBoxLayout
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QLabel
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QMainWindow
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QStackedWidget
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QVBoxLayout
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QWidget
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qboxlayout.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qfileiconprovider.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qframe.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qgridlayout.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlabel.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlayout.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qlayoutitem.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qmainwindow.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qsizepolicy.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qstackedwidget.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtabwidget.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtwidgets-config.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtwidgetsexports.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtwidgetsglobal.h
@@ -1561,6 +1695,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/common_types.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QHash
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QPropertyAnimation
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSet
@@ -1590,6 +1725,9 @@ C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearraylist.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcalendar.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborcommon.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qchar.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare_impl.h
@@ -1603,6 +1741,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontiguouscache.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatastream.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdeadlinetimer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qeasingcurve.h
@@ -1624,9 +1763,14 @@ C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevicebase.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterable.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterator.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsondocument.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonobject.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlatin1stringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qline.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlist.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlocale.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlogging.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmalloc.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmap.h
@@ -1648,6 +1792,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpropertyanimation.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrect.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrefcount.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qregularexpression.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopedpointer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopeguard.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qset.h
@@ -1697,6 +1842,7 @@ C:/Users/13027/Desktop/Jianqiaov2/UserView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypes.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qurl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariantanimation.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h
@@ -1754,6 +1900,7 @@ C:/Users/13027/Desktop/Jianqiaov2/WhitelistManagerView.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/HotkeyEditDialog.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/WhitelistManagerView.h
  mdp:C:/Users/13027/Desktop/Jianqiaov2/common_types.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSet
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString
@@ -1779,6 +1926,9 @@ C:/Users/13027/Desktop/Jianqiaov2/WhitelistManagerView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearraylist.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcalendar.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborcommon.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qchar.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare_impl.h
@@ -1792,6 +1942,7 @@ C:/Users/13027/Desktop/Jianqiaov2/WhitelistManagerView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontiguouscache.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatastream.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qendian.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qexceptionhandling.h
@@ -1808,9 +1959,14 @@ C:/Users/13027/Desktop/Jianqiaov2/WhitelistManagerView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevicebase.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterable.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterator.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsondocument.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonobject.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonparseerror.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonvalue.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlatin1stringview.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qline.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlist.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlocale.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlogging.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmalloc.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmap.h
@@ -1831,6 +1987,7 @@ C:/Users/13027/Desktop/Jianqiaov2/WhitelistManagerView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qprocessordetection.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrect.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrefcount.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qregularexpression.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopedpointer.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopeguard.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qset.h
@@ -1877,7 +2034,9 @@ C:/Users/13027/Desktop/Jianqiaov2/WhitelistManagerView.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtversionchecks.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypeinfo.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypes.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qurl.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h
+ mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h
  mdp:D:/QT6/6.9.0/msvc2022_64/include/QtCore/qversiontagging.h

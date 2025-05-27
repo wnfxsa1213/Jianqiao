@@ -21,11 +21,33 @@
 #include <QImage> // Ensure QImage is included for QImage::fromHICON
 #include <string> // Added for std::wstring
 #include <QTimer> // Make sure QTimer is included
+#include <Psapi.h> // Required for EnumProcessModules, GetModuleFileNameEx - keep for now, assuming other functions might use it
+#include <dwmapi.h> // For DWMWA_CLOAKED
+#include <QFileInfo> // Required for QFileInfo to get base name
+#include <QFileIconProvider> // Added for QFileIconProvider
+#include <QThread> // 添加头文件
+#include <VersionHelpers.h> // 确保包含了必要的头文件
+#include <QCollator> // Qt5之后用于自然排序
+
+// Define a structure to pass data to EnumWindowsProc for hint-based search
+struct HintedEnumWindowsCallbackArg {
+    DWORD targetPid;
+    HWND bestHwnd;
+    int bestScore;
+    const QJsonObject* hints; // Pointer to the window hints
+
+    HintedEnumWindowsCallbackArg(DWORD pid, const QJsonObject* h)
+        : targetPid(pid), bestHwnd(nullptr), bestScore(-1), hints(h) {}
+};
 
 // Initialize static members
 HHOOK SystemInteractionModule::keyboardHook_ = NULL;
 SystemInteractionModule* SystemInteractionModule::instance_ = nullptr;
 const QMap<QString, DWORD> SystemInteractionModule::VK_CODE_MAP = SystemInteractionModule::initializeVkCodeMap();
+
+// Define constants for short activation
+const int SHORT_ACTIVATION_ATTEMPTS = 5; // Max attempts
+const int SHORT_ACTIVATION_INTERVAL_MS = 300; // Interval between attempts
 
 QMap<QString, DWORD> SystemInteractionModule::initializeVkCodeMap() {
     QMap<QString, DWORD> map;
@@ -107,16 +129,26 @@ SystemInteractionModule::SystemInteractionModule(QObject *parent)
 SystemInteractionModule::~SystemInteractionModule()
 {
     uninstallKeyboardHook();
+    
+    // Stop all timers and delete MonitoringInfo objects before the map is cleared.
+    // The QTimer objects themselves are parented to SystemInteractionModule 
+    // and will be deleted by Qt's parent-child mechanism when SystemInteractionModule is deleted.
+    for (auto it = m_monitoringApps.begin(); it != m_monitoringApps.end(); ++it) {
+        MonitoringInfo* info = it.value();
+        if (info) { // Check if pointer is valid
+            if (info->timer) {
+                info->timer->stop();
+                // info->timer->deleteLater(); // QTimer is parented, Qt handles its deletion.
+            }
+            delete info; // Delete the MonitoringInfo object itself
+        }
+    }
+    m_monitoringApps.clear(); // Clear the map of pointers
+
     if (instance_ == this) {
         instance_ = nullptr;
     }
-
-    // Cleanup monitoring timers
-    qDeleteAll(m_monitoringTimers.values()); // Clear any remaining timers
-    m_monitoringTimers.clear();
-    m_monitoringAttempts.clear();
-
-    qDebug() << "系统交互模块: 已销毁。";
+    qDebug() << "[SystemInteractionModule] SystemInteractionModule destroyed.";
 }
 
 bool SystemInteractionModule::loadConfiguration() {
@@ -482,101 +514,119 @@ void SystemInteractionModule::bringToFrontAndActivate(WId windowId)
     qDebug() << "系统交互模块(SystemInteractionModule): 尝试置顶并激活窗口句柄:" << hwnd;
 }
 
-// Structure to pass data to EnumWindows callback
-struct EnumWindowsCallbackArg {
-    DWORD processId;
-    HWND  hwndFound; // HWND of the main window
-};
-
-// Callback function for EnumWindows
-static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
+// Callback function for EnumWindows (modified for hint-based search)
+static BOOL CALLBACK EnumWindowsProcWithHints(HWND hwnd, LPARAM lParam)
 {
-    EnumWindowsCallbackArg *pArg = reinterpret_cast<EnumWindowsCallbackArg*>(lParam);
-    DWORD processId = 0;
-    GetWindowThreadProcessId(hwnd, &processId);
+    HintedEnumWindowsCallbackArg* pArg = reinterpret_cast<HintedEnumWindowsCallbackArg*>(lParam);
+    DWORD currentWindowProcessId;
+    GetWindowThreadProcessId(hwnd, &currentWindowProcessId);
 
-    if (processId == pArg->processId) {
-        LONG exStyle = GetWindowLongPtr(hwnd, GWL_EXSTYLE);
+    if (currentWindowProcessId == pArg->targetPid) {
+        // Basic visible check first
+        if (!IsWindowVisible(hwnd)) {
+            return TRUE; // Continue enumerating
+        }
+
+        // Check for cloaked windows (DWM)
+        int cloaked = 0;
+        DwmGetWindowAttribute(hwnd, DWMWA_CLOAKED, &cloaked, sizeof(cloaked));
+        if (cloaked) {
+            return TRUE; // Skip cloaked windows
+        }
+
+        wchar_t classNameStr[256];
+        GetClassNameW(hwnd, classNameStr, 256);
+        QString currentClassName = QString::fromWCharArray(classNameStr);
+
+        wchar_t windowTitleStr[512];
+        GetWindowTextW(hwnd, windowTitleStr, 512);
+        QString currentTitle = QString::fromWCharArray(windowTitleStr);
+
+        int currentScore = 0;
+        bool possibleCandidate = true;
+
+        // --- Hint-based Scoring --- 
+        const QJsonObject& hints = *(pArg->hints);
+        QString primaryClassNameHint = hints.value("primaryClassName").toString();
+        QString titleContainsHint = hints.value("titleContains").toString();
+        bool allowNonTopLevelHint = hints.value("allowNonTopLevel").toBool(false); // Default false
+        int minScoreHint = hints.value("minScore").toInt(50); // Default 50 (was 60)
+        // QStringList exStyleMustHave = hints.value("exStyleMustHave").toVariant().toStringList();
+        // QStringList exStyleMustNotHave = hints.value("exStyleMustNotHave").toVariant().toStringList();
+
+        // 1. Class Name Match (High Priority)
+        if (!primaryClassNameHint.isEmpty() && currentClassName == primaryClassNameHint) {
+            currentScore += 100;
+        } else if (!primaryClassNameHint.isEmpty() && currentClassName.contains(primaryClassNameHint, Qt::CaseInsensitive)) {
+            currentScore += 70; // Partial match (e.g. if hint is OpusApp, and class is OpusApp_123)
+        } else if (!primaryClassNameHint.isEmpty()) {
+            // If primaryClassNameHint is provided but doesn't match at all, heavily penalize or disqualify
+            // For now, let's not disqualify, but it gets no points here.
+        }
+
+        // 2. Title Contains Match
+        if (!titleContainsHint.isEmpty() && currentTitle.contains(titleContainsHint, Qt::CaseInsensitive)) {
+            currentScore += 50;
+        }
+
+        // 3. Window Title Presence (General good sign)
+        if (!currentTitle.isEmpty()) {
+            currentScore += 20;
+        } else {
+            currentScore -= 10; // Penalize empty titles slightly unless class name is a strong match
+        }
+
+        // 4. Top-Level Status & Hint Compliance
         HWND parentHwnd = GetParent(hwnd);
-        BOOL isVisible = IsWindowVisible(hwnd);
-        int titleLen = GetWindowTextLength(hwnd);
+        bool isEffectivelyTopLevel = (parentHwnd == nullptr || parentHwnd == GetDesktopWindow());
+        
+        if (isEffectivelyTopLevel) {
+            currentScore += 30;
+        } else if (allowNonTopLevelHint) {
+            currentScore += 15; // Allowed non-top-level gets some points
+        } else {
+            // Is not top-level, and non-top-level is NOT allowed by hints
+            possibleCandidate = false; // Disqualify
+            currentScore = -1; // Ensure it's not picked
+        }
 
-        qDebug() << "  [EnumWindowsProc Debug] PID:" << processId << "HWnd:" << hwnd
-                 << "Visible:" << isVisible << "Parent:" << parentHwnd
-                 << "ExStyle:" << QString::asprintf("0x%lX", exStyle) << "TitleLen:" << titleLen;
+        // 5. WS_EX_APPWINDOW Style (Appears in taskbar, usually a good sign for main windows)
+        LONG exStyle = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
+        if (exStyle & WS_EX_APPWINDOW) {
+            currentScore += 40;
+        }
+        
+        // todo: Could add exStyleMustHave / exStyleMustNotHave checks here from hints
 
-        if (isVisible && parentHwnd == NULL) {
-            // Prefer windows with a title
-            if (titleLen > 0) {
-                qDebug() << "    >>> [EnumWindowsProc Match!] Found Visible, NoParent, Titled HWnd:" << hwnd;
-                pArg->hwndFound = hwnd;
-                return FALSE; // Found a good candidate, stop.
-            }
-            // If no titled window found yet, take the first visible top-level one as a fallback
-            if (pArg->hwndFound == NULL) {
-                qDebug() << "    >>> [EnumWindowsProc Fallback Candidate] Found Visible, NoParent, NoTitle HWnd:" << hwnd;
-                pArg->hwndFound = hwnd;
-                // Continue searching in this iteration in case a titled one appears later in the Z-order
-            }
+        qDebug() << "    [EnumWindowsProcWithHints] HWND:" << hwnd << "PID:" << currentWindowProcessId
+                 << "Class: '" << currentClassName << "' Title: '" << currentTitle.left(50) << "...'"
+                 << "Visible:" << IsWindowVisible(hwnd) << "Top-Level:" << isEffectivelyTopLevel
+                 << "Score:" << currentScore << "(Min Required:" << minScoreHint << ")";
+
+        if (possibleCandidate && currentScore >= minScoreHint && currentScore > pArg->bestScore) {
+            qDebug() << "        >>> [EnumWindowsProcWithHints New Best Candidate!] HWND:" << hwnd << "Score:" << currentScore 
+                     << "(Prev Best:" << pArg->bestScore << ") Class:" << currentClassName << "Title:" << currentTitle.left(50);
+            pArg->bestHwnd = hwnd;
+            pArg->bestScore = currentScore;
+            // If a very strong match (e.g., class and title), could consider returning FALSE to stop early.
+            // For now, let it iterate all windows of the process to find the absolute best score.
         }
     }
     return TRUE; // Continue enumerating
 }
 
-// New Static callback for logging all windows (for debugging)
-static BOOL CALLBACK LogAllWindowsProc(HWND hwnd, LPARAM lParam) {
-    DWORD processId = 0;
-    GetWindowThreadProcessId(hwnd, &processId);
-    wchar_t windowTitle[256];
-    GetWindowText(hwnd, windowTitle, 256);
-    wchar_t className[256];
-    GetClassName(hwnd, className, 256);
+// New findMainWindowForProcess that uses hints
+HWND SystemInteractionModule::findMainWindowForProcess(DWORD processId, const QJsonObject& windowHints) {
+    qDebug() << "[SystemInteractionModule] Attempting to find main window for PID:" << processId << "with hints:" << QJsonDocument(windowHints).toJson(QJsonDocument::Compact);
+    HintedEnumWindowsCallbackArg callbackArg(processId, &windowHints);
+    EnumWindows(EnumWindowsProcWithHints, reinterpret_cast<LPARAM>(&callbackArg));
 
-    qDebug() << "  [LogAllWindowsProc] HWND:" << hwnd 
-             << "PID:" << processId 
-             << "Title:" << QString::fromWCharArray(windowTitle)
-             << "Class:" << QString::fromWCharArray(className)
-             << "Visible:" << IsWindowVisible(hwnd)
-             << "Parent:" << GetParent(hwnd);
-    return TRUE; // Continue enumerating
-}
-
-HWND SystemInteractionModule::findMainWindowForProcess(DWORD processId)
-{
-    qDebug() << "SystemInteractionModule: Attempting to find main window for PID:" << processId << "(Initial PID to search)";
-    
-    // --- BEGIN TEMPORARY DEBUG LOGGING ---
-    // qDebug() << "SystemInteractionModule: == Listing all top-level windows at start of findMainWindowForProcess (for PID:" << processId << ") ==";
-    // EnumWindows(LogAllWindowsProc, NULL);
-    // qDebug() << "SystemInteractionModule: == Finished listing all top-level windows ==";
-    // --- END TEMPORARY DEBUG LOGGING ---
-
-    EnumWindowsCallbackArg arg;
-    arg.processId = processId;
-    arg.hwndFound = NULL;
-
-    for (int i = 0; i < 20; ++i) {
-        // Reset hwndFound for each top-level pass of EnumWindows if we want the *last* best match from each pass
-        // or, keep it to get the *first* best match across all passes.
-        // Current logic: keeps the first titled one found, or the first non-titled if no titled ones appear.
-        // If in one pass of EnumWindows multiple suitable windows exist, the one appearing earlier in Z-order that fits criteria will be chosen.
-        EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(&arg));
-        if (arg.hwndFound != NULL) {
-            // If a titled window was found, EnumWindowsProc would have returned FALSE and stopped.
-            // If a non-titled one was found, EnumWindowsProc continued. We check here after the full pass.
-            // Break here if we found *any* candidate in this pass to avoid unnecessary further sleeps/passes.
-            // However, if a non-titled one was found, subsequent passes might find a titled one.
-            // For simplicity, if anything is found, we log and break. The priority is in EnumWindowsProc.
-            qDebug() << "SystemInteractionModule: Main window HWND:" << arg.hwndFound << "(candidate after attempt" << (i+1) << ") for PID:" << processId;
-            break; 
-        }
-        Sleep(100); 
+    if (callbackArg.bestHwnd) {
+        qDebug() << "[SystemInteractionModule] Best window found for PID" << processId << "is" << callbackArg.bestHwnd << "with score" << callbackArg.bestScore;
+    } else {
+        qDebug() << "[SystemInteractionModule] No suitable window found for PID" << processId << "with given hints and logic.";
     }
-    
-    if (arg.hwndFound == NULL) {
-        qWarning() << "SystemInteractionModule: Could not find any suitable main window for PID:" << processId << "after 20 attempts.";
-    }
-    return arg.hwndFound;
+    return callbackArg.bestHwnd;
 }
 
 HWND SystemInteractionModule::findMainWindowForProcessOrChildren(DWORD initialPid, const QString& executableNameHint) {
@@ -686,31 +736,54 @@ QIcon SystemInteractionModule::getIconForExecutable(const QString& executablePat
 {
     if (executablePath.isEmpty() || !QFile::exists(executablePath)) {
         qWarning() << "SystemInteractionModule::getIconForExecutable - Path is empty or file does not exist:" << executablePath;
-        return QIcon(); // Return an empty icon
+        return QIcon();
     }
 
-    SHFILEINFOW sfi = {0};
-    UINT flags = SHGFI_ICON | SHGFI_LARGEICON | SHGFI_USEFILEATTRIBUTES; // Added SHGFI_USEFILEATTRIBUTES
+    // --- Attempt 1: Using QFileIconProvider ---
+    QFileIconProvider provider;
+    QFileInfo fileInfo(executablePath);
+    QIcon icon = provider.icon(fileInfo);
 
-    // Convert QString to wchar_t* using std::wstring
+    if (!icon.isNull()) {
+        qDebug() << "SystemInteractionModule::getIconForExecutable - Successfully got icon using QFileIconProvider for:" << executablePath;
+        // Check if the icon actually has a pixmap, QFileIconProvider might return a "default" icon
+        if (!icon.availableSizes().isEmpty() && !icon.pixmap(icon.availableSizes().first()).isNull()) {
+             return icon;
+        }
+        qDebug() << "SystemInteractionModule::getIconForExecutable - QFileIconProvider returned an icon, but it seems to be a default/empty one for:" << executablePath;
+        // Fall through to SHGetFileInfoW if QFileIconProvider gives a default/empty icon
+    } else {
+        qDebug() << "SystemInteractionModule::getIconForExecutable - QFileIconProvider failed to get icon for:" << executablePath << "Trying SHGetFileInfoW.";
+    }
+
+    // --- Attempt 2: Using SHGetFileInfoW (with COM initialization) --- 
+    HRESULT comInitResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    bool comInitializedHere = SUCCEEDED(comInitResult);
+    // ... (rest of the SHGetFileInfoW logic remains the same as previously modified) ...
+    // Ensure the icon variable is reset if SHGetFileInfoW is attempted after QFileIconProvider
+    icon = QIcon(); // Reset icon before trying SHGetFileInfoW
+
+    SHFILEINFOW sfi = {0};
+    UINT flags = SHGFI_ICON | SHGFI_LARGEICON;
+
     std::wstring filePathStdW = executablePath.toStdWString();
     const wchar_t* filePathW = filePathStdW.c_str();
 
-    // Using SHGetFileInfoW for Unicode path support
-    if (SHGetFileInfoW(filePathW, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), flags)) { // Pass FILE_ATTRIBUTE_NORMAL and use modified flags
+    if (SHGetFileInfoW(filePathW, 0, &sfi, sizeof(sfi), flags)) {
         if (sfi.hIcon) {
             QImage image = QImage::fromHICON(sfi.hIcon);
-            DestroyIcon(sfi.hIcon); // Important: Destroy the icon handle after conversion
+            DestroyIcon(sfi.hIcon);
 
             if (!image.isNull()) {
                 QPixmap pixmap = QPixmap::fromImage(image);
                 if (!pixmap.isNull()) {
-                    return QIcon(pixmap);
+                    icon = QIcon(pixmap);
+                    qDebug() << "SystemInteractionModule::getIconForExecutable - Successfully got icon using SHGetFileInfoW for:" << executablePath;
                 } else {
-                     qWarning() << "SystemInteractionModule::getIconForExecutable - Failed to convert QImage to QPixmap for:" << executablePath;
+                    qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW: Failed to convert QImage to QPixmap for:" << executablePath;
                 }
             } else {
-                qWarning() << "SystemInteractionModule::getIconForExecutable - QImage::fromHICON failed for:" << executablePath;
+                qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW: QImage::fromHICON failed for:" << executablePath;
             }
         } else {
             qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW succeeded but hIcon was null for:" << executablePath;
@@ -720,7 +793,14 @@ QIcon SystemInteractionModule::getIconForExecutable(const QString& executablePat
         qWarning() << "SystemInteractionModule::getIconForExecutable - SHGetFileInfoW failed for:" << executablePath << "Error:" << error;
     }
 
-    return QIcon(); // Return an empty icon if anything failed
+    if (comInitializedHere && comInitResult != RPC_E_CHANGED_MODE) {
+         CoUninitialize();
+    }
+
+    if(icon.isNull()){
+        qWarning() << "SystemInteractionModule::getIconForExecutable - All attempts failed for:" << executablePath;
+    }
+    return icon;
 }
 
 DWORD SystemInteractionModule::findProcessIdByName(const QString& executableName) {
@@ -763,188 +843,305 @@ DWORD SystemInteractionModule::findProcessIdByName(const QString& executableName
 
 // Constants for monitoring (can be defined globally in .cpp or as static const members)
 const int MONITORING_INTERVAL_MS = 500; // milliseconds
-const int MAX_MONITORING_ATTEMPTS = 20; // e.g., 20 * 500ms = 10 seconds
+const int MAX_MONITORING_ATTEMPTS = 40; // e.g., 40 * 500ms = 20 seconds. Increased from 20.
 const int HINT_DETECTION_DELAY_MS = 5000; // 5 seconds delay for hint detection
 
-void SystemInteractionModule::monitorAndActivateApplication(const QString& originalAppPath, qint64 launcherPid, const QString& mainExecutableHint, bool forceActivateOnly)
+void SystemInteractionModule::monitorAndActivateApplication(
+    const QString& originalAppPath, 
+    quint32 launcherPid, 
+    const QString& mainExecutableHint, 
+    const QJsonObject& windowHints, // New parameter
+    bool forceActivateOnly)
 {
-    qDebug() << "SystemInteractionModule::monitorAndActivateApplication - Called for:" << originalAppPath
-             << "Launcher PID:" << launcherPid << "Hint:" << mainExecutableHint << "ForceActivateOnly:" << forceActivateOnly;
+    qDebug() << "SystemInteractionModule::monitorAndActivateApplication for" << originalAppPath 
+             << "LauncherPID:" << launcherPid 
+             << "MainExeHint:" << mainExecutableHint 
+             << "ForceActivateOnly:" << forceActivateOnly
+             << "WindowHints:" << QJsonDocument(windowHints).toJson(QJsonDocument::Compact);
 
-    if (m_monitoringTimers.contains(originalAppPath) && !forceActivateOnly) { // if forceActivateOnly, we might still proceed
-        qWarning() << "SystemInteractionModule::monitorAndActivateApplication - Monitoring already in progress for" << originalAppPath;
+    if (m_monitoringApps.contains(originalAppPath) && !forceActivateOnly) {
+        qDebug() << "SystemInteractionModule: Already monitoring" << originalAppPath << "aborting new monitor request.";
         return;
+    }
+
+    QString targetExecutableName = mainExecutableHint;
+    if (targetExecutableName.isEmpty()) {
+        targetExecutableName = QFileInfo(originalAppPath).fileName();
+        qDebug() << "SystemInteractionModule: mainExecutableHint is empty, using originalAppPath's filename as target:" << targetExecutableName;
+    }
+
+    DWORD targetPid = findProcessIdByName(targetExecutableName);
+    HWND hwnd = nullptr;
+
+            if (targetPid != 0) {
+        qDebug() << "SystemInteractionModule: Found target process" << targetExecutableName << "with PID:" << targetPid;
+        bool useHints = !windowHints.isEmpty();
+        if (useHints) {
+            qDebug() << "SystemInteractionModule: Attempting to find main window for PID:" << targetPid << "(HINTED VERSION)";
+            hwnd = findMainWindowForProcess(targetPid, windowHints);
+        }
+        
+        if (!hwnd) {
+            qDebug() << "SystemInteractionModule: Window not found with hints (or hints were empty). Trying generic findMainWindowForProcess for PID:" << targetPid;
+            hwnd = findMainWindowForProcess(targetPid); // Fallback to non-hinted version
+        }
+
+        if (hwnd) {
+            qDebug() << "SystemInteractionModule: Found main window" << hwnd << "for PID" << targetPid << (useHints ? "using hints." : "using generic search.");
+            
+            qDebug() << "SystemInteractionModule: Applying 500ms delay before activation.";
+            QThread::msleep(500); 
+
+            activateWindow(hwnd);
+            qDebug() << "SystemInteractionModule: Activating window" << hwnd << "for" << originalAppPath;
+                    emit applicationActivated(originalAppPath);
+
+            auto it_remove_after_activate = m_monitoringApps.find(originalAppPath);
+            if (it_remove_after_activate != m_monitoringApps.end()) {
+                MonitoringInfo* infoToDel = it_remove_after_activate.value();
+                if (infoToDel && infoToDel->timer) {
+                    infoToDel->timer->stop(); 
+                }
+                m_monitoringApps.erase(it_remove_after_activate); 
+                delete infoToDel; // Delete the MonitoringInfo object
+                qDebug() << "SystemInteractionModule: Removed monitoring entry for" << originalAppPath << "after successful immediate activation.";
+            }
+            return;
+                } else {
+            qDebug() << "SystemInteractionModule: Found PID" << targetPid << "for" << targetExecutableName << "but failed to find its window even with fallbacks.";
+        }
     }
 
     if (forceActivateOnly) {
-        qDebug() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - START for" << originalAppPath << "Launcher PID:" << launcherPid << "Hint:" << mainExecutableHint;
-        HWND hwnd = 0;
-        if (!mainExecutableHint.isEmpty()) {
-            qDebug() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - Using mainExecutableHint:" << mainExecutableHint;
-            DWORD targetPid = findProcessIdByName(mainExecutableHint);
-            qDebug() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - PID from hint:" << targetPid;
-            if (targetPid != 0) {
-                hwnd = findMainWindowForProcess(targetPid);
-                qDebug() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - HWND from findMainWindowForProcess(targetPid):" << hwnd;
-            }
-        } else if (launcherPid != 0) {
-            qDebug() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - No hint, using launcherPid:" << launcherPid;
-            hwnd = findMainWindowForProcessOrChildren(static_cast<DWORD>(launcherPid), QFileInfo(originalAppPath).fileName());
-            qDebug() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - HWND from findMainWindowForProcessOrChildren(launcherPid):" << hwnd;
-        } else {
-            qWarning() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - No hint and no launcherPID to work with for:" << originalAppPath;
-        }
-
-        if (hwnd) {
-            qInfo() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - Found window. Activating:" << originalAppPath << "HWND:" << hwnd;
-            bringToFrontAndActivate(reinterpret_cast<WId>(hwnd));
-            emit applicationActivated(originalAppPath);
-        } else {
-            qWarning() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - Could not find window for" << originalAppPath;
-        }
-        qDebug() << "SystemInteractionModule::monitorAndActivateApplication [ForceActivateOnly] - END for" << originalAppPath;
-        return; 
+        qDebug() << "SystemInteractionModule: Force activate only mode, but window not found immediately for" << targetExecutableName << "(PID:" << targetPid << "). Aborting.";
+        emit applicationActivationFailed(originalAppPath, "Window not found in force activate mode");
+        return;
     }
 
-    if (mainExecutableHint.isEmpty()) {
-        qWarning() << "SystemInteractionModule::monitorAndActivateApplication - mainExecutableHint is empty for" << originalAppPath;
-        
-        // Attempt to detect and suggest a hint if not already done for this path
-        if (!m_hintSuggestionAttemptedPaths.contains(originalAppPath)) {
-            qInfo() << "SystemInteractionModule::monitorAndActivateApplication - Scheduling hint detection for:" << originalAppPath;
-            m_hintSuggestionAttemptedPaths.insert(originalAppPath); // Mark as attempted
-            QTimer::singleShot(HINT_DETECTION_DELAY_MS, this, [this, launcherPid_dw = static_cast<DWORD>(launcherPid), originalAppPath](){
-                attemptMainExecutableDetection(launcherPid_dw, originalAppPath);
-            });
+    qDebug() << "SystemInteractionModule: Target process/window for" << targetExecutableName << "not found immediately. Starting/Resetting monitoring timer for" << originalAppPath;
+    
+    if (m_monitoringApps.contains(originalAppPath)) {
+        qDebug() << "SystemInteractionModule: Replacing existing monitoring info for" << originalAppPath;
+        auto it_replace = m_monitoringApps.find(originalAppPath);
+        if (it_replace != m_monitoringApps.end()) {
+            MonitoringInfo* oldInfo = it_replace.value();
+            if (oldInfo && oldInfo->timer) {
+                oldInfo->timer->stop();
+            }
+            m_monitoringApps.erase(it_replace); 
+            delete oldInfo; // Delete the old MonitoringInfo object
         }
-        
-        // Fallback: try to find and activate immediately using launcher PID or its children
-        HWND hwnd = findMainWindowForProcessOrChildren(static_cast<DWORD>(launcherPid), QFileInfo(originalAppPath).fileName());
-        if (hwnd) {
-            qInfo() << "SystemInteractionModule::monitorAndActivateApplication - Found window via launcher PID" << launcherPid << "for" << originalAppPath << ". Activating.";
-            bringToFrontAndActivate(reinterpret_cast<WId>(hwnd));
-            emit applicationActivated(originalAppPath);
-        } else {
-            qWarning() << "SystemInteractionModule::monitorAndActivateApplication - Could not find window via launcher PID for" << originalAppPath << "even after initial check.";
-        }
-        return; // Do not start polling timer if hint is empty
     }
 
-    // ---- Start polling if mainExecutableHint is available ----
-    qInfo() << "SystemInteractionModule::monitorAndActivateApplication - Starting polling for" << originalAppPath << "using hint:" << mainExecutableHint;
-
-    QTimer* timer = new QTimer(this);
-    m_monitoringTimers.insert(originalAppPath, timer);
-    m_monitoringAttempts.insert(originalAppPath, 0);
-
-    connect(timer, &QTimer::timeout, this, [this, originalAppPath, mainExecutableHint, launcherPid]() {
-        int attempts = m_monitoringAttempts.value(originalAppPath, 0) + 1;
-        m_monitoringAttempts[originalAppPath] = attempts;
-        qDebug() << "SystemInteractionModule::monitorAndActivateApplication [POLL Timer] - Attempt" << attempts << "for" << originalAppPath << "Hint:" << mainExecutableHint;
-
-        HWND hwnd = 0;
-        DWORD targetPid = findProcessIdByName(mainExecutableHint);
-
-        if (targetPid != 0) {
-            hwnd = findMainWindowForProcess(targetPid);
-        } else {
-            qDebug() << "SystemInteractionModule::monitorAndActivateApplication [POLL Timer] - Process" << mainExecutableHint << "not found yet for" << originalAppPath;
-            // Optional: If mainExecutableHint process is not found, we could check if the original launcher is still running
-            // and if it has spawned children with a different name, but this gets complex quickly.
-            // For now, we rely on mainExecutableHint.
-        }
-
-        if (hwnd) {
-            qInfo() << "SystemInteractionModule::monitorAndActivateApplication [POLL Timer] - SUCCESS! Found window for" << originalAppPath << "using hint:" << mainExecutableHint << ". Activating.";
-            bringToFrontAndActivate(reinterpret_cast<WId>(hwnd));
-            emit applicationActivated(originalAppPath);
-            if (m_monitoringTimers.contains(originalAppPath)) {
-                m_monitoringTimers.value(originalAppPath)->stop();
-                m_monitoringTimers.take(originalAppPath)->deleteLater();
-                m_monitoringAttempts.remove(originalAppPath);
-            }
-        } else if (attempts >= MAX_MONITORING_ATTEMPTS) {
-            qWarning() << "SystemInteractionModule::monitorAndActivateApplication [POLL Timer] - FAILED to find window for" << originalAppPath
-                       << "after" << attempts << "attempts using hint:" << mainExecutableHint << ". Stopping monitor.";
-            if (m_monitoringTimers.contains(originalAppPath)) {
-                m_monitoringTimers.value(originalAppPath)->stop();
-                m_monitoringTimers.take(originalAppPath)->deleteLater();
-                m_monitoringAttempts.remove(originalAppPath);
-            }
-            // We don't emit a failure signal here, UserModeModule has its own timeout.
-        }
-    });
-
-    timer->start(MONITORING_INTERVAL_MS);
+    MonitoringInfo* newMonitoringInfoRawPtr = new MonitoringInfo();
+    newMonitoringInfoRawPtr->originalLauncherPath = originalAppPath;
+    newMonitoringInfoRawPtr->mainExecutableHint = mainExecutableHint;
+    newMonitoringInfoRawPtr->windowHintsJson = QJsonDocument(windowHints).toJson(QJsonDocument::Compact);
+    newMonitoringInfoRawPtr->attempts = 0;
+    newMonitoringInfoRawPtr->launcherPid = launcherPid;
+    newMonitoringInfoRawPtr->forceActivateOnly = forceActivateOnly;
+    newMonitoringInfoRawPtr->timer = new QTimer(this); 
+    
+    connect(newMonitoringInfoRawPtr->timer, &QTimer::timeout, this, &SystemInteractionModule::onMonitoringTimerTimeout);
+    newMonitoringInfoRawPtr->timer->setProperty("originalAppPathProperty", originalAppPath); 
+    newMonitoringInfoRawPtr->timer->start(1000); 
+    
+    m_monitoringApps[originalAppPath] = newMonitoringInfoRawPtr; // Store raw pointer
+    
+    qDebug() << "SystemInteractionModule: Monitoring timer started for" << originalAppPath << "to find" << targetExecutableName;
 }
 
-void SystemInteractionModule::attemptMainExecutableDetection(DWORD launcherPid, QString launcherPath) {
-    qDebug() << "SystemInteractionModule::attemptMainExecutableDetection - Attempting to detect main executable for launcher PID:" << launcherPid << "Path:" << launcherPath;
-    if (launcherPid == 0) {
-        qWarning() << "SystemInteractionModule::attemptMainExecutableDetection - Invalid launcher PID (0).";
+void SystemInteractionModule::onMonitoringTimerTimeout() {
+    QTimer* firedTimer = qobject_cast<QTimer*>(sender());
+    if (!firedTimer) return;
+
+    QString originalAppPath = firedTimer->property("originalAppPathProperty").toString();
+
+    if (originalAppPath.isEmpty() || !m_monitoringApps.contains(originalAppPath)) {
+        qWarning() << "SystemInteractionModule::onMonitoringTimerTimeout - Timer fired for unknown or removed appPath:" << originalAppPath << "Timer object name:" << (firedTimer ? firedTimer->objectName() : "null");
+        firedTimer->stop(); 
+        // The timer is parented, so it will be deleted eventually with its parent (SystemInteractionModule).
+        // If it was in m_monitoringApps, its unique_ptr would have been removed and MonitoringInfo deleted.
+        // If it's not in m_monitoringApps, we can't remove its unique_ptr, but this indicates a logic flaw if a timer exists for an untracked app.
         return;
     }
 
-    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    if (hSnapshot == INVALID_HANDLE_VALUE) {
-        qWarning() << "SystemInteractionModule::attemptMainExecutableDetection - CreateToolhelp32Snapshot failed. Error:" << GetLastError();
+    // Get a reference to the unique_ptr in the map.
+    // We operate on the unique_ptr's managed object directly.
+    MonitoringInfo* currentInfoPtr = m_monitoringApps.value(originalAppPath, nullptr); // Use .value() for safety
+
+    if (!currentInfoPtr) { // Should not happen if map contains originalAppPath, but good check
+        qWarning() << "SystemInteractionModule::onMonitoringTimerTimeout - currentInfoPtr is null for appPath:" << originalAppPath;
+        firedTimer->stop();
+        // Attempt to remove from map if it somehow still exists with a null pointer
+        auto it_null_check = m_monitoringApps.find(originalAppPath);
+        if (it_null_check != m_monitoringApps.end()) {
+             m_monitoringApps.erase(it_null_check);
+        }
+        return;
+    }
+    
+    currentInfoPtr->attempts++;
+    qDebug() << "SystemInteractionModule::onMonitoringTimerTimeout for" << originalAppPath << "Attempt:" << currentInfoPtr->attempts;
+
+    QString targetExeName = currentInfoPtr->mainExecutableHint;
+    if (targetExeName.isEmpty()) {
+        targetExeName = QFileInfo(currentInfoPtr->originalLauncherPath).fileName();
+    }
+
+    DWORD targetPid = findProcessIdByName(targetExeName);
+    HWND targetHwnd = nullptr;
+
+    if (targetPid != 0) {
+        QJsonObject windowHints = QJsonDocument::fromJson(currentInfoPtr->windowHintsJson.toUtf8()).object();
+        if (!windowHints.isEmpty()) {
+            targetHwnd = findMainWindowForProcess(targetPid, windowHints);
+        }
+        if (!targetHwnd) {
+            targetHwnd = findMainWindowForProcess(targetPid); // Fallback
+        }
+    }
+
+    if (targetHwnd) {
+        qDebug() << "SystemInteractionModule: Found window" << targetHwnd << "for" << targetExeName << "(PID:" << targetPid << ") during monitoring. Activating.";
+        activateWindow(targetHwnd);
+        emit applicationActivated(originalAppPath); 
+        
+        currentInfoPtr->timer->stop(); 
+        auto it_success = m_monitoringApps.find(originalAppPath);
+        if (it_success != m_monitoringApps.end()) {
+            m_monitoringApps.erase(it_success); 
+        }
+        delete currentInfoPtr; // Delete the MonitoringInfo object
+        qDebug() << "SystemInteractionModule: Monitoring successful for" << originalAppPath << ", entry removed.";
+    } else if (currentInfoPtr->attempts >= MAX_MONITORING_ATTEMPTS) { 
+        qWarning() << "SystemInteractionModule: Max monitoring attempts reached for" << originalAppPath << ". Could not find/activate" << targetExeName << ". Stopping timer.";
+        emit applicationActivationFailed(originalAppPath, "Monitoring timeout"); 
+        
+        currentInfoPtr->timer->stop();
+        auto it_fail = m_monitoringApps.find(originalAppPath);
+        if (it_fail != m_monitoringApps.end()) {
+            m_monitoringApps.erase(it_fail);
+        }
+        delete currentInfoPtr; // Delete the MonitoringInfo object
+        qDebug() << "SystemInteractionModule: Monitoring failed for" << originalAppPath << "after" << MAX_MONITORING_ATTEMPTS << "attempts, entry removed.";
+    }
+    // If not found and attempts < max, timer continues automatically
+}
+
+void SystemInteractionModule::activateWindow(HWND hwnd) {
+    if (!hwnd || !IsWindow(hwnd)) { // Added IsWindow check
+        qWarning() << "[SystemInteractionModule] activateWindow: Invalid or non-existent window handle:" << hwnd;
         return;
     }
 
-    PROCESSENTRY32W pe32;
-    pe32.dwSize = sizeof(PROCESSENTRY32W);
-    QString launcherFileName = QFileInfo(launcherPath).fileName();
-    QString bestCandidateName;
-    DWORD bestCandidatePid = 0;
+    qDebug() << "[SystemInteractionModule] Attempting to activate window:" << hwnd;
 
-    if (Process32FirstW(hSnapshot, &pe32)) {
-        do {
-            if (pe32.th32ParentProcessID == launcherPid) {
-                QString childExeName = QString::fromWCharArray(pe32.szExeFile);
-                qDebug() << "SystemInteractionModule::attemptMainExecutableDetection - Found child process. PID:" << pe32.th32ProcessID
-                         << "Name:" << childExeName << "Parent PID:" << pe32.th32ParentProcessID;
+    DWORD targetProcessId = 0;
+    GetWindowThreadProcessId(hwnd, &targetProcessId); // Get PID of the target window
 
-                // Check if the child process is different from the launcher and is likely a main app
-                if (childExeName.compare(launcherFileName, Qt::CaseInsensitive) != 0) {
-                    // Check if this child process is still running
-                    HANDLE hChildProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION | PROCESS_VM_READ, FALSE, pe32.th32ProcessID);
-                    if (hChildProcess) {
-                        DWORD exitCode = 0;
-                        if (GetExitCodeProcess(hChildProcess, &exitCode) && exitCode == STILL_ACTIVE) {
-                            // Now, check if this child has a visible main window
-                            HWND hwnd = findMainWindowForProcess(pe32.th32ProcessID);
-                            if (hwnd) {
-                                qDebug() << "SystemInteractionModule::attemptMainExecutableDetection - Child" << childExeName << "(PID:" << pe32.th32ProcessID << ") has a main window. Considering as candidate.";
-                                // Simple selection: first one found. More sophisticated logic could be added.
-                                bestCandidateName = childExeName;
-                                bestCandidatePid = pe32.th32ProcessID;
-                                CloseHandle(hChildProcess);
-                                break; // Found a good candidate
-                            } else {
-                                qDebug() << "SystemInteractionModule::attemptMainExecutableDetection - Child" << childExeName << "(PID:" << pe32.th32ProcessID << ") does not have a detectable main window at this moment.";
-                            }
-                        }
-                        CloseHandle(hChildProcess);
+    // Call AllowSetForegroundWindow. ASFW_ANY is a broad permission.
+    // If targetProcessId is valid, using it is more specific.
+    if (targetProcessId != 0) {
+        qDebug() << "[SystemInteractionModule] Calling AllowSetForegroundWindow(" << targetProcessId << ")";
+        AllowSetForegroundWindow(targetProcessId);
+    } else {
+        qDebug() << "[SystemInteractionModule] Calling AllowSetForegroundWindow(ASFW_ANY) as target PID is 0.";
+        AllowSetForegroundWindow(ASFW_ANY);
+    }
+    QThread::msleep(20); // Small delay after AllowSetForegroundWindow
+
+    const int MAX_ACTIVATION_ATTEMPTS = 3;
+    const int ACTIVATION_RETRY_DELAY_MS = 150; // Increased delay
+
+    for (int attempt = 1; attempt <= MAX_ACTIVATION_ATTEMPTS; ++attempt) {
+        qDebug() << "[SystemInteractionModule] Activation attempt:" << attempt << "for HWND:" << hwnd;
+
+        // 1. Ensure it's not minimized and is visible
+        if (IsIconic(hwnd)) {
+            qDebug() << "[SystemInteractionModule] Window is iconic, restoring (SW_RESTORE).";
+            ShowWindow(hwnd, SW_RESTORE);
+            QThread::msleep(100); // Give it time to restore
+        }
+        // Ensure it's shown (SW_SHOWNA activates and displays it in its current size and position)
+        // ShowWindow(hwnd, SW_SHOWNA); // This can sometimes be less effective than SW_RESTORE then SetForeground
+        // QThread::msleep(50);
+
+        // 2. Try to bring to top using SetWindowPos with HWND_TOPMOST
+        // This makes the window the topmost window but doesn't necessarily give it focus.
+        qDebug() << "[SystemInteractionModule] Calling SetWindowPos with HWND_TOPMOST.";
+        SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+        QThread::msleep(50); 
+
+        // 3. Attempt to set as foreground window (this is the main function for activation)
+        qDebug() << "[SystemInteractionModule] Calling SetForegroundWindow.";
+        if (SetForegroundWindow(hwnd)) {
+            qDebug() << "[SystemInteractionModule] SetForegroundWindow successful on attempt" << attempt;
+        } else {
+            DWORD error = GetLastError();
+            qWarning() << "[SystemInteractionModule] SetForegroundWindow failed on attempt" << attempt << "GetLastError:" << error;
+            
+            // If SetForegroundWindow fails, try attaching thread input (common workaround)
+            DWORD foregroundThreadId = GetWindowThreadProcessId(GetForegroundWindow(), NULL);
+            DWORD currentThreadId = GetCurrentThreadId(); // Our thread
+
+            if (foregroundThreadId != 0 && currentThreadId != 0 && foregroundThreadId != currentThreadId) {
+                qDebug() << "[SystemInteractionModule] Attaching thread input (current:" << currentThreadId << "fg:" << foregroundThreadId << ")";
+                if (AttachThreadInput(foregroundThreadId, currentThreadId, TRUE)) {
+                    qDebug() << "[SystemInteractionModule] AttachThreadInput successful. Retrying SetForegroundWindow.";
+                    if (SetForegroundWindow(hwnd)) {
+                         qDebug() << "[SystemInteractionModule] SetForegroundWindow successful after AttachThreadInput.";
+                    } else {
+                         qWarning() << "[SystemInteractionModule] SetForegroundWindow STILL failed after AttachThreadInput. GetLastError:" << GetLastError();
                     }
+                    AttachThreadInput(foregroundThreadId, currentThreadId, FALSE);
+                    qDebug() << "[SystemInteractionModule] Detached thread input.";
+                } else {
+                    qWarning() << "[SystemInteractionModule] AttachThreadInput failed. GetLastError:" << GetLastError();
                 }
             }
-        } while (Process32NextW(hSnapshot, &pe32) && bestCandidateName.isEmpty()); // Continue if no candidate yet
+        }
+        QThread::msleep(50); // Delay after SetForegroundWindow attempts
+
+        // 4. SetActiveWindow and SetFocus are generally less forceful for bringing to front but good for input focus
+        qDebug() << "[SystemInteractionModule] Calling SetActiveWindow.";
+        SetActiveWindow(hwnd); // Sets the active window
+        qDebug() << "[SystemInteractionModule] Calling SetFocus.";
+        SetFocus(hwnd);       // Sets keyboard focus
+        
+        // 5. BringWindowToTop is another function to ensure Z-order, often redundant but can help.
+        qDebug() << "[SystemInteractionModule] Calling BringWindowToTop.";
+        BringWindowToTop(hwnd);
+
+        // 6. Check if our window is now the foreground window
+        QThread::msleep(100); // Wait a bit for OS to process all these calls
+        HWND currentForeground = GetForegroundWindow();
+        qDebug() << "[SystemInteractionModule] Current foreground window after attempt" << attempt << "is:" << currentForeground << "(Target:" << hwnd << ")";
+
+        if (currentForeground == hwnd) {
+            qDebug() << "[SystemInteractionModule] Successfully set HWND:" << hwnd << "as foreground window on attempt" << attempt << ".";
+            qDebug() << "[SystemInteractionModule] Window activation sequence completed for:" << hwnd;
+            return; // Activation successful
+        }
+
+        qWarning() << "[SystemInteractionModule] Failed to set HWND:" << hwnd << "as foreground on attempt" << attempt
+                   << ". Current foreground is:" << currentForeground << "(Last Error for SetForegroundWindow if it failed recently might not be accurate here).";
+
+        if (attempt < MAX_ACTIVATION_ATTEMPTS) {
+            qDebug() << "[SystemInteractionModule] Retrying activation in" << ACTIVATION_RETRY_DELAY_MS << "ms...";
+            QThread::msleep(ACTIVATION_RETRY_DELAY_MS);
+        }
     }
 
-    CloseHandle(hSnapshot);
-
-    if (!bestCandidateName.isEmpty()) {
-        qInfo() << "********************************************************************************************************";
-        qInfo() << "[SUGGESTION] For application launched via:" << launcherPath;
-        qInfo() << "             A potential main executable was detected:" << bestCandidateName << "(PID:" << bestCandidatePid << ")";
-        qInfo() << "             Consider adding/updating the following in your config.json for this app:";
-        qInfo() << "             \"mainExecutableHint\": \"" << bestCandidateName << "\"";
-        qInfo() << "********************************************************************************************************";
-    } else {
-        qInfo() << "SystemInteractionModule::attemptMainExecutableDetection - No clear main executable candidate found for launcher:" << launcherPath << "(PID:" << launcherPid << ") after" << HINT_DETECTION_DELAY_MS << "ms.";
-    }
+    qWarning() << "[SystemInteractionModule] Window activation sequence FAILED for HWND:" << hwnd << "after" << MAX_ACTIVATION_ATTEMPTS << "attempts.";
 }
 
-bool SystemInteractionModule::isMonitoring(const QString& appPath) const {
-    return m_monitoringTimers.contains(appPath);
+bool SystemInteractionModule::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
+{
+    // For now, just return false, indicating the event was not handled by this filter.
+    // Add specific event handling logic here if needed in the future.
+    Q_UNUSED(eventType);
+    Q_UNUSED(message);
+    Q_UNUSED(result);
+    return false;
 } 

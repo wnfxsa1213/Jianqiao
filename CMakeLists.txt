@@ -49,7 +49,7 @@ add_executable(JianqiaoSystem
 
 target_include_directories(JianqiaoSystem PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(JianqiaoSystem PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::GuiPrivate)
+target_link_libraries(JianqiaoSystem PRIVATE Qt6::Widgets Qt6::Core Qt6::Gui Qt6::GuiPrivate dwmapi)
 
 # Copy config.json to the output directory
 set(CONFIG_FILE_NAME "config.json")

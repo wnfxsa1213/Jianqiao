@@ -45,7 +45,10 @@ template <> constexpr inline auto SystemInteractionModule::qt_create_metaobjectd
         "vkCode",
         "adminLoginRequested",
         "applicationActivated",
-        "originalAppPath"
+        "appPath",
+        "applicationActivationFailed",
+        "reason",
+        "onMonitoringTimerTimeout"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -59,6 +62,12 @@ template <> constexpr inline auto SystemInteractionModule::qt_create_metaobjectd
         QtMocHelpers::SignalData<void(const QString &)>(6, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::QString, 7 },
         }}),
+        // Signal 'applicationActivationFailed'
+        QtMocHelpers::SignalData<void(const QString &, const QString &)>(8, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 7 }, { QMetaType::QString, 9 },
+        }}),
+        // Slot 'onMonitoringTimerTimeout'
+        QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -85,6 +94,8 @@ void SystemInteractionModule::qt_static_metacall(QObject *_o, QMetaObject::Call 
         case 0: _t->keyPressed((*reinterpret_cast< std::add_pointer_t<DWORD>>(_a[1]))); break;
         case 1: _t->adminLoginRequested(); break;
         case 2: _t->applicationActivated((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 3: _t->applicationActivationFailed((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 4: _t->onMonitoringTimerTimeout(); break;
         default: ;
         }
     }
@@ -94,6 +105,8 @@ void SystemInteractionModule::qt_static_metacall(QObject *_o, QMetaObject::Call 
         if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)()>(_a, &SystemInteractionModule::adminLoginRequested, 1))
             return;
         if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(const QString & )>(_a, &SystemInteractionModule::applicationActivated, 2))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (SystemInteractionModule::*)(const QString & , const QString & )>(_a, &SystemInteractionModule::applicationActivationFailed, 3))
             return;
     }
 }
@@ -108,6 +121,8 @@ void *SystemInteractionModule::qt_metacast(const char *_clname)
     if (!_clname) return nullptr;
     if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN23SystemInteractionModuleE_t>.strings))
         return static_cast<void*>(this);
+    if (!strcmp(_clname, "QAbstractNativeEventFilter"))
+        return static_cast< QAbstractNativeEventFilter*>(this);
     return QObject::qt_metacast(_clname);
 }
 
@@ -117,14 +132,14 @@ int SystemInteractionModule::qt_metacall(QMetaObject::Call _c, int _id, void **_
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 5;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 5)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 3;
+        _id -= 5;
     }
     return _id;
 }
@@ -145,5 +160,11 @@ void SystemInteractionModule::adminLoginRequested()
 void SystemInteractionModule::applicationActivated(const QString & _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 2, nullptr, _t1);
+}
+
+// SIGNAL 3
+void SystemInteractionModule::applicationActivationFailed(const QString & _t1, const QString & _t2)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 3, nullptr, _t1, _t2);
 }
 QT_WARNING_POP

@@ -25,6 +25,9 @@ public:
     explicit JianqiaoCoreShell(QWidget *parent = nullptr);
     ~JianqiaoCoreShell();
 
+signals:
+    void userModeActivated();
+
 public slots:
     void onAdminViewVisibilityChanged(bool visible);
     void handleAdminLoginRequested();
@@ -37,6 +40,7 @@ private:
     void initializeCoreApplication();
     void switchToUserModeView();    // Added helper
     void switchToAdminDashboard();   // Added helper
+    void setCurrentSystemMode(OperatingMode mode);
 
     // Override event handler for activation changes
 protected: // QWidget's event is protected
@@ -56,6 +60,9 @@ protected: // QWidget's event is protected
 
     OperatingMode m_currentMode;
 
+private slots:
+    void onAdminRequestsExitAdminMode();
+    void onAdminLoginSuccessful();
 };
 
 #endif // JIANQIAOCORESHELL_H 

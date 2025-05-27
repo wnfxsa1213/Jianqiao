@@ -1,8 +1,19 @@
 C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/EWIEGA46WW/moc_SystemInteractionModule.cpp: C:/Users/13027/Desktop/Jianqiaov2/SystemInteractionModule.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QAbstractNativeEventFilter \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QDebug \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QEvent \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonDocument \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonObject \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QJsonParseError \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QList \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMap \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QMargins \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QObject \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QProcess \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QRect \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSet \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSize \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/QSizeF \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QString \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QTimer \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/QVector \
@@ -14,6 +25,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/q20utility.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/q23utility.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstracteventdispatcher.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qabstractnativeeventfilter.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qalgorithms.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qanystringview.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qarraydata.h \
@@ -29,6 +41,9 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayalgorithms.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearraylist.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qbytearrayview.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcalendar.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborcommon.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcborvalue.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qchar.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcompare_impl.h \
@@ -40,14 +55,21 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainerinfo.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontainertools_impl.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcontiguouscache.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreapplication.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreapplication_platform.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qcoreevent.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdarwinhelpers.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatastream.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdatetime.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdeadlinetimer.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qdebug.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qelapsedtimer.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qendian.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qeventloop.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qexceptionhandling.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfile.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfiledevice.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfileinfo.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qflags.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qfloat16.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qforeach.h \
@@ -58,12 +80,18 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qglobalstatic.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qhash.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qhashfunctions.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevice.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiodevicebase.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterable.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qiterator.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsondocument.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonobject.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonparseerror.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qjsonvalue.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlatin1stringview.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qline.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlist.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlocale.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qlogging.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmalloc.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmap.h \
@@ -73,6 +101,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qmetatype.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qminmax.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnamespace.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnativeinterface.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qnumeric.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qobject.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qobject_impl.h \
@@ -81,9 +110,11 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qoverload.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpair.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qpoint.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qprocess.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qprocessordetection.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrect.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qrefcount.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qregularexpression.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopedpointer.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qscopeguard.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qset.h \
@@ -121,6 +152,7 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtextstream.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtformat_impl.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtimer.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtimezone.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtmetamacros.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtnoop.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtpreprocessorsupport.h \
@@ -131,7 +163,9 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtversionchecks.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypeinfo.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qtypes.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/qurl.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qutf8stringview.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtCore/quuid.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvariant.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvarlengtharray.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qvector.h \
@@ -139,6 +173,11 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qxptype_traits.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtCore/qyieldcpu.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/QIcon \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/QPixmap \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/QScreen \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/QTransform \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/QWindow \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qabstractfileiconprovider.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qaction.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qbitmap.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qbrush.h \
@@ -148,8 +187,11 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontinfo.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontmetrics.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qfontvariableaxis.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qguiapplication.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qguiapplication_platform.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qicon.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qimage.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qinputmethod.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qkeysequence.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpaintdevice.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qpalette.h \
@@ -159,13 +201,20 @@ C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qregion.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgb.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qrgba64.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qscreen.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qscreen_platform.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qsurface.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qsurfaceformat.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtgui-config.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiexports.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtguiglobal.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qtransform.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindow.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtGui/qwindowdefs_win.h \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QFileIconProvider \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/QWidget \
+  D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qfileiconprovider.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qsizepolicy.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtwidgets-config.h \
   D:/QT6/6.9.0/msvc2022_64/include/QtWidgets/qtwidgetsexports.h \
