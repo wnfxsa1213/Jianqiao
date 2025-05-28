@@ -3,6 +3,8 @@
     <file alias="styles/AppCardWidget.qss">styles/AppCardWidget.qss</file>
     <!-- Add other resources like icons here -->
     <file alias="icons/loading_spinner.gif">icons/loading_spinner.gif</file>
+    <file alias="images/admin_bg.jpg">images/admin_bg.jpg</file>
+    <file alias="images/user_bg.jpg">images/user_bg.jpg</file>
     <!-- Example: <file alias="icons/default_app_icon.png">icons/default_app_icon.png</file> -->
     <!-- Example: <file alias="AdminLoginView.qss">AdminLoginView.qss</file> -->
 </qresource>

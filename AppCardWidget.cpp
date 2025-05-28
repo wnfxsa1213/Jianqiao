@@ -9,6 +9,44 @@
 #include <QStyle> // Added for style()->polish/unpolish
 #include <QEasingCurve> // For animation easing
 #include <QResizeEvent> // For resize event handling
+#include <QPainter>
+#include <QPainterPath>
+
+// 辅助函数：裁剪透明边距
+static QRect tightBoundingRect(const QImage& img) {
+    int left = img.width(), right = 0, top = img.height(), bottom = 0;
+    for (int y = 0; y < img.height(); ++y) {
+        for (int x = 0; x < img.width(); ++x) {
+            if (qAlpha(img.pixel(x, y)) > 10) {
+                if (x < left) left = x;
+                if (x > right) right = x;
+                if (y < top) top = y;
+                if (y > bottom) bottom = y;
+            }
+        }
+    }
+    if (left > right || top > bottom) return QRect(0,0,1,1);
+    return QRect(left, top, right-left+1, bottom-top+1);
+}
+
+// 工具函数：缩放并居中pixmap（仅裁剪和缩放，不画圆底）
+static QPixmap scaledCenteredPixmap(const QIcon& icon, const QSize& targetSize) {
+    QPixmap origPixmap = icon.pixmap(QSize(128,128));
+    if (origPixmap.isNull()) return QPixmap(targetSize); // 返回空白pixmap
+    QImage img = origPixmap.toImage();
+    QRect contentRect = tightBoundingRect(img);
+    QImage trimmed = img.copy(contentRect);
+    QPixmap scaledPixmap = QPixmap::fromImage(trimmed).scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap result(targetSize);
+    result.fill(Qt::transparent);
+    QPainter painter(&result);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::SmoothPixmapTransform);
+    int x = (result.width() - scaledPixmap.width())/2;
+    int y = (result.height() - scaledPixmap.height())/2;
+    painter.drawPixmap(x, y, scaledPixmap);
+    return result;
+}
 
 AppCardWidget::AppCardWidget(const QString& appName, const QString& appPath, const QIcon& appIcon, QWidget *parent)
     : QWidget{parent}, 
@@ -47,8 +85,8 @@ void AppCardWidget::setupUi()
     
     m_iconLabel = new QLabel(this);
     m_iconLabel->setObjectName("iconLabel");
-    m_iconLabel->setPixmap(m_appIcon.pixmap(QSize(56, 56))); // 调整图标大小
-    m_iconLabel->setFixedSize(QSize(56, 56)); // 确保图标标签大小固定
+    m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, QSize(56, 56)));
+    m_iconLabel->setFixedSize(QSize(56, 56));
     m_iconLabel->setAlignment(Qt::AlignCenter);
     
     // 取消使用布局，改为手动设置位置
@@ -80,16 +118,11 @@ void AppCardWidget::setupUi()
 
 void AppCardWidget::updateIconPosition()
 {
-    // 计算图标应该放置的位置，使其居中
     if (m_iconLabel) {
-        int x = (width() - m_iconLabel->width()) / 2;
-        int y = (height() - m_iconLabel->height()) / 2;
-        
-        // 应用缩放因子对图标进行缩放，同时保持居中
-        QSize scaledSize(m_iconLabel->width() * m_scaleFactor, m_iconLabel->height() * m_scaleFactor);
+        QSize scaledSize = QSize(56 * m_scaleFactor, 56 * m_scaleFactor);
+        m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, scaledSize));
         int scaledX = (width() - scaledSize.width()) / 2;
         int scaledY = (height() - scaledSize.height()) / 2;
-        
         m_iconLabel->setGeometry(scaledX, scaledY, scaledSize.width(), scaledSize.height());
     }
     

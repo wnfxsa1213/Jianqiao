@@ -133,6 +133,7 @@ private:
     QSet<DWORD> m_userModeBlockedVkCodes;
     QMap<QString, MonitoringInfo*> m_monitoringApps;
     QList<DWORD> m_adminLoginHotkeySequence; // Now clearly in private section
+    int HINT_DETECTION_DELAY_MS; // 探测等待时间（毫秒），支持动态配置
 
 };
 

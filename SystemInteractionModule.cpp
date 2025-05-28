@@ -30,6 +30,7 @@
 #include <QCollator> // Qt5之后用于自然排序
 #include <QtConcurrent> // Required for QtConcurrent::run
 #include <QProcess> // Added for QProcess
+#include <QList>
 
 // Define a structure to pass data to EnumWindowsProc for hint-based search
 struct HintedEnumWindowsCallbackArg {
@@ -53,6 +54,25 @@ const int SHORT_ACTIVATION_INTERVAL_MS = 300; // Interval between attempts
 
 // Define constants if not already defined elsewhere (e.g., at the top of the .cpp file)
 // const int HINT_DETECTION_DELAY_MS = 5000; // Example, ensure this matches what's used
+
+// 将HINT_DETECTION_DELAY_MS默认值提升到10000ms，并支持从配置读取
+int getHintDetectionDelayMsFromConfig(const QString& configPath) {
+    QFile configFile(configPath);
+    if (!configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return 10000; // 默认10秒
+    }
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(configFile.readAll(), &err);
+    if (err.error != QJsonParseError::NoError || !doc.isObject()) {
+        return 10000;
+    }
+    QJsonObject obj = doc.object();
+    if (obj.contains("detection_wait_ms") && obj["detection_wait_ms"].isDouble()) {
+        int val = obj["detection_wait_ms"].toInt();
+        if (val >= 1000 && val <= 60000) return val; // 合理范围
+    }
+    return 10000;
+}
 
 QMap<QString, DWORD> SystemInteractionModule::initializeVkCodeMap() {
     QMap<QString, DWORD> map;
@@ -103,6 +123,7 @@ SystemInteractionModule::SystemInteractionModule(QObject *parent)
     : QObject{parent}
     , m_userModeActive(true) // Default to user mode active
     , m_isHookInstalled(false)
+    , HINT_DETECTION_DELAY_MS(10000) // 初始化成员变量
 {
     instance_ = this; // Set the static instance pointer
 
@@ -129,6 +150,10 @@ SystemInteractionModule::SystemInteractionModule(QObject *parent)
     }
     // initializeBlockedKeys(); // Removed, logic moved to loadConfiguration
     qDebug() << "系统交互模块(SystemInteractionModule): 已创建。";
+
+    // 加载等待时间
+    HINT_DETECTION_DELAY_MS = getHintDetectionDelayMsFromConfig(m_configPath);
+    qDebug() << "[SystemInteractionModule] 探测等待时间(ms):" << HINT_DETECTION_DELAY_MS;
 }
 
 SystemInteractionModule::~SystemInteractionModule()
@@ -753,86 +778,80 @@ QIcon SystemInteractionModule::getIconForExecutable(const QString& executablePat
         return QIcon();
     }
 
-    // --- Attempt 1: Using QFileIconProvider ---
+    // --- 优先尝试获取大尺寸图标 ---
     QFileIconProvider provider;
     QFileInfo fileInfo(executablePath);
     QIcon icon = provider.icon(fileInfo);
     qDebug() << "[SIM::getIcon] QFileIconProvider.icon(fileInfo) called.";
 
-    if (!icon.isNull()) {
-        qDebug() << "[SIM::getIcon] QFileIconProvider returned a non-null icon.";
-        if (!icon.availableSizes().isEmpty()) {
-            QPixmap pix = icon.pixmap(icon.availableSizes().first());
-            if (!pix.isNull()) {
-                qDebug() << "[SIM::getIcon] Successfully got icon using QFileIconProvider for:" << executablePath << "Pixmap size:" << pix.size();
-                return icon;
-            }
-            qDebug() << "[SIM::getIcon] QFileIconProvider icon.pixmap() was null.";
-        } else {
-            qDebug() << "[SIM::getIcon] QFileIconProvider icon has no availableSizes.";
+    QList<QSize> trySizes = {QSize(256,256), QSize(128,128), QSize(64,64), QSize(48,48), QSize(32,32), QSize(16,16)};
+    QPixmap bestPixmap;
+    QSize bestSize;
+    for (const QSize& sz : trySizes) {
+        QPixmap pix = icon.pixmap(sz);
+        if (!pix.isNull() && pix.width() >= bestSize.width() && pix.height() >= bestSize.height()) {
+            bestPixmap = pix;
+            bestSize = pix.size();
+            if (pix.width() >= 128 && pix.height() >= 128) break; // 已满足大尺寸
         }
-        qDebug() << "[SIM::getIcon] QFileIconProvider returned an icon, but it seems to be a default/empty one for:" << executablePath;
-    } else {
-        qWarning() << "[SIM::getIcon] QFileIconProvider returned a null icon for:" << executablePath << "Trying SHGetFileInfoW.";
+    }
+    if (!bestPixmap.isNull() && bestPixmap.width() >= 64 && bestPixmap.height() >= 64) {
+        qDebug() << "[SIM::getIcon] Got large pixmap from QFileIconProvider, size:" << bestPixmap.size();
+        return QIcon(bestPixmap);
     }
 
-    // --- Attempt 2: Using SHGetFileInfoW (with COM initialization) ---
-    qDebug() << "[SIM::getIcon] Attempting SHGetFileInfoW for:" << executablePath;
+    // --- 若QFileIconProvider获取不到大图标，尝试SHGetFileInfo ---
+    qDebug() << "[SIM::getIcon] Attempting SHGetFileInfoW for large icon:" << executablePath;
     HRESULT comInitResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
     bool comInitializedHere = SUCCEEDED(comInitResult);
     if (!comInitializedHere && comInitResult != RPC_E_CHANGED_MODE) {
         qWarning() << "[SIM::getIcon] CoInitializeEx failed with HRESULT:" << QString::number(comInitResult, 16);
-        // It might be okay to proceed if COM is already initialized in a compatible way.
-    } else if (comInitializedHere) {
-        qDebug() << "[SIM::getIcon] CoInitializeEx successful or already initialized in a compatible way.";
     }
-
-    icon = QIcon(); // Reset icon before trying SHGetFileInfoW
-
     SHFILEINFOW sfi = {0};
-    UINT flags = SHGFI_ICON | SHGFI_LARGEICON | SHGFI_USEFILEATTRIBUTES; // Added SHGFI_USEFILEATTRIBUTES based on previous findings
-
+    UINT flags = SHGFI_ICON | SHGFI_LARGEICON | SHGFI_USEFILEATTRIBUTES;
     std::wstring filePathStdW = executablePath.toStdWString();
     const wchar_t* filePathW = filePathStdW.c_str();
-    DWORD fileAttributes = FILE_ATTRIBUTE_NORMAL; // Common attribute
-
-    qDebug() << "[SIM::getIcon] Calling SHGetFileInfoW with flags:" << QString::number(flags, 16);
+    DWORD fileAttributes = FILE_ATTRIBUTE_NORMAL;
     if (SHGetFileInfoW(filePathW, fileAttributes, &sfi, sizeof(sfi), flags)) {
-        qDebug() << "[SIM::getIcon] SHGetFileInfoW call succeeded.";
         if (sfi.hIcon) {
-            qDebug() << "[SIM::getIcon] SHGetFileInfoW returned valid hIcon:" << sfi.hIcon;
             QImage image = QImage::fromHICON(sfi.hIcon);
-            DestroyIcon(sfi.hIcon); // IMPORTANT: Destroy the icon handle
-
-            if (!image.isNull()) {
-                qDebug() << "[SIM::getIcon] QImage::fromHICON successful. Image size:" << image.size();
+            DestroyIcon(sfi.hIcon);
+            if (!image.isNull() && (image.width() > bestSize.width() || image.height() > bestSize.height())) {
                 QPixmap pixmap = QPixmap::fromImage(image);
                 if (!pixmap.isNull()) {
-                    icon = QIcon(pixmap);
-                    qDebug() << "[SIM::getIcon] Successfully got icon using SHGetFileInfoW for:" << executablePath << "Pixmap size:" << pixmap.size();
-                } else {
-                    qWarning() << "[SIM::getIcon] SHGetFileInfoW: Failed to convert QImage to QPixmap for:" << executablePath;
+                    bestPixmap = pixmap;
+                    bestSize = pixmap.size();
+                    qDebug() << "[SIM::getIcon] Got large icon from SHGetFileInfoW, size:" << bestPixmap.size();
                 }
-            } else {
-                qWarning() << "[SIM::getIcon] SHGetFileInfoW: QImage::fromHICON failed for:" << executablePath;
             }
-        } else {
-            qWarning() << "[SIM::getIcon] SHGetFileInfoW succeeded but hIcon was null for:" << executablePath;
         }
-    } else {
-        DWORD error = GetLastError();
-        qWarning() << "[SIM::getIcon] SHGetFileInfoW failed for:" << executablePath << "Error code:" << error;
     }
-
     if (comInitializedHere && comInitResult != RPC_E_CHANGED_MODE) {
-         CoUninitialize();
-         qDebug() << "[SIM::getIcon] CoUninitialize called.";
+        CoUninitialize();
+    }
+    if (!bestPixmap.isNull() && bestPixmap.width() >= 64 && bestPixmap.height() >= 64) {
+        return QIcon(bestPixmap);
     }
 
-    if(icon.isNull()){
-        qWarning() << "[SIM::getIcon] All attempts to get icon FAILED for:" << executablePath;
+    // --- 若仍无大图标，尝试查找应用目录下ico/svg资源 ---
+    QDir exeDir = QFileInfo(executablePath).absoluteDir();
+    QString baseName = QFileInfo(executablePath).completeBaseName();
+    QStringList iconCandidates = exeDir.entryList(QStringList{baseName+".ico", "app.ico", "icon.ico", baseName+".svg", "app.svg", "icon.svg"}, QDir::Files);
+    for (const QString& iconFile : iconCandidates) {
+        QString iconPath = exeDir.absoluteFilePath(iconFile);
+        QIcon fileIcon(iconPath);
+        QPixmap pix = fileIcon.pixmap(QSize(128,128));
+        if (!pix.isNull() && (pix.width() > bestSize.width() || pix.height() > bestSize.height())) {
+            bestPixmap = pix;
+            bestSize = pix.size();
+            qDebug() << "[SIM::getIcon] Got icon from app dir resource:" << iconPath << ", size:" << bestPixmap.size();
+        }
     }
-    return icon;
+    if (!bestPixmap.isNull()) {
+        return QIcon(bestPixmap);
+    }
+    qWarning() << "[SIM::getIcon] All attempts to get large icon FAILED for:" << executablePath;
+    return icon; // 兜底返回QFileIconProvider原始icon
 }
 
 DWORD SystemInteractionModule::findProcessIdByName(const QString& executableName) {
@@ -876,7 +895,8 @@ DWORD SystemInteractionModule::findProcessIdByName(const QString& executableName
 // Constants for monitoring (can be defined globally in .cpp or as static const members)
 const int MONITORING_INTERVAL_MS = 500; // milliseconds
 const int MAX_MONITORING_ATTEMPTS = 40; // e.g., 40 * 500ms = 20 seconds. Increased from 20.
-const int HINT_DETECTION_DELAY_MS = 5000; // 5 seconds delay for hint detection
+// 替换原有const int HINT_DETECTION_DELAY_MS = 5000;
+int HINT_DETECTION_DELAY_MS = 10000;
 
 void SystemInteractionModule::monitorAndActivateApplication(
     const QString& originalAppPath, 
@@ -1223,8 +1243,8 @@ SuggestedWindowHints SystemInteractionModule::performExecutableDetectionLogic(co
     initialPid = process.processId();
     qDebug() << "[SIM::performExeDetectLogic] Initial process started. PID:" << initialPid << "Exe:" << QFileInfo(executablePath).fileName();
 
-    qDebug() << "[SIM::performExeDetectLogic] Waiting" << HINT_DETECTION_DELAY_MS << "ms for app to initialize...";
-    QThread::msleep(HINT_DETECTION_DELAY_MS); // Wait for app to potentially launch its main window or child process
+    qDebug() << "[SIM::performExeDetectLogic] Waiting" << this->HINT_DETECTION_DELAY_MS << "ms for app to initialize...";
+    QThread::msleep(this->HINT_DETECTION_DELAY_MS); // Wait for app to potentially launch its main window or child process
 
     QPair<HWND, int> windowResult = qMakePair(nullptr, -1); // HWND and score
     DWORD targetPid = initialPid; // Initially assume the launched process is the target

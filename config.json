@@ -11,6 +11,7 @@
             ]
         }
     },
+    "detection_wait_ms": 10000,
     "whitelist_apps": [
         {
             "name": "WPS",

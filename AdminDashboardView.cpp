@@ -15,6 +15,11 @@
 #include "SystemInteractionModule.h" // Include the definition for SystemInteractionModule
 #include <QProgressDialog> // For better user feedback during detection
 #include "DetectionResultDialog.h" // Make sure this is included
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QFile>
+#include <QPainter>
+#include <QPixmap>
 
 AdminDashboardView::AdminDashboardView(SystemInteractionModule* systemInteractionModule, QWidget *parent)
     : QWidget(parent)
@@ -39,6 +44,8 @@ AdminDashboardView::AdminDashboardView(SystemInteractionModule* systemInteractio
     , m_exitButton(nullptr)
     , m_exitApplicationButton(nullptr)
     , m_systemInteractionModulePtr(systemInteractionModule) // Initialize the new member
+    , m_detectionWaitMsSpinBox(nullptr)
+    , m_saveDetectionWaitMsButton(nullptr)
 {
     qDebug() << "管理员仪表盘(AdminDashboardView): 已创建。";
     setupUi();
@@ -59,6 +66,8 @@ void AdminDashboardView::setupUi()
 {
     setWindowTitle("管理员仪表盘");
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    this->setObjectName("AdminDashboardView");
+    this->setStyleSheet("QWidget#AdminDashboardView { background-image: url(:/images/admin_bg.jpg); background-repeat: no-repeat; background-position: center; background-attachment: fixed; }");
     // setMinimumSize(800, 600); // Increased size for more content
 
     // Material Design inspired stylesheet
@@ -216,6 +225,36 @@ void AdminDashboardView::setupUi()
     passwordSettingsFormLayout->addRow(buttonLayout); // Add the button layout as a row
     
     settingsTabLayout->addWidget(passwordSettingsGroup);
+
+    // 探测等待时间设置组
+    QGroupBox* detectionWaitGroup = new QGroupBox("探测等待时间设置", m_settingsTab);
+    QHBoxLayout* detectionWaitLayout = new QHBoxLayout(detectionWaitGroup);
+    QLabel* detectionWaitLabel = new QLabel("探测等待时间 (毫秒):", detectionWaitGroup);
+    m_detectionWaitMsSpinBox = new QSpinBox(detectionWaitGroup);
+    m_detectionWaitMsSpinBox->setRange(1000, 60000);
+    m_detectionWaitMsSpinBox->setSingleStep(1000);
+    m_detectionWaitMsSpinBox->setSuffix(" ms");
+    // 读取config.json初始化
+    QFile configFile("config.json");
+    int waitMs = 10000;
+    if (configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QJsonParseError err;
+        QJsonDocument doc = QJsonDocument::fromJson(configFile.readAll(), &err);
+        if (err.error == QJsonParseError::NoError && doc.isObject()) {
+            QJsonObject obj = doc.object();
+            if (obj.contains("detection_wait_ms") && obj["detection_wait_ms"].isDouble()) {
+                waitMs = obj["detection_wait_ms"].toInt();
+            }
+        }
+    }
+    m_detectionWaitMsSpinBox->setValue(waitMs);
+    m_saveDetectionWaitMsButton = new QPushButton("保存", detectionWaitGroup);
+    connect(m_saveDetectionWaitMsButton, &QPushButton::clicked, this, &AdminDashboardView::onDetectionWaitMsSaveClicked);
+    detectionWaitLayout->addWidget(detectionWaitLabel);
+    detectionWaitLayout->addWidget(m_detectionWaitMsSpinBox);
+    detectionWaitLayout->addWidget(m_saveDetectionWaitMsButton);
+    detectionWaitGroup->setLayout(detectionWaitLayout);
+    settingsTabLayout->addWidget(detectionWaitGroup);
 
     settingsTabLayout->addStretch(1); 
     m_settingsTab->setLayout(settingsTabLayout);
@@ -593,6 +632,42 @@ void AdminDashboardView::onDetectionDialogApplied(const QString& finalMainExecut
     // Clear pending info
     m_pendingDetectionAppPath.clear();
     m_pendingDetectionAppName.clear();
+}
+
+void AdminDashboardView::onDetectionWaitMsSaveClicked() {
+    int newWaitMs = m_detectionWaitMsSpinBox->value();
+    QFile configFile("config.json");
+    if (!configFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "保存失败", "无法打开配置文件");
+        return;
+    }
+    QJsonParseError err;
+    QJsonDocument doc = QJsonDocument::fromJson(configFile.readAll(), &err);
+    configFile.close();
+    if (err.error != QJsonParseError::NoError || !doc.isObject()) {
+        QMessageBox::warning(this, "保存失败", "配置文件格式错误");
+        return;
+    }
+    QJsonObject obj = doc.object();
+    obj["detection_wait_ms"] = newWaitMs;
+    if (!configFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) {
+        QMessageBox::warning(this, "保存失败", "无法写入配置文件");
+        return;
+    }
+    configFile.write(QJsonDocument(obj).toJson(QJsonDocument::Indented));
+    configFile.close();
+    QMessageBox::information(this, "保存成功", "探测等待时间已保存");
+}
+
+void AdminDashboardView::paintEvent(QPaintEvent *event) {
+    Q_UNUSED(event);
+    QPainter painter(this);
+    QPixmap bg(":/images/admin_bg.jpg");
+    if (!bg.isNull()) {
+        painter.drawPixmap(this->rect(), bg);
+    } else {
+        painter.fillRect(this->rect(), QColor(236, 239, 241)); // Fallback background
+    }
 }
 
 // Implement other methods and slots as functionality is migrated 

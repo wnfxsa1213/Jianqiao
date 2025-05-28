@@ -9,6 +9,26 @@
 #include <QPainter>     // For custom painting
 #include <QTimer>       // For launch timers
 #include <QResizeEvent> // For resizeEvent
+#include <QPixmap>
+#include <QGraphicsBlurEffect>
+
+// 新建自定义Dock背景Frame
+// class DockBackgroundFrame : public QFrame {
+// public:
+//     using QFrame::QFrame;
+// protected:
+//     void paintEvent(QPaintEvent* event) override {
+//         QPainter painter(this);
+//         painter.setRenderHint(QPainter::Antialiasing);
+//         QColor bg(255,255,255,180); // 0.7透明度
+//         painter.setBrush(bg);
+//         painter.setPen(Qt::NoPen);
+//         painter.drawRoundedRect(rect(), 24, 24); // 大圆角
+//         // 可选：加阴影
+//         // painter.setPen(QColor(0,0,0,30));
+//         // painter.drawRoundedRect(rect().adjusted(2,2,-2,-2), 24, 24);
+//     }
+// };
 
 UserView::UserView(QWidget *parent)
     : QWidget(parent),
@@ -41,12 +61,12 @@ void UserView::setupUi() {
     QHBoxLayout* centeringLayout = new QHBoxLayout();
     centeringLayout->setContentsMargins(0,0,0,0); 
     centeringLayout->setSpacing(0);
-    // centeringLayout->addStretch(1); // Left stretch - REMOVE or set to 0 if m_dockFrame gets a >0 stretchFactor
 
-    m_dockFrame = new QFrame(this); 
-    m_dockFrame->setObjectName("dockPanel");
-    m_dockFrame->setFixedHeight(90); 
-    m_dockFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed); // Keep Expanding horizontally
+    // 用QFrame替换DockBackgroundFrame，并设置透明
+    m_dockFrame = new QFrame(this);
+    m_dockFrame->setFixedHeight(90);
+    m_dockFrame->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_dockFrame->setStyleSheet("background: transparent; border: none;");
 
     QVBoxLayout* dockFrameInternalLayout = new QVBoxLayout(m_dockFrame); 
     dockFrameInternalLayout->setContentsMargins(0, 5, 0, 5);
@@ -73,45 +93,15 @@ void UserView::setupUi() {
     m_dockFrame->setLayout(dockFrameInternalLayout);
 
     // Adjust stretch factors for centeringLayout
-    centeringLayout->addStretch(0); // Minimal stretch on the left
+    centeringLayout->addStretch(0);
     centeringLayout->addWidget(m_dockFrame, 1); // Give m_dockFrame higher priority for space
     centeringLayout->addStretch(0); // Minimal stretch on the right
     m_mainLayout->addLayout(centeringLayout);
 
     setLayout(m_mainLayout);
 
-    QString userViewStyleSheet = QString(
-        "QFrame#dockPanel {"\
-        "    background-color: rgba(220, 220, 220, 0.85);"
-        "    border-radius: 18px;"
-        "    margin-left: 50px;"
-        "    margin-right: 50px;"
-        "    margin-bottom: 15px;"
-        "    padding: 2px 8px 8px 8px;"
-        "}"\
-        "QScrollArea#dockScrollArea {"\
-        "    background-color: transparent;"\
-        "    border: none;"\
-        "}"\
-        "QWidget#dockScrollContentWidget {"\
-        "    background-color: transparent;"\
-        "}"\
-        "QScrollBar:horizontal {"\
-        "    height: 6px;"
-        "    background: rgba(0,0,0,0.1);"
-        "    margin: 0px 0px 0px 0px;"
-        "    border-radius: 3px;"\
-        "}"\
-        "QScrollBar::handle:horizontal {"\
-        "    background: rgba(0,0,0,0.3);"
-        "    min-width: 20px;"\
-        "    border-radius: 3px;"\
-        "}"\
-        "QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {"\
-        "    background: none; border: none; width: 0px;"\
-        "}"
-    );
-    this->setStyleSheet(userViewStyleSheet);
+    this->setObjectName("userView");
+    this->setStyleSheet("QWidget#userView { background-image: url(:/images/user_bg.jpg); background-repeat: no-repeat; background-position: center; background-attachment: fixed; }");
 }
 
 void UserView::clearAppCards() {
@@ -245,8 +235,9 @@ void UserView::setCurrentBackground(const QString& imagePath) {
 void UserView::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event);
     QPainter painter(this);
-    if (!m_currentBackground.isNull()) {
-        painter.drawPixmap(this->rect(), m_currentBackground);
+    QPixmap bg(":/images/user_bg.jpg");
+    if (!bg.isNull()) {
+        painter.drawPixmap(this->rect(), bg);
     } else {
         painter.fillRect(this->rect(), QColor(30, 30, 30)); // Default dark background
     }

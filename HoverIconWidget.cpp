@@ -3,6 +3,13 @@
 #include <QDebug>
 #include <QEnterEvent> // Required for QEnterEvent
 #include <QMouseEvent> // Required for QMouseEvent
+#include <QPixmap>
+
+// 工具函数：缩放并居中pixmap
+static QPixmap scaledCenteredPixmap(const QPixmap& pixmap, const QSize& targetSize) {
+    if (pixmap.isNull()) return QPixmap(targetSize); // 返回空白pixmap
+    return pixmap.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
 
 HoverIconWidget::HoverIconWidget(const QPixmap &icon, const QString &appName, const QString &appPath, QWidget *parent)
     : QWidget(parent), 
@@ -92,12 +99,10 @@ void HoverIconWidget::setScaleFactor(qreal factor) {
         return;
 
     m_currentScaleFactor = factor;
-    
     int targetIconSize = static_cast<int>(m_iconSize * m_currentScaleFactor);
-    
     // Scale the pixmap for the label
     if (!m_originalPixmap.isNull()) {
-        m_iconLabel->setPixmap(m_originalPixmap.scaled(targetIconSize, targetIconSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        m_iconLabel->setPixmap(scaledCenteredPixmap(m_originalPixmap, QSize(targetIconSize, targetIconSize)));
     }
 
     // Recalculate the widget's fixed size based on the new icon size

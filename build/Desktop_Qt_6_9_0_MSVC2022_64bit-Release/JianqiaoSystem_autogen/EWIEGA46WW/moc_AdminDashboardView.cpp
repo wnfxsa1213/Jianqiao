@@ -66,7 +66,8 @@ template <> constexpr inline auto AdminDashboardView::qt_create_metaobjectdata<q
         "onDetectionResultsReceived",
         "onDetectionDialogApplied",
         "finalMainExecutableHint",
-        "finalWindowHints"
+        "finalWindowHints",
+        "onDetectionWaitMsSaveClicked"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -108,6 +109,8 @@ template <> constexpr inline auto AdminDashboardView::qt_create_metaobjectdata<q
         QtMocHelpers::SlotData<void(const QString &, const QJsonObject &)>(24, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { QMetaType::QString, 25 }, { QMetaType::QJsonObject, 26 },
         }}),
+        // Slot 'onDetectionWaitMsSaveClicked'
+        QtMocHelpers::SlotData<void()>(27, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -144,6 +147,7 @@ void AdminDashboardView::qt_static_metacall(QObject *_o, QMetaObject::Call _c, i
         case 10: _t->onConfirmPasswordChangeClicked(); break;
         case 11: _t->onDetectionResultsReceived((*reinterpret_cast< std::add_pointer_t<SuggestedWindowHints>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
         case 12: _t->onDetectionDialogApplied((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QJsonObject>>(_a[2]))); break;
+        case 13: _t->onDetectionWaitMsSaveClicked(); break;
         default: ;
         }
     }
@@ -199,14 +203,14 @@ int AdminDashboardView::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 13)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 14;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 13)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 14;
     }
     return _id;
 }

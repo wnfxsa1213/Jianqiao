@@ -9,6 +9,8 @@
 	"INCLUDE_DIR" : "C:/Users/13027/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release/JianqiaoSystem_autogen/include",
 	"INPUTS" : 
 	[
+		"C:/Users/13027/Desktop/Jianqiaov2/images/user_bg.jpg",
+		"C:/Users/13027/Desktop/Jianqiaov2/images/admin_bg.jpg",
 		"C:/Users/13027/Desktop/Jianqiaov2/styles/AppCardWidget.qss",
 		"C:/Users/13027/Desktop/Jianqiaov2/icons/loading_spinner.gif"
 	],

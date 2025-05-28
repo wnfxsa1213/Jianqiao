@@ -11,6 +11,7 @@
 #include <windows.h> // Added for DWORD type
 #include "common_types.h" // Corrected path
 #include "DetectionResultDialog.h" // <<< Include DetectionResultDialog
+#include <QSpinBox>
 
 // Forward declarations if needed
 // class WhitelistManagerWidget; // If we decide to embed a refactored part
@@ -50,6 +51,7 @@ private slots:
     // void onSomeSettingChanged();
     void onDetectionResultsReceived(const SuggestedWindowHints& hints, bool success, const QString& errorString); // <<< NEW SLOT
     void onDetectionDialogApplied(const QString& finalMainExecutableHint, const QJsonObject& finalWindowHints); // <<< NEW SLOT for dialog results
+    void onDetectionWaitMsSaveClicked(); // 新增槽函数
 
 private:
     void setupUi();
@@ -101,6 +103,11 @@ private:
     SystemInteractionModule* m_systemInteractionModulePtr; // <<< Pointer to SystemInteractionModule
     QString m_pendingDetectionAppPath; // To store path while waiting for detection results
     QString m_pendingDetectionAppName; // To store name while waiting for detection results
+    QSpinBox* m_detectionWaitMsSpinBox; // 探测等待时间设置
+    QPushButton* m_saveDetectionWaitMsButton; // 保存按钮
+
+protected:
+    void paintEvent(QPaintEvent *event) override;
 };
 
 #endif // ADMINDASHBOARDVIEW_H 
