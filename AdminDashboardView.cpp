@@ -1,4 +1,5 @@
 #include "AdminDashboardView.h"
+#include "UserModeModule.h"
 #include "HotkeyEditDialog.h"
 #include <QDebug>
 #include <QPushButton> // For example exit button
@@ -20,6 +21,8 @@
 #include <QFile>
 #include <QPainter>
 #include <QPixmap>
+#include <QSettings> // 用于注册表操作
+#include <QCheckBox>
 
 AdminDashboardView::AdminDashboardView(SystemInteractionModule* systemInteractionModule, QWidget *parent)
     : QWidget(parent)
@@ -46,6 +49,7 @@ AdminDashboardView::AdminDashboardView(SystemInteractionModule* systemInteractio
     , m_systemInteractionModulePtr(systemInteractionModule) // Initialize the new member
     , m_detectionWaitMsSpinBox(nullptr)
     , m_saveDetectionWaitMsButton(nullptr)
+    , m_autoStartCheckBox(nullptr)
 {
     qDebug() << "管理员仪表盘(AdminDashboardView): 已创建。";
     setupUi();
@@ -256,6 +260,13 @@ void AdminDashboardView::setupUi()
     detectionWaitGroup->setLayout(detectionWaitLayout);
     settingsTabLayout->addWidget(detectionWaitGroup);
 
+    // --- 新增：开机自启动设置 ---
+    m_autoStartCheckBox = new QCheckBox("开机自启动", m_settingsTab);
+    settingsTabLayout->addWidget(m_autoStartCheckBox);
+    connect(m_autoStartCheckBox, &QCheckBox::toggled, this, &AdminDashboardView::onAutoStartCheckBoxToggled);
+    updateAutoStartCheckBoxState(); // 启动时同步状态
+    // --- END ---
+
     settingsTabLayout->addStretch(1); 
     m_settingsTab->setLayout(settingsTabLayout);
     m_tabWidget->addTab(m_settingsTab, "系统设置");
@@ -455,6 +466,15 @@ void AdminDashboardView::onRemoveAppClicked()
 void AdminDashboardView::onExitApplicationClicked() {
     qDebug() << "AdminDashboardView::onExitApplicationClicked INVOKED.";
     qDebug() << "管理员仪表盘(AdminDashboardView): '退出整个程序' 按钮被点击。应用程序将退出。";
+    // 主动卸载键盘钩子
+    if (m_systemInteractionModulePtr) {
+        m_systemInteractionModulePtr->uninstallKeyboardHook();
+    }
+    // 通知UserModeModule终止所有子进程（如有）
+    if (m_userModeModule) {
+        m_userModeModule->terminateActiveProcesses();
+    }
+    // 退出应用
     QCoreApplication::instance()->quit();
 }
 
@@ -667,6 +687,34 @@ void AdminDashboardView::paintEvent(QPaintEvent *event) {
         painter.drawPixmap(this->rect(), bg);
     } else {
         painter.fillRect(this->rect(), QColor(236, 239, 241)); // Fallback background
+    }
+}
+
+// 辅助函数：检测当前是否已设置自启动，并同步复选框
+void AdminDashboardView::updateAutoStartCheckBoxState() {
+    // 注册表路径：HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+    QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString appName = QCoreApplication::applicationName();
+    QString exePath = QCoreApplication::applicationFilePath().replace('/', '\\');
+    QVariant val = reg.value(appName);
+    if (val.isValid() && val.toString() == exePath) {
+        m_autoStartCheckBox->setChecked(true);
+    } else {
+        m_autoStartCheckBox->setChecked(false);
+    }
+}
+
+// 槽函数：设置或取消自启动
+void AdminDashboardView::onAutoStartCheckBoxToggled(bool checked) {
+    QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString appName = QCoreApplication::applicationName();
+    QString exePath = QCoreApplication::applicationFilePath().replace('/', '\\');
+    if (checked) {
+        reg.setValue(appName, exePath);
+        qDebug() << "已设置开机自启动:" << exePath;
+    } else {
+        reg.remove(appName);
+        qDebug() << "已取消开机自启动:" << exePath;
     }
 }
 

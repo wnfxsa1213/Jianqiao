@@ -12,12 +12,13 @@
 #include <QFrame>        // For the dock background
 #include "AppCardWidget.h" // CHANGED from HoverIconWidget
 #include <QPixmap> // ADDED for m_currentBackground
+#include <QtCore/QString> // More explicit include for QString
 
 // Forward declarations
 class QLabel;
 class QFrame;
 class QScrollArea;
-class QHBoxLayout;
+class QHBoxLayout; // 恢复QHBoxLayout前置声明
 class QVBoxLayout;
 class AppCardWidget;
 struct AppInfo; // Forward declaration

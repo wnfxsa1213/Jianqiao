@@ -85,6 +85,9 @@ public:
 
     virtual bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
 
+    // 新增：统一获取配置文件路径的静态函数声明
+    static QString getConfigFilePath();
+
 signals:
     void adminLoginRequested();
     void applicationActivated(const QString& appPath);
@@ -123,6 +126,7 @@ private:
     QList<DWORD> getAllProcessIds();
     bool isModifierKey(DWORD vkCode) const;
     void activateWindow(HWND hwnd); // Moved here
+    QString vkCodesToString(const QList<DWORD>& codes) const; // 新增：辅助函数声明
 
     // Private member variables
     QList<DWORD> m_adminLoginHotkey;
@@ -131,6 +135,7 @@ private:
     bool m_isHookInstalled;
     QSet<DWORD> m_pressedKeys;
     QSet<DWORD> m_userModeBlockedVkCodes;
+    QList<QList<DWORD>> m_userModeBlockedKeyCombinations;
     QMap<QString, MonitoringInfo*> m_monitoringApps;
     QList<DWORD> m_adminLoginHotkeySequence; // Now clearly in private section
     int HINT_DETECTION_DELAY_MS; // 探测等待时间（毫秒），支持动态配置

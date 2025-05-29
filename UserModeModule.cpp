@@ -56,13 +56,6 @@ UserModeModule::UserModeModule(JianqiaoCoreShell *coreShell, UserView* userView,
         connect(m_systemInteractionModulePtr, &SystemInteractionModule::applicationActivationFailed, this, &UserModeModule::onApplicationActivationFailed);
     }
 
-    // Connect signals from UserView
-    if (m_userViewPtr) { // Changed m_userView to m_userViewPtr
-        connect(m_userViewPtr, &UserView::applicationLaunchRequested, this, &UserModeModule::onApplicationLaunchRequested); // Changed m_userView to m_userViewPtr
-    } else {
-        qWarning() << "UserView is null in UserModeModule constructor.";
-    }
-
     // connect(m_processMonitoringTimer, &QTimer::timeout, this, &UserModeModule::monitorLaunchedProcesses);
     // m_processMonitoringTimer->start(5000); // Check every 5 seconds
 }
@@ -163,7 +156,7 @@ void UserModeModule::setUserViewInstance(UserView* view)
 void UserModeModule::loadConfiguration()
 {
     m_whitelistedApps.clear(); // Use m_whitelistedApps
-    QString configPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation) + "/config.json";
+    QString configPath = UserModeModule::getConfigFilePath();
     QFile configFile(configPath);
 
     if (!QFileInfo::exists(configPath)) {
@@ -501,4 +494,11 @@ void UserModeModule::updateUserAppList(const QList<AppInfo>& apps) {
     // This log message is now more accurate as the signal has been emitted,
     // which should trigger the UserView update.
     qDebug() << "UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.";
+}
+
+// 静态函数：统一获取配置文件路径
+QString UserModeModule::getConfigFilePath() {
+    QString configDir = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)) + "/../JianqiaoSystem";
+    QDir().mkpath(configDir); // 确保目录存在
+    return configDir + "/config.json";
 } 

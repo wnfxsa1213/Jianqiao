@@ -74,6 +74,9 @@ private:
 public: // Ensure prepareAdminDashboardData is public if called from CoreShell
     void prepareAdminDashboardData(); // MOVED to public
 
+    // 新增：统一获取配置文件路径的静态函数声明
+    static QString getConfigFilePath();
+
 };
 
 #endif // ADMINMODULE_H 

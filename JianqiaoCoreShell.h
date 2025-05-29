@@ -62,7 +62,6 @@ protected: // QWidget's event is protected
 
 private slots:
     void onAdminRequestsExitAdminMode();
-    void onAdminLoginSuccessful();
 };
 
 #endif // JIANQIAOCORESHELL_H 

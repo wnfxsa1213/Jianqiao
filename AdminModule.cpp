@@ -41,6 +41,7 @@ AdminModule::AdminModule(SystemInteractionModule* systemInteraction, AdminDashbo
 
 AdminModule::~AdminModule()
 {
+    delete m_loginView;
     qDebug() << "管理员模块(AdminModule): 销毁。";
 }
 
@@ -228,12 +229,7 @@ void AdminModule::onWhitelistUpdated(const QList<AppInfo>& updatedWhitelist) {
 
 void AdminModule::loadConfig()
 {
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir dirCheck(configDir);
-    if (!dirCheck.exists()) {
-        dirCheck.mkpath(".");
-        }
-    QString configPath = configDir + "/config.json";
+    QString configPath = AdminModule::getConfigFilePath();
     qDebug() << "管理员模块(AdminModule): 尝试从以下路径加载配置文件:" << configPath;
 
     QFile configFile(configPath);
@@ -366,15 +362,7 @@ void AdminModule::loadConfig()
 
 void AdminModule::saveConfig() 
 {
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir dir(configDir);
-    if (!dir.exists()) {
-        if (!dir.mkpath(".")) {
-            qWarning() << "管理员模块(AdminModule): 无法创建配置目录:" << configDir;
-            return;
-        }
-    }
-    QString configPath = configDir + "/config.json";
+    QString configPath = AdminModule::getConfigFilePath();
     qDebug() << "管理员模块(AdminModule): 准备保存完整配置到:" << configPath;
 
     QJsonObject rootObj;
@@ -465,7 +453,7 @@ void AdminModule::initializeDefaultAdminHotkey() {
 
 bool AdminModule::saveWhitelistToConfig(const QList<AppInfo>& apps)
 {
-    QString configPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/config.json";
+    QString configPath = AdminModule::getConfigFilePath();
     qDebug() << "[AdminModule::saveWhitelistToConfig] Attempting to save" << apps.count() << "apps to:" << configPath;
 
     QFile configFile(configPath);
@@ -550,12 +538,7 @@ bool AdminModule::saveAdminPasswordToConfig(const QString& newPassword) {
     }
     m_adminPasswordHash = QString(QCryptographicHash::hash(newPassword.toUtf8(), QCryptographicHash::Sha256).toHex());
     
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir dirCheck(configDir);
-    if (!dirCheck.exists()) {
-        dirCheck.mkpath(".");
-    }
-    QString configPath = configDir + "/config.json";
+    QString configPath = AdminModule::getConfigFilePath();
     
     QFile configFile(configPath);
     QJsonObject rootObj;
@@ -587,12 +570,7 @@ bool AdminModule::saveAdminLoginHotkeyToConfig(const QStringList& hotkeyVkString
         return false;
     }
 
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir dirCheck(configDir);
-    if (!dirCheck.exists()) {
-        dirCheck.mkpath(".");
-    }
-    QString configPath = configDir + "/config.json";
+    QString configPath = AdminModule::getConfigFilePath();
 
     QFile configFile(configPath);
     QJsonObject rootObj;
@@ -652,4 +630,11 @@ void AdminModule::prepareAdminDashboardData()
     } else {
          qWarning() << "管理员模块(AdminModule): 管理员仪表盘视图实例为空，无法准备数据！";
     }
+}
+
+// 静态函数：统一获取配置文件路径
+QString AdminModule::getConfigFilePath() {
+    QString configDir = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)) + "/../JianqiaoSystem";
+    QDir().mkpath(configDir); // 确保目录存在
+    return configDir + "/config.json";
 }

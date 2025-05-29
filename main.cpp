@@ -4,6 +4,7 @@
 #include <QTextStream>
 #include <QDateTime>
 #include <QDir>
+#include <QCoreApplication>
 
 // Global file object for logging - ensure it's accessible and managed correctly.
 // For simplicity in a single file main.cpp, a static or global instance can be used,
@@ -63,6 +64,11 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(myMessageOutput);
 
     QApplication a(argc, argv);
+
+    // 设置应用元信息
+    QCoreApplication::setOrganizationName("雪鸮团队");
+    QCoreApplication::setApplicationName("剑鞘系统");
+    QCoreApplication::setApplicationVersion("2.0.0.0");
 
     qDebug() << "Application started."; // This should now go to log.txt
 

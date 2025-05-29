@@ -85,4 +85,21 @@ add_custom_command(
     TARGET JianqiaoSystem POST_BUILD
     COMMAND Qt6::windeployqt --dir "$<TARGET_FILE_DIR:JianqiaoSystem>" --plugindir "$<TARGET_FILE_DIR:JianqiaoSystem>/plugins" "$<TARGET_FILE:JianqiaoSystem>"
     COMMENT "Deploying Qt dependencies for JianqiaoSystem using windeployqt"
-) 
+)
+
+set(APP_ICON_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/appicon.rc")
+set(APP_VERSION_RESOURCE_WINDOWS "${CMAKE_CURRENT_SOURCE_DIR}/version.rc")
+if(MSVC)
+    if(EXISTS ${APP_ICON_RESOURCE_WINDOWS})
+        target_sources(JianqiaoSystem PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
+    endif()
+    if(EXISTS ${APP_VERSION_RESOURCE_WINDOWS})
+        target_sources(JianqiaoSystem PRIVATE ${APP_VERSION_RESOURCE_WINDOWS})
+    endif()
+    set(APP_MANIFEST "${CMAKE_CURRENT_SOURCE_DIR}/JianqiaoSystem.exe.manifest")
+    if(EXISTS ${APP_MANIFEST})
+        set_target_properties(JianqiaoSystem PROPERTIES
+            LINK_FLAGS "/MANIFESTUAC:level='requireAdministrator' /MANIFEST:EMBED /MANIFESTINPUT:${APP_MANIFEST}"
+        )
+    endif()
+endif() 

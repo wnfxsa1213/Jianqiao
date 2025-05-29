@@ -9,8 +9,7 @@
 #include <QPainter>     // For custom painting
 #include <QTimer>       // For launch timers
 #include <QResizeEvent> // For resizeEvent
-#include <QPixmap>
-#include <QGraphicsBlurEffect>
+#include <QPixmap>      // For QPixmap usage
 
 // 新建自定义Dock背景Frame
 // class DockBackgroundFrame : public QFrame {
@@ -41,6 +40,7 @@ UserView::UserView(QWidget *parent)
 {
     qDebug() << "用户视图(UserView): 已创建。";
     setupUi();
+    setCurrentBackground(":/images/user_bg.jpg"); // 设置默认背景图
     this->setObjectName("userView"); 
 }
 
@@ -54,8 +54,6 @@ void UserView::setupUi() {
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setContentsMargins(0, 0, 0, 0);
     m_mainLayout->setSpacing(0);
-
-    m_mainLayout->addStretch(1); // Pushes the dock to the bottom
 
     // Centering layout for the dock panel
     QHBoxLayout* centeringLayout = new QHBoxLayout();
@@ -84,10 +82,11 @@ void UserView::setupUi() {
     m_dockScrollContentWidget->setObjectName("dockScrollContentWidget");
     m_dockScrollArea->setWidget(m_dockScrollContentWidget);
 
+    // 恢复为QHBoxLayout横向布局，只在一行排列应用卡片
     m_dockItemsLayout = new QHBoxLayout(m_dockScrollContentWidget);
     m_dockItemsLayout->setContentsMargins(5, 0, 5, 0);
     m_dockItemsLayout->setSpacing(5);
-    m_dockItemsLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    m_dockItemsLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter); // 让图标整体居中显示
 
     dockFrameInternalLayout->addWidget(m_dockScrollArea);
     m_dockFrame->setLayout(dockFrameInternalLayout);
@@ -97,6 +96,7 @@ void UserView::setupUi() {
     centeringLayout->addWidget(m_dockFrame, 1); // Give m_dockFrame higher priority for space
     centeringLayout->addStretch(0); // Minimal stretch on the right
     m_mainLayout->addLayout(centeringLayout);
+    m_mainLayout->addStretch(1); // 在dock下方加弹性，推到顶部
 
     setLayout(m_mainLayout);
 
@@ -105,9 +105,11 @@ void UserView::setupUi() {
 }
 
 void UserView::clearAppCards() {
+    // 清空所有AppCardWidget卡片
     for (AppCardWidget* card : qAsConst(m_appCards)) {
         if (card) {
-            m_dockItemsLayout->removeWidget(card);
+            // 先从布局中移除卡片，再延迟删除
+            m_dockItemsLayout->removeWidget(card); // 恢复QHBoxLayout的移除方式
             card->deleteLater();
         }
     }
@@ -121,22 +123,16 @@ void UserView::clearAppCards() {
 
 void UserView::setAppList(const QList<AppInfo>& apps) {
     m_currentApps = apps;
-    // Populate immediately if view is visible or first show
-    // if (isVisible() || m_isFirstShow) { 
-    //    populateAppList(apps);
-    // }
-    // If not visible and not first show, populateAppList will be called in showEvent
-
-    // Always populate the list when it's set, regardless of visibility or first show status.
-    // The showEvent logic for m_isFirstShow can remain as a fallback for initial population 
-    // if setAppList somehow isn't called before the first show, though it should be.
-    populateAppList(apps); 
+    if (isVisible()) { // 如果视图可见，立即填充
+        populateAppList(m_currentApps);
+    }
+    // 如果视图不可见，populateAppList 将在 showEvent 中被调用 (如果 m_isFirstShow 为 true)
 }
 
 void UserView::showEvent(QShowEvent *event) {
     QWidget::showEvent(event);
     if (m_isFirstShow) {
-        populateAppList(m_currentApps); // Populate on first show
+        populateAppList(m_currentApps); // 首次显示时填充应用列表
         m_isFirstShow = false;
     }
 }
@@ -173,7 +169,9 @@ void UserView::populateAppList(const QList<AppInfo>& apps) {
         AppCardWidget *card = new AppCardWidget(appInfo.name, appInfo.path, icon, m_dockScrollContentWidget);
         connect(card, &AppCardWidget::launchAppRequested, this, &UserView::onCardLaunchRequested);
         
-        m_dockItemsLayout->addWidget(card);
+        // 插入到布局的中间，实现从中间向两边扩散的排列效果
+        int mid = m_dockItemsLayout->count() / 2;
+        m_dockItemsLayout->insertWidget(mid, card);
         m_appCards.append(card);
     }
     
@@ -235,11 +233,10 @@ void UserView::setCurrentBackground(const QString& imagePath) {
 void UserView::paintEvent(QPaintEvent *event) {
     Q_UNUSED(event);
     QPainter painter(this);
-    QPixmap bg(":/images/user_bg.jpg");
-    if (!bg.isNull()) {
-        painter.drawPixmap(this->rect(), bg);
+    if (!m_currentBackground.isNull()) {
+        painter.drawPixmap(this->rect(), m_currentBackground);
     } else {
-        painter.fillRect(this->rect(), QColor(30, 30, 30)); // Default dark background
+        painter.fillRect(this->rect(), QColor(30, 30, 30)); // 默认深色背景
     }
 }
 

@@ -43,6 +43,9 @@ public:
     void updateUserAppList(const QList<AppInfo>& apps); // New method
     void terminateActiveProcesses(); // Added declaration
 
+    // 新增：统一获取配置文件路径的静态函数声明
+    static QString getConfigFilePath();
+
 signals:
     void userModeActivated();
     void userModeDeactivated();

@@ -81,12 +81,12 @@ void AppCardWidget::setupUi()
     // 移除使用QVBoxLayout进行垂直居中的方法
     // 改为直接在widget中放置图标并手动控制位置
     
-    setFixedSize(68, 68); // 确保AppCardWidget大小固定
+    setFixedSize(96, 96); // 放大卡片整体尺寸
     
     m_iconLabel = new QLabel(this);
     m_iconLabel->setObjectName("iconLabel");
-    m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, QSize(56, 56)));
-    m_iconLabel->setFixedSize(QSize(56, 56));
+    m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, QSize(80, 80))); // 放大图标
+    m_iconLabel->setFixedSize(QSize(80, 80));
     m_iconLabel->setAlignment(Qt::AlignCenter);
     
     // 取消使用布局，改为手动设置位置
@@ -119,7 +119,7 @@ void AppCardWidget::setupUi()
 void AppCardWidget::updateIconPosition()
 {
     if (m_iconLabel) {
-        QSize scaledSize = QSize(56 * m_scaleFactor, 56 * m_scaleFactor);
+        QSize scaledSize = QSize(80 * m_scaleFactor, 80 * m_scaleFactor); // 放大缩放基准
         m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, scaledSize));
         int scaledX = (width() - scaledSize.width()) / 2;
         int scaledY = (height() - scaledSize.height()) / 2;

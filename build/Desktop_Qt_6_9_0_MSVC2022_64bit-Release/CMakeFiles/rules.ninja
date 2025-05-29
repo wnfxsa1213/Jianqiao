@@ -27,6 +27,16 @@ rule CXX_COMPILER__JianqiaoSystem_unscanned_Release
 
 
 #############################################
+# Rule for compiling RC files.
+
+rule RC_COMPILER__JianqiaoSystem_unscanned_Release
+  depfile = $DEP_FILE
+  deps = gcc
+  command = D:/QT6/Tools/CMake_64/bin/cmcldeps.exe RC $in $DEP_FILE $out "注意: 包含文件:  " "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/HostX64/x64/cl.exe" ${LAUNCHER}${CODE_CHECK}C:\PROGRA~2\WI3CF2~1\10\bin\100261~1.0\x64\rc.exe $DEFINES $INCLUDES $FLAGS /fo $out $in
+  description = Building RC object $out
+
+
+#############################################
 # Rule for linking CXX executable.
 
 rule CXX_EXECUTABLE_LINKER__JianqiaoSystem_Release

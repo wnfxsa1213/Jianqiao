@@ -12,12 +12,14 @@
 #include "common_types.h" // Corrected path
 #include "DetectionResultDialog.h" // <<< Include DetectionResultDialog
 #include <QSpinBox>
+#include <QCheckBox> // 新增：用于自启动复选框
 
 // Forward declarations if needed
 // class WhitelistManagerWidget; // If we decide to embed a refactored part
 // class PasswordSettingsWidget;
 // class HotkeySettingsWidget;
 class SystemInteractionModule; // Forward declare
+class UserModeModule; // Forward declare
 
 class AdminDashboardView : public QWidget
 {
@@ -32,6 +34,8 @@ public:
     void setCurrentAdminLoginHotkey(const QStringList& hotkeyStrings);
     // void setPasswordChangeInterface(); // Placeholder
     // void setHotkeySettingsInterface(); // Placeholder
+    void setSystemInteractionModulePtr(SystemInteractionModule* ptr) { m_systemInteractionModulePtr = ptr; }
+    void setUserModeModule(UserModeModule* ptr) { m_userModeModule = ptr; }
 
 signals:
     void userRequestsExitAdminMode();
@@ -52,6 +56,7 @@ private slots:
     void onDetectionResultsReceived(const SuggestedWindowHints& hints, bool success, const QString& errorString); // <<< NEW SLOT
     void onDetectionDialogApplied(const QString& finalMainExecutableHint, const QJsonObject& finalWindowHints); // <<< NEW SLOT for dialog results
     void onDetectionWaitMsSaveClicked(); // 新增槽函数
+    void onAutoStartCheckBoxToggled(bool checked); // 新增：自启动槽函数
 
 private:
     void setupUi();
@@ -100,11 +105,15 @@ private:
     // PasswordSettingsWidget* m_passwordWidget;
     // HotkeySettingsWidget* m_hotkeyWidget;
 
-    SystemInteractionModule* m_systemInteractionModulePtr; // <<< Pointer to SystemInteractionModule
+    SystemInteractionModule* m_systemInteractionModulePtr = nullptr; // 用于安全退出时卸载钩子
+    UserModeModule* m_userModeModule = nullptr; // 用于安全退出时终止子进程
     QString m_pendingDetectionAppPath; // To store path while waiting for detection results
     QString m_pendingDetectionAppName; // To store name while waiting for detection results
     QSpinBox* m_detectionWaitMsSpinBox; // 探测等待时间设置
     QPushButton* m_saveDetectionWaitMsButton; // 保存按钮
+
+    QCheckBox* m_autoStartCheckBox = nullptr; // 新增：自启动复选框
+    void updateAutoStartCheckBoxState(); // 新增：辅助函数
 
 protected:
     void paintEvent(QPaintEvent *event) override;

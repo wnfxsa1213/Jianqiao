@@ -1,626 +1,133 @@
---- Log started at 2025-05-28 11:14:14 ---
-2025-05-28 11:14:14.922 DEBUG:   Application started.
-2025-05-28 11:14:14.922 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数开始。
-2025-05-28 11:14:14.922 DEBUG:   剑鞘核心(JianqiaoCoreShell): 初始化核心应用设置。
-2025-05-28 11:14:14.923 DEBUG:   SystemInteractionModule: Config path set to: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-28 11:14:14.923 DEBUG:   SystemInteractionModule (loadConfiguration): Attempting to load config from: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-28 11:14:14.923 DEBUG:   管理员登录热键已从配置文件加载: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-28 11:14:14.923 DEBUG:   配置文件中未找到 'user_mode_settings'。不拦截用户模式按键。
-2025-05-28 11:14:14.923 DEBUG:   系统交互模块(SystemInteractionModule): 已创建。
-2025-05-28 11:14:14.923 DEBUG:   [SystemInteractionModule] 探测等待时间(ms): 10000
-2025-05-28 11:14:14.923 DEBUG:   剑鞘核心(JianqiaoCoreShell): 底层系统交互模块已实例化。
-2025-05-28 11:14:14.923 DEBUG:   用户视图(UserView): 已创建。
-2025-05-28 11:14:14.938 DEBUG:   管理员仪表盘(AdminDashboardView): 已创建。
-2025-05-28 11:14:14.945 DEBUG:   剑鞘核心外壳: UI设置完成 (QStackedWidget), 视图实例已创建。
-2025-05-28 11:14:14.946 DEBUG:   管理员登录视图(AdminLoginView): 成功加载 AdminLoginView.qss
-2025-05-28 11:14:14.946 DEBUG:   管理员登录视图(AdminLoginView): 已创建。
-2025-05-28 11:14:14.946 DEBUG:   管理员模块(AdminModule): 构造函数开始。
-2025-05-28 11:14:14.946 DEBUG:   管理员模块(AdminModule): 尝试从以下路径加载配置文件: "C:/Users/13027/AppData/Local/JianqiaoSystem/config.json"
-2025-05-28 11:14:14.946 DEBUG:   管理员模块(AdminModule): 已加载管理员密码哈希。
-2025-05-28 11:14:14.946 DEBUG:   管理员模块(AdminModule): 已加载管理员登录热键: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-28 11:14:14.946 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-2025-05-28 11:14:14.946 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-28 11:14:15.005 DEBUG:   [SIM::getIcon] Got large pixmap from QFileIconProvider, size: QSize(256, 256)
-2025-05-28 11:14:15.005 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
-2025-05-28 11:14:15.005 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":50,\"primaryClassName\":\"OpusApp\",\"titleContains\":\"WPS Office\"}"
-2025-05-28 11:14:15.005 DEBUG:   [SIM::getIcon] Attempting to get icon for: "D:/Bambu Studio/bambu-studio.exe"
-2025-05-28 11:14:15.005 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-28 11:14:15.012 DEBUG:   [SIM::getIcon] Got large pixmap from QFileIconProvider, size: QSize(256, 256)
-2025-05-28 11:14:15.012 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "bambu-studio" Path: "D:/Bambu Studio/bambu-studio.exe" Hint: "bambu-studio.exe"
-2025-05-28 11:14:15.012 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":40,\"primaryClassName\":\"wxWindowNR\",\"titleContains\":\"\xE6\x9C\xAA\xE5\x91\xBD\xE5\x90\x8D - BambuStudio\"}"
-2025-05-28 11:14:15.012 DEBUG:   管理员模块(AdminModule): 共加载 2 个白名单应用。
-2025-05-28 11:14:15.012 DEBUG:   管理员模块(AdminModule): 准备填充管理员仪表盘数据。
-2025-05-28 11:14:15.012 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
-2025-05-28 11:14:15.012 DEBUG:   AdminDashboardView::setWhitelistedApps called with 2 apps.
-2025-05-28 11:14:15.012 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
-2025-05-28 11:14:15.012 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
-2025-05-28 11:14:15.012 DEBUG:   管理员模块(AdminModule): 配置文件加载完成。
-2025-05-28 11:14:15.012 DEBUG:   管理员模块(AdminModule): 构造函数结束。
-2025-05-28 11:14:15.013 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: "wps.exe"
-2025-05-28 11:14:15.013 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
-2025-05-28 11:14:15.013 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-28 11:14:15.015 DEBUG:   [SIM::getIcon] Got large pixmap from QFileIconProvider, size: QSize(256, 256)
-2025-05-28 11:14:15.015 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "bambu-studio" Path: "D:/Bambu Studio/bambu-studio.exe" Hint: "bambu-studio.exe"
-2025-05-28 11:14:15.015 DEBUG:   [SIM::getIcon] Attempting to get icon for: "D:/Bambu Studio/bambu-studio.exe"
-2025-05-28 11:14:15.015 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
-2025-05-28 11:14:15.018 DEBUG:   [SIM::getIcon] Got large pixmap from QFileIconProvider, size: QSize(256, 256)
-2025-05-28 11:14:15.018 INFO:    Configuration loaded, 2 apps in whitelist.
-2025-05-28 11:14:15.018 INFO:    UserModeModule initialized and connected to UserView (app launch request and app list update).
-2025-05-28 11:14:15.018 DEBUG:   键盘钩子: 安装成功。
-2025-05-28 11:14:15.018 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 SystemInteractionModule::adminLoginRequested 信号。
-2025-05-28 11:14:15.018 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。
-2025-05-28 11:14:15.018 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-28 11:14:15.018 DEBUG:   JianqiaoCoreShell: Fetched 2 apps from AdminModule's current state for UserModeModule.
-2025-05-28 11:14:15.018 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 2
-2025-05-28 11:14:15.018 DEBUG:   UserView::populateAppList - Received 2 apps. Clearing existing cards.
-2025-05-28 11:14:15.018 DEBUG:     App: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Icon isNull: false
-2025-05-28 11:14:15.018 DEBUG:     App: "bambu-studio" Path: "D:/Bambu Studio/bambu-studio.exe" Icon isNull: false
-2025-05-28 11:14:15.020 DEBUG:   UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.
-2025-05-28 11:14:15.020 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-28 11:14:15.020 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-28 11:14:15.020 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-28 11:14:15.020 DEBUG:   剑鞘核心(JianqiaoCoreShell): 用户视图已显示 (初始状态)。
-2025-05-28 11:14:15.020 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数结束。
-2025-05-28 11:14:15.024 DEBUG:   UserView::populateAppList - Received 2 apps. Clearing existing cards.
-2025-05-28 11:14:15.024 DEBUG:     App: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Icon isNull: false
-2025-05-28 11:14:15.024 DEBUG:     App: "bambu-studio" Path: "D:/Bambu Studio/bambu-studio.exe" Icon isNull: false
-2025-05-28 11:17:12.869 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
-2025-05-28 11:17:12.869 DEBUG:   "用户模式下按键 VK_LCONTROL 未被任何规则拦截。"
-2025-05-28 11:17:12.872 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-28 11:17:12.872 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-28 11:17:12.925 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-28 11:17:12.925 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-28 11:17:13.028 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
-2025-05-28 11:17:13.029 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
-2025-05-28 11:17:13.029 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
-2025-05-28 11:17:13.029 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
-2025-05-28 11:17:13.029 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
-2025-05-28 11:17:13.029 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
-2025-05-28 11:17:13.031 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
-2025-05-28 11:17:13.032 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
-2025-05-28 11:17:13.032 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
-2025-05-28 11:17:16.424 DEBUG:   管理员登录视图(AdminLoginView): '退出登录'按钮被点击。
-2025-05-28 11:17:16.424 DEBUG:   管理员模块(AdminModule): 登录视图请求退出管理员模式（例如通过取消按钮）。
-2025-05-28 11:17:16.428 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
-2025-05-28 11:17:16.428 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
-2025-05-28 11:17:16.428 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
-2025-05-28 11:17:16.428 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到退出管理员模式请求。
-2025-05-28 11:17:16.428 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-28 11:17:16.428 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
-2025-05-28 11:17:16.428 DEBUG:   JianqiaoCoreShell: Fetched 2 apps from AdminModule's current state for UserModeModule.
-2025-05-28 11:17:16.428 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 2
-2025-05-28 11:17:16.428 DEBUG:   UserView::populateAppList - Received 2 apps. Clearing existing cards.
-2025-05-28 11:17:16.428 DEBUG:     App: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Icon isNull: false
-2025-05-28 11:17:16.428 DEBUG:     App: "bambu-studio" Path: "D:/Bambu Studio/bambu-studio.exe" Icon isNull: false
-2025-05-28 11:17:16.429 DEBUG:   UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.
-2025-05-28 11:17:16.429 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
-2025-05-28 11:17:16.429 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
-2025-05-28 11:17:16.434 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
-2025-05-28 11:17:16.434 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式。
-2025-05-28 11:17:16.636 DEBUG:   "用户模式下按键: VK_LWIN (VK: 0x5b), m_userModeActive: 1"
-2025-05-28 11:17:16.636 DEBUG:   "用户模式下按键 VK_LWIN 未被任何规则拦截。"
-2025-05-28 11:17:22.238 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
-2025-05-28 11:17:22.238 DEBUG:   "用户模式下按键 VK_LMENU 未被任何规则拦截。"
-2025-05-28 11:17:22.623 DEBUG:   "用户模式下按键: F4 (VK: 0x73), m_userModeActive: 1"
-2025-05-28 11:17:22.623 DEBUG:   "用户模式下按键 F4 未被任何规则拦截。"
-2025-05-28 11:18:17.989 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:17.990 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:17.990 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:17.990 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:18.278 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.278 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:18.278 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.278 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:18.517 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.517 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:18.517 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.517 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:18.714 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.714 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:18.714 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.714 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:18.918 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.918 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:18.918 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:18.918 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:19.166 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:19.166 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:19.166 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:19.166 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:19.485 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:19.485 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:19.485 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:19.485 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:19.886 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:19.886 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:19.886 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:19.886 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:20.173 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:20.173 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:20.173 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:20.174 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:20.422 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:20.422 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:20.422 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:20.422 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:20.670 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:20.670 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:20.670 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:20.670 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:21.230 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:21.230 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:21.230 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:21.230 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:21.538 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:21.538 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:21.538 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:21.538 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:21.810 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:21.810 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:21.810 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:21.810 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.030 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.030 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.030 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.030 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.538 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.538 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.538 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.538 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.569 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.569 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.569 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.569 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.600 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.600 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.600 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.600 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.631 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.631 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.631 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.631 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.663 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.663 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.663 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.663 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.710 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.710 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.710 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.710 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.741 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.741 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.741 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.741 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.772 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.772 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.772 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.772 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.803 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.803 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.803 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.803 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.834 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.834 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.834 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.834 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.866 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.866 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.866 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.866 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.897 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.897 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.897 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.897 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.929 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.929 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.929 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.929 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:18:22.959 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.959 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:18:22.959 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:18:22.959 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:19:59.238 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:19:59.238 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:19:59.286 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:19:59.286 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:19:59.418 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:19:59.418 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:19:59.578 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-28 11:19:59.578 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-28 11:20:00.102 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:20:00.102 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:20:05.682 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:20:05.682 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:20:06.630 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:20:06.630 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:20:06.630 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:20:06.630 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:20:06.974 DEBUG:   "用户模式下按键: U (VK: 0x55), m_userModeActive: 1"
-2025-05-28 11:20:06.974 DEBUG:   "用户模式下按键 U 未被任何规则拦截。"
-2025-05-28 11:20:19.025 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xFF"
-2025-05-28 11:20:19.025 DEBUG:   "用户模式下按键: 0XFF (VK: 0xff), m_userModeActive: 1"
-2025-05-28 11:20:19.025 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xFF"
-2025-05-28 11:20:19.025 DEBUG:   "用户模式下按键 0XFF 未被任何规则拦截。"
-2025-05-28 11:20:22.723 DEBUG:   "用户模式下按键: T (VK: 0x54), m_userModeActive: 1"
-2025-05-28 11:20:22.723 DEBUG:   "用户模式下按键 T 未被任何规则拦截。"
-2025-05-28 11:20:22.760 DEBUG:   "用户模式下按键: I (VK: 0x49), m_userModeActive: 1"
-2025-05-28 11:20:22.760 DEBUG:   "用户模式下按键 I 未被任何规则拦截。"
-2025-05-28 11:20:23.284 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-28 11:20:23.284 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-28 11:20:23.724 DEBUG:   "用户模式下按键: A (VK: 0x41), m_userModeActive: 1"
-2025-05-28 11:20:23.724 DEBUG:   "用户模式下按键 A 未被任何规则拦截。"
-2025-05-28 11:20:23.848 DEBUG:   "用户模式下按键: N (VK: 0x4e), m_userModeActive: 1"
-2025-05-28 11:20:23.848 DEBUG:   "用户模式下按键 N 未被任何规则拦截。"
-2025-05-28 11:20:24.424 DEBUG:   "用户模式下按键: Y (VK: 0x59), m_userModeActive: 1"
-2025-05-28 11:20:24.424 DEBUG:   "用户模式下按键 Y 未被任何规则拦截。"
-2025-05-28 11:20:24.516 DEBUG:   "用户模式下按键: U (VK: 0x55), m_userModeActive: 1"
-2025-05-28 11:20:24.516 DEBUG:   "用户模式下按键 U 未被任何规则拦截。"
-2025-05-28 11:20:24.872 DEBUG:   "用户模式下按键: 2 (VK: 0x32), m_userModeActive: 1"
-2025-05-28 11:20:24.872 DEBUG:   "用户模式下按键 2 未被任何规则拦截。"
-2025-05-28 11:20:25.629 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:20:25.629 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:20:25.629 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:20:25.629 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:20:26.068 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:20:26.068 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:20:29.472 DEBUG:   "用户模式下按键: T (VK: 0x54), m_userModeActive: 1"
-2025-05-28 11:20:29.472 DEBUG:   "用户模式下按键 T 未被任何规则拦截。"
-2025-05-28 11:20:29.612 DEBUG:   "用户模式下按键: I (VK: 0x49), m_userModeActive: 1"
-2025-05-28 11:20:29.612 DEBUG:   "用户模式下按键 I 未被任何规则拦截。"
-2025-05-28 11:20:29.801 DEBUG:   "用户模式下按键: A (VK: 0x41), m_userModeActive: 1"
-2025-05-28 11:20:29.801 DEBUG:   "用户模式下按键 A 未被任何规则拦截。"
-2025-05-28 11:20:29.976 DEBUG:   "用户模式下按键: N (VK: 0x4e), m_userModeActive: 1"
-2025-05-28 11:20:29.976 DEBUG:   "用户模式下按键 N 未被任何规则拦截。"
-2025-05-28 11:20:30.261 DEBUG:   "用户模式下按键: Y (VK: 0x59), m_userModeActive: 1"
-2025-05-28 11:20:30.261 DEBUG:   "用户模式下按键 Y 未被任何规则拦截。"
-2025-05-28 11:20:30.333 DEBUG:   "用户模式下按键: U (VK: 0x55), m_userModeActive: 1"
-2025-05-28 11:20:30.333 DEBUG:   "用户模式下按键 U 未被任何规则拦截。"
-2025-05-28 11:20:30.508 DEBUG:   "用户模式下按键: 2 (VK: 0x32), m_userModeActive: 1"
-2025-05-28 11:20:30.508 DEBUG:   "用户模式下按键 2 未被任何规则拦截。"
-2025-05-28 11:20:30.681 DEBUG:   "用户模式下按键: 1 (VK: 0x31), m_userModeActive: 1"
-2025-05-28 11:20:30.681 DEBUG:   "用户模式下按键 1 未被任何规则拦截。"
-2025-05-28 11:20:30.845 DEBUG:   "用户模式下按键: 1 (VK: 0x31), m_userModeActive: 1"
-2025-05-28 11:20:30.845 DEBUG:   "用户模式下按键 1 未被任何规则拦截。"
-2025-05-28 11:20:30.952 DEBUG:   "用户模式下按键: 3 (VK: 0x33), m_userModeActive: 1"
-2025-05-28 11:20:30.953 DEBUG:   "用户模式下按键 3 未被任何规则拦截。"
-2025-05-28 11:20:31.036 DEBUG:   "用户模式下按键: 1 (VK: 0x31), m_userModeActive: 1"
-2025-05-28 11:20:31.036 DEBUG:   "用户模式下按键 1 未被任何规则拦截。"
-2025-05-28 11:20:31.197 DEBUG:   "用户模式下按键: 4 (VK: 0x34), m_userModeActive: 1"
-2025-05-28 11:20:31.197 DEBUG:   "用户模式下按键 4 未被任何规则拦截。"
-2025-05-28 11:20:31.632 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBE"
-2025-05-28 11:20:31.632 DEBUG:   "用户模式下按键: 0XBE (VK: 0xbe), m_userModeActive: 1"
-2025-05-28 11:20:31.632 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBE"
-2025-05-28 11:20:31.632 DEBUG:   "用户模式下按键 0XBE 未被任何规则拦截。"
-2025-05-28 11:20:33.025 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:20:33.025 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:20:33.796 DEBUG:   "用户模式下按键: T (VK: 0x54), m_userModeActive: 1"
-2025-05-28 11:20:33.796 DEBUG:   "用户模式下按键 T 未被任何规则拦截。"
-2025-05-28 11:20:33.920 DEBUG:   "用户模式下按键: I (VK: 0x49), m_userModeActive: 1"
-2025-05-28 11:20:33.920 DEBUG:   "用户模式下按键 I 未被任何规则拦截。"
-2025-05-28 11:20:34.041 DEBUG:   "用户模式下按键: A (VK: 0x41), m_userModeActive: 1"
-2025-05-28 11:20:34.041 DEBUG:   "用户模式下按键 A 未被任何规则拦截。"
-2025-05-28 11:20:34.188 DEBUG:   "用户模式下按键: N (VK: 0x4e), m_userModeActive: 1"
-2025-05-28 11:20:34.189 DEBUG:   "用户模式下按键 N 未被任何规则拦截。"
-2025-05-28 11:20:34.460 DEBUG:   "用户模式下按键: Y (VK: 0x59), m_userModeActive: 1"
-2025-05-28 11:20:34.460 DEBUG:   "用户模式下按键 Y 未被任何规则拦截。"
-2025-05-28 11:20:34.533 DEBUG:   "用户模式下按键: U (VK: 0x55), m_userModeActive: 1"
-2025-05-28 11:20:34.533 DEBUG:   "用户模式下按键 U 未被任何规则拦截。"
-2025-05-28 11:20:34.701 DEBUG:   "用户模式下按键: 2 (VK: 0x32), m_userModeActive: 1"
-2025-05-28 11:20:34.701 DEBUG:   "用户模式下按键 2 未被任何规则拦截。"
-2025-05-28 11:20:34.852 DEBUG:   "用户模式下按键: 1 (VK: 0x31), m_userModeActive: 1"
-2025-05-28 11:20:34.853 DEBUG:   "用户模式下按键 1 未被任何规则拦截。"
-2025-05-28 11:20:35.004 DEBUG:   "用户模式下按键: 1 (VK: 0x31), m_userModeActive: 1"
-2025-05-28 11:20:35.004 DEBUG:   "用户模式下按键 1 未被任何规则拦截。"
-2025-05-28 11:20:35.124 DEBUG:   "用户模式下按键: 3 (VK: 0x33), m_userModeActive: 1"
-2025-05-28 11:20:35.124 DEBUG:   "用户模式下按键 3 未被任何规则拦截。"
-2025-05-28 11:20:35.213 DEBUG:   "用户模式下按键: 1 (VK: 0x31), m_userModeActive: 1"
-2025-05-28 11:20:35.213 DEBUG:   "用户模式下按键 1 未被任何规则拦截。"
-2025-05-28 11:20:35.385 DEBUG:   "用户模式下按键: 4 (VK: 0x34), m_userModeActive: 1"
-2025-05-28 11:20:35.385 DEBUG:   "用户模式下按键 4 未被任何规则拦截。"
-2025-05-28 11:20:35.752 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBE"
-2025-05-28 11:20:35.752 DEBUG:   "用户模式下按键: 0XBE (VK: 0xbe), m_userModeActive: 1"
-2025-05-28 11:20:35.752 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBE"
-2025-05-28 11:20:35.752 DEBUG:   "用户模式下按键 0XBE 未被任何规则拦截。"
-2025-05-28 11:20:36.301 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:20:36.301 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:20:51.446 DEBUG:   "用户模式下按键: U (VK: 0x55), m_userModeActive: 1"
-2025-05-28 11:20:51.446 DEBUG:   "用户模式下按键 U 未被任何规则拦截。"
-2025-05-28 11:20:51.742 DEBUG:   "用户模式下按键: B (VK: 0x42), m_userModeActive: 1"
-2025-05-28 11:20:51.742 DEBUG:   "用户模式下按键 B 未被任何规则拦截。"
-2025-05-28 11:21:04.091 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.091 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.091 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.091 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.601 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.601 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.601 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.601 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.632 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.632 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.632 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.632 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.663 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.663 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.663 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.663 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.695 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.704 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.704 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.704 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.726 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.726 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.726 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.726 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.757 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.757 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.757 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.757 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.804 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.804 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.804 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.804 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.835 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.835 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.835 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.835 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.866 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.866 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.866 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.866 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.896 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.896 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.896 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.896 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.927 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.927 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.927 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.927 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.958 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.958 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.958 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.958 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:04.989 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.989 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:04.989 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:04.989 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:05.020 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.020 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:05.020 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.020 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:05.067 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.067 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:05.067 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.067 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:05.098 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.098 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:05.098 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.098 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:05.128 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.128 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:05.128 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.128 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:05.159 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.159 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:05.159 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.159 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:21:05.535 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.535 DEBUG:   "用户模式下按键: 0X26 (VK: 0x26), m_userModeActive: 1"
-2025-05-28 11:21:05.535 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x26"
-2025-05-28 11:21:05.535 DEBUG:   "用户模式下按键 0X26 未被任何规则拦截。"
-2025-05-28 11:22:44.214 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:22:44.214 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:22:45.374 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-28 11:22:45.374 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-28 11:22:46.210 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:22:46.210 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:22:46.558 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:22:46.558 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:22:46.830 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-28 11:22:46.830 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-28 11:22:47.922 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:47.922 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:22:47.922 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:47.922 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:22:48.119 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:48.119 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:22:48.119 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:48.119 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:22:48.590 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:48.590 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:22:48.590 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:48.590 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:22:48.751 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:48.751 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:22:48.751 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:48.751 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:22:48.947 DEBUG:   "用户模式下按键: VK_SPACE (VK: 0x20), m_userModeActive: 1"
-2025-05-28 11:22:48.947 DEBUG:   "用户模式下按键 VK_SPACE 未被任何规则拦截。"
-2025-05-28 11:22:49.367 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:49.367 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:22:49.367 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:49.367 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:22:49.538 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:49.538 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:22:49.538 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:49.538 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:22:49.834 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:22:49.834 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:22:50.039 DEBUG:   "用户模式下按键: I (VK: 0x49), m_userModeActive: 1"
-2025-05-28 11:22:50.039 DEBUG:   "用户模式下按键 I 未被任何规则拦截。"
-2025-05-28 11:22:50.158 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:22:50.158 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:22:50.362 DEBUG:   "用户模式下按键: T (VK: 0x54), m_userModeActive: 1"
-2025-05-28 11:22:50.362 DEBUG:   "用户模式下按键 T 未被任何规则拦截。"
-2025-05-28 11:22:50.606 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xDE"
-2025-05-28 11:22:50.606 DEBUG:   "用户模式下按键: 0XDE (VK: 0xde), m_userModeActive: 1"
-2025-05-28 11:22:50.606 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xDE"
-2025-05-28 11:22:50.606 DEBUG:   "用户模式下按键 0XDE 未被任何规则拦截。"
-2025-05-28 11:22:50.610 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:22:50.610 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:22:52.111 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:52.111 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:22:52.111 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:52.111 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:22:52.442 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:52.442 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:22:52.442 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:22:52.442 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:22:53.195 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:22:53.195 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:22:54.690 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:22:54.690 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:22:55.355 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:22:55.355 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:22:56.702 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:22:56.702 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:22:56.831 DEBUG:   "用户模式下按键: VK_SPACE (VK: 0x20), m_userModeActive: 1"
-2025-05-28 11:22:56.831 DEBUG:   "用户模式下按键 VK_SPACE 未被任何规则拦截。"
-2025-05-28 11:22:57.002 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:57.002 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:22:57.002 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:57.002 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:22:57.170 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:57.170 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:22:57.170 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:22:57.170 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:22:59.722 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:22:59.722 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:22:59.722 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:22:59.722 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:22:59.938 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:22:59.938 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:22:59.938 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:22:59.938 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:23:00.790 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:23:00.791 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:23:02.770 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:23:02.771 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:23:02.999 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:02.999 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:03.119 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:03.119 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:03.474 DEBUG:   "用户模式下按键: VK_SPACE (VK: 0x20), m_userModeActive: 1"
-2025-05-28 11:23:03.474 DEBUG:   "用户模式下按键 VK_SPACE 未被任何规则拦截。"
-2025-05-28 11:23:03.747 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:03.747 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:23:03.747 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:03.747 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:23:03.895 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:03.895 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:23:03.895 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:03.895 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:23:04.111 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:04.111 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:04.290 DEBUG:   "用户模式下按键: I (VK: 0x49), m_userModeActive: 1"
-2025-05-28 11:23:04.290 DEBUG:   "用户模式下按键 I 未被任何规则拦截。"
-2025-05-28 11:23:04.438 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:04.438 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:04.639 DEBUG:   "用户模式下按键: T (VK: 0x54), m_userModeActive: 1"
-2025-05-28 11:23:04.639 DEBUG:   "用户模式下按键 T 未被任何规则拦截。"
-2025-05-28 11:23:04.782 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:23:04.782 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:23:08.771 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:23:08.771 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:23:09.770 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:09.770 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:09.910 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:09.911 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:10.975 DEBUG:   "用户模式下按键: VK_SPACE (VK: 0x20), m_userModeActive: 1"
-2025-05-28 11:23:10.975 DEBUG:   "用户模式下按键 VK_SPACE 未被任何规则拦截。"
-2025-05-28 11:23:11.127 DEBUG:   "用户模式下按键: I (VK: 0x49), m_userModeActive: 1"
-2025-05-28 11:23:11.127 DEBUG:   "用户模式下按键 I 未被任何规则拦截。"
-2025-05-28 11:23:11.327 DEBUG:   "用户模式下按键: N (VK: 0x4e), m_userModeActive: 1"
-2025-05-28 11:23:11.327 DEBUG:   "用户模式下按键 N 未被任何规则拦截。"
-2025-05-28 11:23:11.563 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:11.563 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:11.931 DEBUG:   "用户模式下按键: T (VK: 0x54), m_userModeActive: 1"
-2025-05-28 11:23:11.931 DEBUG:   "用户模式下按键 T 未被任何规则拦截。"
-2025-05-28 11:23:12.150 DEBUG:   "用户模式下按键: A (VK: 0x41), m_userModeActive: 1"
-2025-05-28 11:23:12.150 DEBUG:   "用户模式下按键 A 未被任何规则拦截。"
-2025-05-28 11:23:12.263 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:12.263 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:12.399 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:12.399 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:13.163 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:23:13.163 DEBUG:   "用户模式下按键: 0X28 (VK: 0x28), m_userModeActive: 1"
-2025-05-28 11:23:13.163 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x28"
-2025-05-28 11:23:13.163 DEBUG:   "用户模式下按键 0X28 未被任何规则拦截。"
-2025-05-28 11:23:13.475 DEBUG:   "用户模式下按键: VK_RETURN (VK: 0x0d), m_userModeActive: 1"
-2025-05-28 11:23:13.475 DEBUG:   "用户模式下按键 VK_RETURN 未被任何规则拦截。"
-2025-05-28 11:23:17.367 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:17.367 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:17.527 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:17.527 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:17.655 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:23:17.655 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:23:18.003 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:23:18.003 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:23:18.003 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:23:18.003 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:23:18.187 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:23:18.187 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:23:18.187 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:23:18.187 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:23:18.354 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:23:18.354 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:23:18.354 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:23:18.354 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:23:18.523 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:23:18.523 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:23:18.739 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:18.739 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:18.895 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:18.895 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:19.119 DEBUG:   "用户模式下按键: VK_SPACE (VK: 0x20), m_userModeActive: 1"
-2025-05-28 11:23:19.119 DEBUG:   "用户模式下按键 VK_SPACE 未被任何规则拦截。"
-2025-05-28 11:23:19.319 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:19.319 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:23:19.319 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:19.319 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:23:19.479 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:19.479 DEBUG:   "用户模式下按键: 0XBD (VK: 0xbd), m_userModeActive: 1"
-2025-05-28 11:23:19.479 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0xBD"
-2025-05-28 11:23:19.479 DEBUG:   "用户模式下按键 0XBD 未被任何规则拦截。"
-2025-05-28 11:23:19.803 DEBUG:   "用户模式下按键: I (VK: 0x49), m_userModeActive: 1"
-2025-05-28 11:23:19.803 DEBUG:   "用户模式下按键 I 未被任何规则拦截。"
-2025-05-28 11:23:20.007 DEBUG:   "用户模式下按键: N (VK: 0x4e), m_userModeActive: 1"
-2025-05-28 11:23:20.007 DEBUG:   "用户模式下按键 N 未被任何规则拦截。"
-2025-05-28 11:23:20.155 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:20.155 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:20.503 DEBUG:   "用户模式下按键: A (VK: 0x41), m_userModeActive: 1"
-2025-05-28 11:23:20.503 DEBUG:   "用户模式下按键 A 未被任何规则拦截。"
-2025-05-28 11:23:21.215 DEBUG:   "用户模式下按键: VK_ESCAPE (VK: 0x1b), m_userModeActive: 1"
-2025-05-28 11:23:21.215 DEBUG:   "用户模式下按键 VK_ESCAPE 未被任何规则拦截。"
-2025-05-28 11:23:24.547 DEBUG:   "用户模式下按键: U (VK: 0x55), m_userModeActive: 1"
-2025-05-28 11:23:24.547 DEBUG:   "用户模式下按键 U 未被任何规则拦截。"
-2025-05-28 11:23:53.455 DEBUG:   "用户模式下按键: W (VK: 0x57), m_userModeActive: 1"
-2025-05-28 11:23:53.455 DEBUG:   "用户模式下按键 W 未被任何规则拦截。"
-2025-05-28 11:23:53.578 DEBUG:   "用户模式下按键: S (VK: 0x53), m_userModeActive: 1"
-2025-05-28 11:23:53.578 DEBUG:   "用户模式下按键 S 未被任何规则拦截。"
-2025-05-28 11:23:53.802 DEBUG:   "用户模式下按键: L (VK: 0x4c), m_userModeActive: 1"
-2025-05-28 11:23:53.802 DEBUG:   "用户模式下按键 L 未被任何规则拦截。"
-2025-05-28 11:23:54.006 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-28 11:23:54.006 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-28 11:24:00.867 DEBUG:   "用户模式下按键: U (VK: 0x55), m_userModeActive: 1"
-2025-05-28 11:24:00.868 DEBUG:   "用户模式下按键 U 未被任何规则拦截。"
-2025-05-28 11:24:01.020 DEBUG:   "用户模式下按键: B (VK: 0x42), m_userModeActive: 1"
-2025-05-28 11:24:01.020 DEBUG:   "用户模式下按键 B 未被任何规则拦截。"
-2025-05-28 11:24:01.644 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
-2025-05-28 11:24:01.644 DEBUG:   "用户模式下按键 VK_LSHIFT 未被任何规则拦截。"
-2025-05-28 11:24:06.447 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:24:06.447 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:24:06.447 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:24:06.447 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:24:09.952 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:24:09.952 DEBUG:   "用户模式下按键: 0X08 (VK: 0x08), m_userModeActive: 1"
-2025-05-28 11:24:09.952 WARNING: "SystemInteractionModule::vkCodeToString - No string representation found in VK_CODE_MAP for vkCode: 0x8"
-2025-05-28 11:24:09.952 DEBUG:   "用户模式下按键 0X08 未被任何规则拦截。"
-2025-05-28 11:25:17.431 DEBUG:   Application finished with exit code: 0
---- Log finished at 2025-05-28 11:25:17 ---
-2025-05-28 11:25:17.431 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已销毁。
-2025-05-28 11:25:17.432 DEBUG:   键盘钩子: 卸载成功。
-2025-05-28 11:25:17.432 DEBUG:   [SystemInteractionModule] SystemInteractionModule destroyed.
-2025-05-28 11:25:17.432 DEBUG:   管理员仪表盘(AdminDashboardView): 已销毁。
-2025-05-28 11:25:17.432 DEBUG:   用户视图(UserView): 已销毁。
-2025-05-28 11:25:17.434 DEBUG:   管理员模块(AdminModule): 销毁。
-2025-05-28 11:25:17.434 INFO:    UserModeModule destroyed.
+--- Log started at 2025-05-29 09:19:22 ---
+2025-05-29 09:19:22.851 DEBUG:   Application started.
+2025-05-29 09:19:22.851 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数开始。
+2025-05-29 09:19:22.851 DEBUG:   剑鞘核心(JianqiaoCoreShell): 初始化核心应用设置。
+2025-05-29 09:19:22.851 DEBUG:   SystemInteractionModule: Config path set to: "C:\\Users\\13027\\AppData\\Roaming\\雪鸮团队\\剑鞘系统/../JianqiaoSystem/config.json"
+2025-05-29 09:19:22.851 DEBUG:   SystemInteractionModule (loadConfiguration): Attempting to load config from: "C:\\Users\\13027\\AppData\\Roaming\\雪鸮团队\\剑鞘系统/../JianqiaoSystem/config.json"
+2025-05-29 09:19:22.852 DEBUG:   管理员登录热键已从配置文件加载: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的独立按键已从配置文件加载: "VK_RWIN, VK_LWIN"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_MENU + VK_TAB"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_CONTROL + VK_SHIFT + VK_ESCAPE"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + D"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + L"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + VK_TAB"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_CONTROL + VK_ESCAPE"
+2025-05-29 09:19:22.852 WARNING: 配置文件中无效的拦截组合键中的键名: "VK_F4"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_MENU"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + S"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + A"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + N"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + VK_SHIFT + S"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + E"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + R"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + I"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + X"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + P"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_LWIN + K"
+2025-05-29 09:19:22.852 DEBUG:   用户模式下需拦截的组合键已加载: "VK_CONTROL + VK_MENU + VK_DELETE"
+2025-05-29 09:19:22.852 DEBUG:   系统交互模块(SystemInteractionModule): 已创建。
+2025-05-29 09:19:22.852 DEBUG:   [SystemInteractionModule] 探测等待时间(ms): 10000
+2025-05-29 09:19:22.852 DEBUG:   剑鞘核心(JianqiaoCoreShell): 底层系统交互模块已实例化。
+2025-05-29 09:19:22.852 DEBUG:   用户视图(UserView): 已创建。
+2025-05-29 09:19:22.868 DEBUG:   UserView: Background image set to ":/images/user_bg.jpg"
+2025-05-29 09:19:22.868 DEBUG:   管理员仪表盘(AdminDashboardView): 已创建。
+2025-05-29 09:19:22.875 DEBUG:   剑鞘核心外壳: UI设置完成 (QStackedWidget), 视图实例已创建。
+2025-05-29 09:19:22.875 DEBUG:   管理员登录视图(AdminLoginView): 成功加载 AdminLoginView.qss
+2025-05-29 09:19:22.875 DEBUG:   管理员登录视图(AdminLoginView): 已创建。
+2025-05-29 09:19:22.875 DEBUG:   管理员模块(AdminModule): 构造函数开始。
+2025-05-29 09:19:22.875 DEBUG:   管理员模块(AdminModule): 尝试从以下路径加载配置文件: "C:\\Users\\13027\\AppData\\Roaming\\雪鸮团队\\剑鞘系统/../JianqiaoSystem/config.json"
+2025-05-29 09:19:22.875 DEBUG:   管理员模块(AdminModule): 已加载管理员密码哈希。
+2025-05-29 09:19:22.875 DEBUG:   管理员模块(AdminModule): 已加载管理员登录热键: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-29 09:19:22.875 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
+2025-05-29 09:19:22.876 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
+2025-05-29 09:19:22.968 DEBUG:   [SIM::getIcon] Got large pixmap from QFileIconProvider, size: QSize(256, 256)
+2025-05-29 09:19:22.968 DEBUG:   管理员模块(AdminModule): 已加载白名单应用: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: ""
+2025-05-29 09:19:22.968 DEBUG:     with WindowHints: "{\"allowNonTopLevel\":true,\"minScore\":50,\"primaryClassName\":\"OpusApp\",\"titleContains\":\"WPS Office\"}"
+2025-05-29 09:19:22.968 DEBUG:   管理员模块(AdminModule): 共加载 1 个白名单应用。
+2025-05-29 09:19:22.968 DEBUG:   管理员模块(AdminModule): 准备填充管理员仪表盘数据。
+2025-05-29 09:19:22.968 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-29 09:19:22.968 DEBUG:   AdminDashboardView::setWhitelistedApps called with 1 apps.
+2025-05-29 09:19:22.969 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-29 09:19:22.969 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-29 09:19:22.969 DEBUG:   管理员模块(AdminModule): 配置文件加载完成。
+2025-05-29 09:19:22.969 DEBUG:   管理员模块(AdminModule): 构造函数结束。
+2025-05-29 09:19:22.969 DEBUG:   UserModeModule::loadConfiguration - Loaded app: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Hint: ""
+2025-05-29 09:19:22.969 DEBUG:   [SIM::getIcon] Attempting to get icon for: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe"
+2025-05-29 09:19:22.969 DEBUG:   [SIM::getIcon] QFileIconProvider.icon(fileInfo) called.
+2025-05-29 09:19:22.971 DEBUG:   [SIM::getIcon] Got large pixmap from QFileIconProvider, size: QSize(256, 256)
+2025-05-29 09:19:22.971 INFO:    Configuration loaded, 1 apps in whitelist.
+2025-05-29 09:19:22.971 INFO:    UserModeModule initialized and connected to UserView (app launch request and app list update).
+2025-05-29 09:19:22.971 DEBUG:   键盘钩子: 安装成功。
+2025-05-29 09:19:22.971 DEBUG:   钩子安装，句柄: 985687
+2025-05-29 09:19:22.971 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 SystemInteractionModule::adminLoginRequested 信号。
+2025-05-29 09:19:22.971 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。
+2025-05-29 09:19:22.971 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到用户模式视图.
+2025-05-29 09:19:22.971 DEBUG:   JianqiaoCoreShell: Fetched 1 apps from AdminModule's current state for UserModeModule.
+2025-05-29 09:19:22.971 DEBUG:   UserModeModule::updateUserAppList - Updating apps from provided list. Count: 1
+2025-05-29 09:19:22.971 DEBUG:   UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.
+2025-05-29 09:19:22.971 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: true
+2025-05-29 09:19:22.971 DEBUG:   剑鞘核心(JianqiaoCoreShell): UserView is now current widget.
+2025-05-29 09:19:22.971 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已切换到用户模式.
+2025-05-29 09:19:22.971 DEBUG:   剑鞘核心(JianqiaoCoreShell): 用户视图已显示 (初始状态)。
+2025-05-29 09:19:22.971 DEBUG:   剑鞘核心(JianqiaoCoreShell): 构造函数结束。
+2025-05-29 09:19:22.975 DEBUG:   UserView::populateAppList - Received 1 apps. Clearing existing cards.
+2025-05-29 09:19:22.975 DEBUG:     App: "WPS" Path: "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe" Icon isNull: false
+2025-05-29 09:19:25.461 DEBUG:   "用户模式下按键: VK_LCONTROL (VK: 0xa2), m_userModeActive: 1"
+2025-05-29 09:19:25.521 DEBUG:   "用户模式下按键: VK_LSHIFT (VK: 0xa0), m_userModeActive: 1"
+2025-05-29 09:19:25.641 DEBUG:   "用户模式下按键: VK_LMENU (VK: 0xa4), m_userModeActive: 1"
+2025-05-29 09:19:25.769 DEBUG:   系统交互模块(LowLevelKeyboardProc): 管理员登录热键组合被按下。
+2025-05-29 09:19:25.769 DEBUG:   剑鞘核心(JianqiaoCoreShell): 接收到管理员登录请求。
+2025-05-29 09:19:25.769 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModePendingLogin.
+2025-05-29 09:19:25.769 DEBUG:   系统交互模块(SystemInteractionModule): 设置用户模式状态为: false
+2025-05-29 09:19:25.769 DEBUG:   管理员模块(AdminModule): 请求显示管理员登录视图。
+2025-05-29 09:19:25.769 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-29 09:19:25.771 DEBUG:   管理员登录视图(AdminLoginView): 显示事件触发，尝试居中。
+2025-05-29 09:19:25.775 DEBUG:   管理员模块(AdminModule): 管理员登录视图已显示。
+2025-05-29 09:19:25.775 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录视图已请求显示。
+2025-05-29 09:19:29.281 DEBUG:   管理员登录视图(AdminLoginView): '登录'按钮被点击。
+2025-05-29 09:19:29.281 DEBUG:   管理员模块(AdminModule): 收到登录尝试。
+2025-05-29 09:19:29.281 DEBUG:   管理员模块(AdminModule): 验证密码 - 成功
+2025-05-29 09:19:29.281 DEBUG:   管理员模块(AdminModule): 密码验证成功。
+2025-05-29 09:19:29.281 DEBUG:   管理员登录视图(AdminLoginView): 登录成功，UI已更新。
+2025-05-29 09:19:29.281 DEBUG:   管理员登录视图(AdminLoginView): UI已重置为初始状态。
+2025-05-29 09:19:29.285 DEBUG:   管理员登录视图(AdminLoginView): hideEvent triggered.
+2025-05-29 09:19:29.285 DEBUG:   管理员模块(AdminModule): 登录视图已隐藏。
+2025-05-29 09:19:29.285 DEBUG:   管理员模块(AdminModule): 登录视图隐藏，且管理员仪表盘视图也不可见。
+2025-05-29 09:19:29.285 DEBUG:   剑鞘核心(JianqiaoCoreShell): 管理员登录成功并处于活动状态。
+2025-05-29 09:19:29.285 DEBUG:   剑鞘核心(JianqiaoCoreShell): 系统模式设置为 AdminModeActive.
+2025-05-29 09:19:29.285 DEBUG:   管理员模块(AdminModule): prepareAdminDashboardData() 调用。
+2025-05-29 09:19:29.285 DEBUG:   AdminDashboardView::setWhitelistedApps called with 1 apps.
+2025-05-29 09:19:29.285 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-29 09:19:29.285 DEBUG:   管理员模块(AdminModule): 管理员仪表盘视图数据已准备就绪。
+2025-05-29 09:19:29.285 DEBUG:   JianqiaoCoreShell::switchToAdminDashboard() EXECUTED.
+2025-05-29 09:19:29.285 DEBUG:   剑鞘核心(JianqiaoCoreShell): 切换到管理员仪表盘。
+2025-05-29 09:19:29.285 DEBUG:   AdminDashboardView::setWhitelistedApps called with 1 apps.
+2025-05-29 09:19:29.285 DEBUG:   AdminDashboardView: Current admin hotkey display updated to: "VK_SHIFT + VK_CONTROL + VK_MENU + A"
+2025-05-29 09:19:29.285 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboardView data populated.
+2025-05-29 09:19:29.287 DEBUG:   剑鞘核心(JianqiaoCoreShell): AdminDashboard is now current widget. StackedWidget Geometry: QRect(0,0 1707x1067)
+2025-05-29 09:19:33.410 DEBUG:   AdminDashboardView::onRemoveAppClicked INVOKED.
+2025-05-29 09:19:33.410 DEBUG:   AdminDashboardView: Remove App button clicked.
+2025-05-29 09:19:33.410 DEBUG:   AdminDashboardView: Emitting whitelistChanged with 0 apps.
+2025-05-29 09:19:33.410 DEBUG:   [AdminModule] onWhitelistUpdated CALLED. Received 0 apps.
+2025-05-29 09:19:33.411 DEBUG:   [AdminModule::saveWhitelistToConfig] Attempting to save 0 apps to: "C:\\Users\\13027\\AppData\\Roaming\\雪鸮团队\\剑鞘系统/../JianqiaoSystem/config.json"
+2025-05-29 09:19:33.411 DEBUG:   管理员模块(AdminModule): 0 个应用已序列化到JSON。
+2025-05-29 09:19:33.411 DEBUG:   管理员模块(AdminModule): 白名单已成功写入并通过 configFile.close()。
+2025-05-29 09:19:33.411 DEBUG:   [AdminModule::saveWhitelistToConfig] Verification: Successfully re-opened config file for reading.
+2025-05-29 09:19:33.411 DEBUG:   [AdminModule::saveWhitelistToConfig] Verification: Content after save:
+ "{\n    \"admin_password\": \"240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9\",\n    \"admin_password_hash\": \"240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9\",\n    \"detection_wait_ms\": 10000,\n    \"shortcuts\": {\n        \"admin_login\": {\n            \"key_sequence\": [\n                \"VK_SHIFT\",\n                \"VK_CONTROL\",\n                \"VK_MENU\",\n                \"A\"\n            ]\n        }\n    },\n    \"user_mode_settings\": {\n        \"blocked_key_combinations\": [\n            [\n                \"VK_MENU\",\n                \"VK_TAB\"\n            ],\n            [\n                \"VK_CONTROL\",\n                \"VK_SHIFT\",\n                \"VK_ESCAPE\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"D\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"L\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"VK_TAB\"\n            ],\n            [\n                \"VK_CONTROL\",\n                \"VK_ESCAPE\"\n            ],\n            [\n                \"VK_MENU\",\n                \"VK_F4\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"S\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"A\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"N\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"VK_SHIFT\",\n                \"S\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"E\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"R\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"I\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"X\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"P\"\n            ],\n            [\n                \"VK_LWIN\",\n                \"K\"\n            ],\n            [\n                \"VK_CONTROL\",\n                \"VK_MENU\",\n                \"VK_DELETE\"\n            ]\n        ],\n        \"blocked_keys\": [\n            \"VK_LWIN\",\n            \"VK_RWIN\"\n        ]\n    },\n    \"whitelist_apps\": [\n    ]\n}\n"
+2025-05-29 09:19:33.411 DEBUG:   管理员模块(AdminModule): 更新后的白名单已成功保存到 config.json。
+2025-05-29 09:19:37.314 DEBUG:   AdminDashboardView::onExitApplicationClicked INVOKED.
+2025-05-29 09:19:37.314 DEBUG:   管理员仪表盘(AdminDashboardView): '退出整个程序' 按钮被点击。应用程序将退出。
+2025-05-29 09:19:37.314 DEBUG:   尝试卸载钩子，当前句柄: 985687
+2025-05-29 09:19:37.314 DEBUG:   键盘钩子: 卸载成功。
+2025-05-29 09:19:37.322 DEBUG:   Application finished with exit code: 0
+--- Log finished at 2025-05-29 09:19:37 ---
+2025-05-29 09:19:37.323 DEBUG:   剑鞘核心(JianqiaoCoreShell): 已销毁。
+2025-05-29 09:19:37.323 DEBUG:   尝试卸载钩子，当前句柄: 0
+2025-05-29 09:19:37.323 DEBUG:   键盘钩子: 无需卸载，当前未安装钩子。
+2025-05-29 09:19:37.323 DEBUG:   [SystemInteractionModule] SystemInteractionModule destroyed.
+2025-05-29 09:19:37.323 DEBUG:   用户视图(UserView): 已销毁。
+2025-05-29 09:19:37.324 DEBUG:   管理员仪表盘(AdminDashboardView): 已销毁。
+2025-05-29 09:19:37.325 DEBUG:   管理员登录视图(AdminLoginView): 已销毁。
+2025-05-29 09:19:37.327 DEBUG:   管理员模块(AdminModule): 销毁。
+2025-05-29 09:19:37.327 INFO:    UserModeModule destroyed.

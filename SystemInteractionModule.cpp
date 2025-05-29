@@ -95,9 +95,66 @@ QMap<QString, DWORD> SystemInteractionModule::initializeVkCodeMap() {
         map.insert(QString(c), c);
     }
     // Function keys
-    for (int i = 1; i <= 12; ++i) {
+    for (int i = 1; i <= 24; ++i) {
         map.insert(QString("F%1").arg(i), VK_F1 + (i - 1));
     }
+    // 编辑/导航键
+    map.insert("VK_DELETE", VK_DELETE);
+    map.insert("VK_INSERT", VK_INSERT);
+    map.insert("VK_HOME", VK_HOME);
+    map.insert("VK_END", VK_END);
+    map.insert("VK_PRIOR", VK_PRIOR);   // Page Up
+    map.insert("VK_NEXT", VK_NEXT);     // Page Down
+    map.insert("VK_BACK", VK_BACK);     // Backspace
+    map.insert("VK_ESCAPE", VK_ESCAPE); // Esc
+    map.insert("VK_RETURN", VK_RETURN); // Enter
+    map.insert("VK_TAB", VK_TAB);       // Tab
+    map.insert("VK_SPACE", VK_SPACE);   // Space
+    // 方向键
+    map.insert("VK_LEFT", VK_LEFT);
+    map.insert("VK_UP", VK_UP);
+    map.insert("VK_RIGHT", VK_RIGHT);
+    map.insert("VK_DOWN", VK_DOWN);
+    // 锁定键
+    map.insert("VK_CAPITAL", VK_CAPITAL);   // Caps Lock
+    map.insert("VK_NUMLOCK", VK_NUMLOCK);   // Num Lock
+    map.insert("VK_SCROLL", VK_SCROLL);     // Scroll Lock
+    // 小键盘
+    map.insert("VK_NUMPAD0", VK_NUMPAD0);
+    map.insert("VK_NUMPAD1", VK_NUMPAD1);
+    map.insert("VK_NUMPAD2", VK_NUMPAD2);
+    map.insert("VK_NUMPAD3", VK_NUMPAD3);
+    map.insert("VK_NUMPAD4", VK_NUMPAD4);
+    map.insert("VK_NUMPAD5", VK_NUMPAD5);
+    map.insert("VK_NUMPAD6", VK_NUMPAD6);
+    map.insert("VK_NUMPAD7", VK_NUMPAD7);
+    map.insert("VK_NUMPAD8", VK_NUMPAD8);
+    map.insert("VK_NUMPAD9", VK_NUMPAD9);
+    map.insert("VK_MULTIPLY", VK_MULTIPLY);
+    map.insert("VK_ADD", VK_ADD);
+    map.insert("VK_SEPARATOR", VK_SEPARATOR);
+    map.insert("VK_SUBTRACT", VK_SUBTRACT);
+    map.insert("VK_DECIMAL", VK_DECIMAL);
+    map.insert("VK_DIVIDE", VK_DIVIDE);
+    // OEM 键（常见符号键）
+    map.insert("VK_OEM_1", VK_OEM_1);
+    map.insert("VK_OEM_PLUS", VK_OEM_PLUS);
+    map.insert("VK_OEM_COMMA", VK_OEM_COMMA);
+    map.insert("VK_OEM_MINUS", VK_OEM_MINUS);
+    map.insert("VK_OEM_PERIOD", VK_OEM_PERIOD);
+    map.insert("VK_OEM_2", VK_OEM_2);
+    map.insert("VK_OEM_3", VK_OEM_3);
+    map.insert("VK_OEM_4", VK_OEM_4);
+    map.insert("VK_OEM_5", VK_OEM_5);
+    map.insert("VK_OEM_6", VK_OEM_6);
+    map.insert("VK_OEM_7", VK_OEM_7);
+    // 其它常用
+    map.insert("VK_PAUSE", VK_PAUSE);
+    map.insert("VK_SNAPSHOT", VK_SNAPSHOT); // PrintScreen
+    map.insert("VK_APPS", VK_APPS);         // 菜单键
+    map.insert("VK_SLEEP", VK_SLEEP);
+    // Windows specific keys from config
+    map.insert("VK_LWIN", VK_LWIN);         // Left Windows key
     // Add other common keys as needed
     map.insert("VK_RETURN", VK_RETURN);     // Enter
     map.insert("VK_ESCAPE", VK_ESCAPE);   // Esc
@@ -117,6 +174,18 @@ QMap<QString, DWORD> SystemInteractionModule::initializeVkCodeMap() {
 
 DWORD SystemInteractionModule::stringToVkCode(const QString& keyString) {
     return VK_CODE_MAP.value(keyString.toUpper(), 0); // Return 0 if not found
+}
+
+// 新增：辅助函数，将VK Code列表转换为字符串，用于日志
+QString SystemInteractionModule::vkCodesToString(const QList<DWORD>& codes) const {
+    QStringList names;
+    for (DWORD code : codes) {
+        names.append(vkCodeToString(code)); // 复用现有的 vkCodeToString
+    }
+    if (names.isEmpty()) {
+        return "[空组合]";
+    }
+    return names.join(" + ");
 }
 
 SystemInteractionModule::SystemInteractionModule(QObject *parent)
@@ -140,7 +209,7 @@ SystemInteractionModule::SystemInteractionModule(QObject *parent)
             configDir = QCoreApplication::applicationDirPath(); // Fallback if creation fails
         }
     }
-    m_configPath = configDir + "/config.json"; // Store for potential future use, though loadConfiguration also calculates it
+    m_configPath = SystemInteractionModule::getConfigFilePath(); // Store for potential future use, though loadConfiguration also calculates it
     qDebug() << "SystemInteractionModule: Config path set to:" << m_configPath;
 
     if (!loadConfiguration()) {
@@ -203,7 +272,7 @@ bool SystemInteractionModule::loadConfiguration() {
         // For robustness if SIM is somehow initialized first or AdminModule fails to create dir:
         // configDir = QCoreApplication::applicationDirPath(); // Or just proceed and let file open fail for defaults
     }
-    QString configPath = configDir + "/config.json";
+    QString configPath = SystemInteractionModule::getConfigFilePath();
     qDebug() << "SystemInteractionModule (loadConfiguration): Attempting to load config from:" << configPath;
 
     QFile configFile(configPath);
@@ -297,8 +366,42 @@ bool SystemInteractionModule::loadConfiguration() {
         } else {
             qDebug() << "配置文件中未找到 'user_mode_settings.blocked_keys' 或格式不正确。不拦截用户模式按键。";
         }
+
+        // 新增：加载用户模式下拦截的组合键
+        if (userSettingsObj.contains("blocked_key_combinations") && userSettingsObj["blocked_key_combinations"].isArray()) {
+            QJsonArray blockedCombosArray = userSettingsObj["blocked_key_combinations"].toArray();
+            m_userModeBlockedKeyCombinations.clear(); // 清空旧的组合键配置
+            for (const QJsonValue& comboVal : blockedCombosArray) {
+                if (comboVal.isArray()) {
+                    QJsonArray comboArray = comboVal.toArray();
+                    QList<DWORD> currentComboVkCodes;
+                    QStringList currentComboNames; // 用于日志
+                    for (const QJsonValue& keyVal : comboArray) {
+                        if (keyVal.isString()) {
+                            DWORD vkCode = stringToVkCode(keyVal.toString());
+                            if (vkCode != 0) {
+                                currentComboVkCodes.append(vkCode);
+                                currentComboNames.append(keyVal.toString());
+                            } else {
+                                qWarning() << "配置文件中无效的拦截组合键中的键名:" << keyVal.toString();
+                            }
+                        }
+                    }
+                    if (!currentComboVkCodes.isEmpty()) {
+                        m_userModeBlockedKeyCombinations.append(currentComboVkCodes);
+                        qDebug() << "用户模式下需拦截的组合键已加载:" << currentComboNames.join(" + ");
+                    }
+                }
+            }
+            if (!m_userModeBlockedKeyCombinations.isEmpty()) {
+                // blockedKeysLoaded = true; // 可以考虑组合键是否也影响此标记，或者有单独的标记
+            }
+        } else {
+            qDebug() << "配置文件中未找到 'user_mode_settings.blocked_key_combinations' 或格式不正确。不拦截组合键。";
+        }
+
     } else {
-        qDebug() << "配置文件中未找到 'user_mode_settings'。不拦截用户模式按键。";
+        qDebug() << "配置文件中未找到 'user_mode_settings'。不拦截用户模式按键或组合键。";
     }
 
     return hotkeyLoaded; // Return true if at least admin hotkey was loaded successfully or defaulted.
@@ -398,51 +501,57 @@ LRESULT CALLBACK SystemInteractionModule::LowLevelKeyboardProc(int nCode, WPARAM
 
                 // 1. Block individual keys
                 if (instance_->m_userModeBlockedVkCodes.contains(vkCode)) {
-                    // Before blocking, ensure this key is NOT part of a currently forming admin login hotkey
-                    // This is a simple check: if the blocked key is in the admin hotkey, and other admin hotkey modifiers are also pressed,
-                    // then don't block it yet, let the admin hotkey logic decide.
-                    // This prevents blocking 'L' if 'Ctrl+Shift+Alt+L' is the admin hotkey.
-                    bool partOfAdminHotkeyInProgress = false;
-                    if (instance_->m_adminLoginHotkey.contains(vkCode)) {
-                        int matchingAdminModifiers = 0;
-                        for (DWORD adminKey : instance_->m_adminLoginHotkey) {
-                            if (adminKey != vkCode && instance_->m_pressedKeys.contains(adminKey)) {
-                                // Check if it's a modifier-like key
-                                if (adminKey == VK_LCONTROL || adminKey == VK_RCONTROL || adminKey == VK_CONTROL || 
-                                    adminKey == VK_LSHIFT  || adminKey == VK_RSHIFT  || adminKey == VK_SHIFT || 
-                                    adminKey == VK_LMENU   || adminKey == VK_RMENU   || adminKey == VK_MENU) {
-                                    matchingAdminModifiers++;
+                    qDebug() << QString("用户模式下拦截单个按键: %1 (VK: 0x%2)")
+                                .arg(instance_->vkCodeToString(vkCode))
+                                .arg(vkCode, 2, 16, QChar('0'));
+                    return 1; // Eat the key press
+                }
+
+                // 2. 拦截组合键 (新增逻辑)
+                if (!instance_->m_userModeBlockedKeyCombinations.isEmpty()) {
+                    for (const QList<DWORD>& comboToBlock : instance_->m_userModeBlockedKeyCombinations) {
+                        if (comboToBlock.isEmpty() || !comboToBlock.contains(vkCode)) {
+                            // 如果组合是空的，或者当前按键不是这个组合的一部分，则跳过此组合
+                            continue;
+                        }
+
+                        // 检查是否所有组合键都已按下，并且不多不少
+                        bool allComboKeysCurrentlyPressed = true;
+                        if (instance_->m_pressedKeys.size() != comboToBlock.size()) {
+                            allComboKeysCurrentlyPressed = false;
+                        } else {
+                            for (DWORD requiredKeyInCombo : comboToBlock) {
+                                bool keyFoundInPressed = instance_->m_pressedKeys.contains(requiredKeyInCombo);
+                                
+                                // 处理通用修饰符 (例如，配置为 VK_CONTROL，用户按下 VK_LCONTROL)
+                                if (!keyFoundInPressed) {
+                                    if (requiredKeyInCombo == VK_CONTROL && 
+                                        (instance_->m_pressedKeys.contains(VK_LCONTROL) || instance_->m_pressedKeys.contains(VK_RCONTROL))) {
+                                        keyFoundInPressed = true;
+                                    } else if (requiredKeyInCombo == VK_SHIFT && 
+                                               (instance_->m_pressedKeys.contains(VK_LSHIFT) || instance_->m_pressedKeys.contains(VK_RSHIFT))) {
+                                        keyFoundInPressed = true;
+                                    } else if (requiredKeyInCombo == VK_MENU && 
+                                               (instance_->m_pressedKeys.contains(VK_LMENU) || instance_->m_pressedKeys.contains(VK_RMENU))) {
+                                        keyFoundInPressed = true;
+                                    }
+                                }
+                                if (!keyFoundInPressed) {
+                                    allComboKeysCurrentlyPressed = false;
+                                    break;
                                 }
                             }
                         }
-                        // If all *other* keys in adminLoginHotkey are modifiers and are pressed, consider it in progress
-                        // This is a heuristic. A more robust way would be to check if all *modifier* components of the admin hotkey are pressed.
-                        if (matchingAdminModifiers >= (instance_->m_adminLoginHotkey.count() -1) && instance_->m_adminLoginHotkey.count() > 1) {
-                             partOfAdminHotkeyInProgress = true;
+
+                        if (allComboKeysCurrentlyPressed) {
+                            qDebug() << QString("用户模式下拦截组合键: %1 (触发键: %2 - 0x%3)")
+                                        .arg(instance_->vkCodesToString(comboToBlock))
+                                        .arg(instance_->vkCodeToString(vkCode))
+                                        .arg(vkCode, 2, 16, QChar('0'));
+                            return 1; // 吃掉消息，阻止组合键生效
                         }
                     }
-
-                    if (!partOfAdminHotkeyInProgress) {
-                        qDebug() << "系统交互模块(LowLevelKeyboardProc): 用户模式下，拦截按键:" << vkCode;
-                        return 1; // Block it
-                    }
                 }
-
-                // 2. Block Alt+Tab
-                bool altPressed = instance_->m_pressedKeys.contains(VK_LMENU) || instance_->m_pressedKeys.contains(VK_RMENU) || instance_->m_pressedKeys.contains(VK_MENU);
-                if (altPressed && vkCode == VK_TAB) {
-                     qDebug() << "系统交互模块(LowLevelKeyboardProc): 在用户模式下拦截 Alt+Tab.";
-                     return 1; // Block Alt+Tab
-                }
-
-                // 3. Block Ctrl+Esc
-                bool ctrlPressed = instance_->m_pressedKeys.contains(VK_LCONTROL) || instance_->m_pressedKeys.contains(VK_RCONTROL) || instance_->m_pressedKeys.contains(VK_CONTROL);
-                if (ctrlPressed && vkCode == VK_ESCAPE) {
-                     qDebug() << "系统交互模块(LowLevelKeyboardProc): 在用户模式下拦截 Ctrl+Esc.";
-                     return 1; // Block Ctrl+Esc
-                }
-                
-                qDebug() << QString("用户模式下按键 %1 未被任何规则拦截。").arg(instance_->vkCodeToString(vkCode));
             }
         }
     }
@@ -480,11 +589,13 @@ bool SystemInteractionModule::installKeyboardHook()
     }
 
     qDebug() << "键盘钩子: 安装成功。";
+    qDebug() << "钩子安装，句柄:" << (quintptr)keyboardHook_;
     return true;
 }
 
 void SystemInteractionModule::uninstallKeyboardHook()
 {
+    qDebug() << "尝试卸载钩子，当前句柄:" << (quintptr)keyboardHook_;
     if (keyboardHook_ != NULL)
     {
         if (UnhookWindowsHookEx(keyboardHook_))
@@ -1545,3 +1656,10 @@ void SystemInteractionModule::stopMonitoringProcess(const QString& appPath) {
 }
 
 // ... (rest of the SystemInteractionModule.cpp file) ... 
+
+// 静态函数：统一获取配置文件路径
+QString SystemInteractionModule::getConfigFilePath() {
+    QString configDir = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)) + "/../JianqiaoSystem";
+    QDir().mkpath(configDir); // 确保目录存在
+    return configDir + "/config.json";
+}

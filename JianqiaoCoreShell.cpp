@@ -61,6 +61,8 @@ void JianqiaoCoreShell::setupUi()
         qCritical() << "JianqiaoCoreShell::setupUi - m_systemInteractionModule is null before creating AdminDashboardView!";
     }
     m_adminDashboardInstance = new AdminDashboardView(m_systemInteractionModule, this);
+    m_adminDashboardInstance->setSystemInteractionModulePtr(m_systemInteractionModule);
+    m_adminDashboardInstance->setUserModeModule(m_userModeModule);
 
     m_mainStackedWidget->addWidget(m_userViewInstance);
     m_mainStackedWidget->addWidget(m_adminDashboardInstance);
@@ -257,6 +259,6 @@ void JianqiaoCoreShell::onAdminRequestsExitAdminMode() {
     switchToUserModeView(); // Centralized method to switch to user mode
 }
 
-void JianqiaoCoreShell::onAdminLoginSuccessful() {
-    // ... existing code ...
-} 
+// void JianqiaoCoreShell::onAdminLoginSuccessful() {
+//     // ... 已废弃的槽函数 ...
+// } 
