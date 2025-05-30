@@ -10,6 +10,9 @@
 #include <QTimer>       // For launch timers
 #include <QResizeEvent> // For resizeEvent
 #include <QPixmap>      // For QPixmap usage
+#include "AppStatusBar.h"
+#include "AppStatusModel.h"
+#include "SystemInteractionModule.h"
 
 // 新建自定义Dock背景Frame
 // class DockBackgroundFrame : public QFrame {
@@ -98,8 +101,26 @@ void UserView::setupUi() {
     m_mainLayout->addLayout(centeringLayout);
     m_mainLayout->addStretch(1); // 在dock下方加弹性，推到顶部
 
-    setLayout(m_mainLayout);
+    // ========== 新增：应用状态栏控件 ========== //
+    m_statusModel = new AppStatusModel(this);
+    m_statusBar = new AppStatusBar(this);
+    m_statusBar->setModel(m_statusModel);
+    m_mainLayout->addWidget(m_statusBar); // 添加到底部
 
+    // ========== 新增：定时刷新逻辑 ========== //
+    m_statusRefreshTimer = new QTimer(this);
+    m_statusRefreshTimer->setInterval(1000); // 每秒刷新
+    connect(m_statusRefreshTimer, &QTimer::timeout, this, [this]() {
+        // 这里假设有全局SystemInteractionModule指针systemInteractionModule和白名单列表m_currentApps
+        extern SystemInteractionModule* systemInteractionModule; // 需在主程序中定义
+        if (systemInteractionModule) {
+            QList<AppStatus> statusList = systemInteractionModule->getAllAppStatus(m_currentApps);
+            m_statusModel->updateStatus(statusList);
+        }
+    });
+    m_statusRefreshTimer->start();
+
+    setLayout(m_mainLayout);
     this->setObjectName("userView");
     this->setStyleSheet("QWidget#userView { background-image: url(:/images/user_bg.jpg); background-repeat: no-repeat; background-position: center; background-attachment: fixed; }");
 }
@@ -123,10 +144,8 @@ void UserView::clearAppCards() {
 
 void UserView::setAppList(const QList<AppInfo>& apps) {
     m_currentApps = apps;
-    if (isVisible()) { // 如果视图可见，立即填充
-        populateAppList(m_currentApps);
-    }
-    // 如果视图不可见，populateAppList 将在 showEvent 中被调用 (如果 m_isFirstShow 为 true)
+    qDebug() << "UserView::setAppList - 收到新白名单，数量:" << apps.count() << ", 当前视图可见:" << isVisible();
+    populateAppList(m_currentApps); // 无论可见与否都立即刷新，防止数据不同步
 }
 
 void UserView::showEvent(QShowEvent *event) {
@@ -290,5 +309,13 @@ void UserView::onLaunchTimerTimeout(const QString& appPath) {
         this->setAppLoadingState(appPath, false);
     } else {
         qWarning() << "UserView: Launch timer for" << appPath << "fired, but app not in launching state or path mismatch.";
+    }
+}
+
+// ===================== 新增：高亮底部状态栏指定应用 =====================
+void UserView::setActiveAppInStatusBar(const QString& appPath)
+{
+    if (m_statusModel) {
+        m_statusModel->setActiveApp(appPath);
     }
 }

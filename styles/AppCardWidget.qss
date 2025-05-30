@@ -4,7 +4,7 @@ QWidget#appCard {
     min-height: 68px;
     max-height: 68px;
     background-color: rgba(255, 255, 255, 0.55); /* 半透明白色，若隐若无 */
-    border-radius: 20px; /* 更大圆角 */
+    border-radius: 20px; /* 更大圆角 */ 
     padding: 6px; /* 内边距，让图标和边框有距离 */
     margin: 2px; /* 卡片之间的间距，如果Dock布局需要的话 */
     border: none; /* 去掉边框 */

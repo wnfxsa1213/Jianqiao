@@ -89,7 +89,14 @@ void JianqiaoCoreShell::initializeConnections()
                 this, &JianqiaoCoreShell::handleExitAdminModeTriggered);
         connect(m_adminModule, &AdminModule::loginSuccessfulAndAdminActive,
                 this, &JianqiaoCoreShell::handleAdminLoginSuccessful);
-        qDebug() << "剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive)。";
+        connect(m_adminModule, &AdminModule::configurationChanged, this, [this]() {
+            if (m_adminModule && m_userModeModule) {
+                QList<AppInfo> currentAdminApps = m_adminModule->getWhitelistedApps();
+                qDebug() << "JianqiaoCoreShell: AdminModule 配置变更，刷新用户白名单，数量:" << currentAdminApps.count();
+                m_userModeModule->updateUserAppList(currentAdminApps);
+            }
+        });
+        qDebug() << "剑鞘核心(JianqiaoCoreShell): 已连接 AdminModule 信号 (exitAdminModeRequested, loginSuccessfulAndAdminActive, configurationChanged)。";
     }
 }
 

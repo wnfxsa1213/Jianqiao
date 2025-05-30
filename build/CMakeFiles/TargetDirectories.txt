@@ -1,3 +1,0 @@
-C:/Users/13027/Desktop/Jianqiaov2/build/CMakeFiles/JianqiaoSystem.dir
-C:/Users/13027/Desktop/Jianqiaov2/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/13027/Desktop/Jianqiaov2/build/CMakeFiles/ZERO_CHECK.dir

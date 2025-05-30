@@ -28,6 +28,8 @@ set(PROJECT_SOURCES
     AppCardWidget.cpp # Consider removing if AppCardWidget is fully replaced
     HoverIconWidget.cpp 
     DetectionResultDialog.cpp
+    AppStatusModel.cpp
+    AppStatusBar.cpp
 )
 
 set(PROJECT_HEADERS
@@ -44,6 +46,8 @@ set(PROJECT_HEADERS
     AppCardWidget.h # Consider removing if AppCardWidget is fully replaced
     HoverIconWidget.h
     DetectionResultDialog.h
+    AppStatusModel.h
+    AppStatusBar.h
 )
 
 add_executable(JianqiaoSystem WIN32

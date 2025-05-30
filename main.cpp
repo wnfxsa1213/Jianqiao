@@ -6,6 +6,12 @@
 #include <QDir>
 #include <QCoreApplication>
 
+// ========== 全局变量定义区 ==========
+// 全局系统交互模块指针，供全局访问（如窗口激活等）
+SystemInteractionModule* systemInteractionModule = nullptr;
+// 全局主窗口指针，供部分模块需要主窗口句柄时使用
+QWidget* mainWindow = nullptr;
+
 // Global file object for logging - ensure it's accessible and managed correctly.
 // For simplicity in a single file main.cpp, a static or global instance can be used,
 // but proper RAII / explicit open/close is better in larger apps.
@@ -74,6 +80,13 @@ int main(int argc, char *argv[])
 
     JianqiaoCoreShell w;
     w.show();
+
+    // ========== 全局变量初始化 ==========
+    // mainWindow指向主窗口对象
+    mainWindow = &w;
+    // systemInteractionModule指向核心交互模块（通过JianqiaoCoreShell的getSystemInteractionModule方法获取）
+    systemInteractionModule = w.getSystemInteractionModule();
+    // 如无getSystemInteractionModule方法，可考虑在此new一个SystemInteractionModule对象
 
     int result = a.exec();
     qDebug() << "Application finished with exit code:" << result;

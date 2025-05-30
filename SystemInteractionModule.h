@@ -23,6 +23,8 @@
 #include <QDebug>
 #include <memory> // Keep for now, might be used elsewhere or for comparison
 #include "common_types.h" // Ensure SuggestedWindowHints is known
+#include "AppStatus.h" // 确保包含AppStatus定义
+#include "common_types.h" // 假设AppInfo定义在此
 
 #if defined(Q_OS_WIN)
 #include <windows.h> // For HWND, DWORD, etc.
@@ -53,6 +55,17 @@ struct MonitoringInfo {
     // MonitoringInfo& operator=(MonitoringInfo&& other) noexcept = delete;
 };
 
+// 新增：窗口候选信息结构体
+struct WindowCandidateInfo {
+    HWND hwnd;
+    QString className;
+    QString title;
+    bool isVisible;
+    bool isTopLevel;
+    DWORD processId;
+    int score;
+};
+
 class SystemInteractionModule : public QObject, public QAbstractNativeEventFilter
 {
     Q_OBJECT
@@ -65,7 +78,8 @@ public:
     bool loadConfiguration();
     void bringToFrontAndActivate(WId windowId);
     HWND findMainWindowForProcess(DWORD processId, const QJsonObject& windowHints = QJsonObject());
-    QPair<HWND, int> findMainWindowForProcessWithScore(DWORD processId, const QJsonObject& windowHints = QJsonObject());
+    // 查找指定进程的主窗口（带分数，支持Hint打分，静态函数，便于递归调用）
+    static QPair<HWND, int> findMainWindowForProcessWithScore(DWORD processId, const QJsonObject& windowHints = QJsonObject());
     HWND findMainWindowForProcessOrChildren(DWORD initialPid, const QString& executableNameHint);
     void monitorAndActivateApplication(
         const QString& originalAppPath,
@@ -87,6 +101,44 @@ public:
 
     // 新增：统一获取配置文件路径的静态函数声明
     static QString getConfigFilePath();
+
+    /**
+     * @brief 获取所有白名单应用的实时状态
+     * @param whitelist 当前白名单应用信息列表
+     * @return 所有应用的AppStatus状态列表
+     */
+    QList<AppStatus> getAllAppStatus(const QList<AppInfo>& whitelist);
+
+    void activateWindow(HWND hwnd); // Moved here, now public
+
+    /**
+     * @brief 自动采集并推荐主窗口特征（windowFindingHints）
+     * @param processId 目标进程ID
+     * @return 推荐的windowFindingHints（包含primaryClassName、titleContains等）
+     */
+    static QJsonObject autoDetectWindowFindingHints(DWORD processId);
+
+    /**
+     * @brief 递归查找主窗口并收集所有分数大于0的候选窗口
+     * @param processId 目标进程ID
+     * @param windowHints 查找Hint
+     * @param candidates 用于收集所有候选窗口信息
+     * @param depth 当前递归深度
+     * @param maxDepth 最大递归深度
+     * @return 最优主窗口句柄及分数
+     */
+    static QPair<HWND, int> findMainWindowRecursiveWithCandidates(
+        DWORD processId,
+        const QJsonObject& windowHints,
+        QList<WindowCandidateInfo>& candidates,
+        int depth = 0,
+        int maxDepth = 4);
+
+    /**
+     * @brief 获取最近一次探测的候选窗口信息
+     * @return 候选窗口信息列表
+     */
+    QList<WindowCandidateInfo> getLastDetectionCandidates() const;
 
 signals:
     void adminLoginRequested();
@@ -125,7 +177,6 @@ private:
     QDateTime getProcessCreationTime(DWORD processId);
     QList<DWORD> getAllProcessIds();
     bool isModifierKey(DWORD vkCode) const;
-    void activateWindow(HWND hwnd); // Moved here
     QString vkCodesToString(const QList<DWORD>& codes) const; // 新增：辅助函数声明
 
     // Private member variables
@@ -139,7 +190,10 @@ private:
     QMap<QString, MonitoringInfo*> m_monitoringApps;
     QList<DWORD> m_adminLoginHotkeySequence; // Now clearly in private section
     int HINT_DETECTION_DELAY_MS; // 探测等待时间（毫秒），支持动态配置
+    QString m_lastActivatedAppPath; // 新增：记录最近一次被激活的应用路径
 
+    // 新增：递归查找主窗口（支持特殊类型应用）
+    static QPair<HWND, int> findMainWindowRecursive(DWORD processId, const QJsonObject& windowHints, int depth = 0, int maxDepth = 4);
 };
 
 #endif // SYSTEMINTERACTIONMODULE_H 

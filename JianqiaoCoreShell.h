@@ -25,6 +25,9 @@ public:
     explicit JianqiaoCoreShell(QWidget *parent = nullptr);
     ~JianqiaoCoreShell();
 
+    // 新增：获取底层系统交互模块指针
+    SystemInteractionModule* getSystemInteractionModule() const { return m_systemInteractionModule; }
+
 signals:
     void userModeActivated();
 

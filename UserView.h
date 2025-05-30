@@ -13,6 +13,8 @@
 #include "AppCardWidget.h" // CHANGED from HoverIconWidget
 #include <QPixmap> // ADDED for m_currentBackground
 #include <QtCore/QString> // More explicit include for QString
+#include "AppStatusBar.h" // 新增：应用状态栏控件
+#include "AppStatusModel.h" // 新增：应用状态模型
 
 // Forward declarations
 class QLabel;
@@ -39,6 +41,9 @@ public:
     void setCurrentBackground(const QString& imagePath); 
 
     void setAppLoadingState(const QString& appPath, bool isLoading); // REPLACES setAppIconLaunching & resetAppIconState
+
+    // 新增：高亮底部状态栏指定应用
+    void setActiveAppInStatusBar(const QString& appPath);
 
 signals:
     void applicationLaunchRequested(const QString& appPath, const QString& appName); // Added appName
@@ -76,6 +81,10 @@ private:
 
     QSet<QString> m_launchingApps;      
     QHash<QString, QTimer*> m_launchTimers; 
+
+    AppStatusBar* m_statusBar = nullptr; // 应用状态栏控件
+    AppStatusModel* m_statusModel = nullptr; // 应用状态数据模型
+    QTimer* m_statusRefreshTimer = nullptr; // 状态定时刷新定时器
 };
 
 #endif // USERVIEW_H 

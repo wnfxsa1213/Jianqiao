@@ -1,3 +1,20 @@
+#include <QDialog>
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QFormLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QJsonObject>
+#include <QSpinBox>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QGroupBox>
+#include <QJsonArray>
+#include "common_types.h" // For struct SuggestedWindowHints
+#include "SystemInteractionModule.h" // For WindowCandidateInfo
 #include "DetectionResultDialog.h"
 #include <QDebug>
 #include <QFrame> // For QFrame line separator
@@ -12,11 +29,26 @@ DetectionResultDialog::DetectionResultDialog(const SuggestedWindowHints& initial
       m_applyButton(nullptr),
       m_cancelButton(nullptr),
       m_buttonBox(nullptr),
-      m_initialHints(initialHints) // Store initial hints
+      m_initialHints(initialHints)
 {
+    // 自动解析initialHints.candidatesJson为m_candidates
+    m_candidates.clear();
+    for (const QJsonValue& val : initialHints.candidatesJson) {
+        if (!val.isObject()) continue;
+        QJsonObject obj = val.toObject();
+        WindowCandidateInfo info;
+        info.hwnd = reinterpret_cast<HWND>(obj.value("hwnd").toString().toULongLong());
+        info.className = obj.value("className").toString();
+        info.title = obj.value("title").toString();
+        info.isVisible = obj.value("isVisible").toBool();
+        info.isTopLevel = obj.value("isTopLevel").toBool();
+        info.processId = obj.value("processId").toInt();
+        info.score = obj.value("score").toInt();
+        m_candidates.append(info);
+    }
     setupUi(initialHints);
     setWindowTitle(tr("探测结果与参数建议"));
-    setMinimumWidth(450);
+    setMinimumWidth(600);
 }
 
 DetectionResultDialog::~DetectionResultDialog()
@@ -24,13 +56,20 @@ DetectionResultDialog::~DetectionResultDialog()
     qDebug() << "DetectionResultDialog destroyed.";
 }
 
-void DetectionResultDialog::setupUi(const SuggestedWindowHints& initialHints)
+void DetectionResultDialog::setupUi(const struct SuggestedWindowHints& initialHints)
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     QFormLayout *formLayout = new QFormLayout();
     formLayout->setRowWrapPolicy(QFormLayout::WrapAllRows);
     formLayout->setLabelAlignment(Qt::AlignLeft);
     formLayout->setSpacing(10);
+
+    // 新增：探测失败时，顶部显示红色失败原因
+    if (!initialHints.isValid && !initialHints.errorString.isEmpty()) {
+        QLabel* errorLabel = new QLabel(tr("失败原因：") + initialHints.errorString, this);
+        errorLabel->setStyleSheet("color: #d32f2f; font-weight: bold; font-size: 14px;");
+        mainLayout->addWidget(errorLabel);
+    }
 
     QLabel* infoLabel = new QLabel(tr("以下是根据选择的应用程序探测到的参数建议。您可以修改这些参数后再应用："), this);
     infoLabel->setWordWrap(true);
@@ -64,6 +103,89 @@ void DetectionResultDialog::setupUi(const SuggestedWindowHints& initialHints)
 
     mainLayout->addLayout(formLayout);
 
+    // 新增：详细参数展示区，展示所有新采集的窗口和进程属性
+    QGroupBox* detailGroup = new QGroupBox(tr("窗口与进程详细参数"), this);
+    QVBoxLayout* detailVLayout = new QVBoxLayout();
+    // 1. 展示主窗口参数（如有）
+    QFormLayout* detailLayout = new QFormLayout();
+    detailLayout->addRow(tr("进程完整路径："), new QLabel(initialHints.processFullPath, this));
+    detailLayout->addRow(tr("父进程ID："), new QLabel(QString::number(initialHints.parentProcessId), this));
+    detailLayout->addRow(tr("父窗口句柄："), new QLabel(QString::number(reinterpret_cast<quintptr>(initialHints.parentWindowHandle)), this));
+    detailLayout->addRow(tr("窗口层级："), new QLabel(QString::number(initialHints.windowHierarchyLevel), this));
+    detailLayout->addRow(tr("是否可见："), new QLabel(initialHints.isVisible ? tr("是") : tr("否"), this));
+    detailLayout->addRow(tr("是否最小化："), new QLabel(initialHints.isMinimized ? tr("是") : tr("否"), this));
+    detailVLayout->addLayout(detailLayout);
+    // 2. 展示所有候选窗口详细参数（如有）
+    if (!m_candidates.isEmpty()) {
+        QLabel* allLabel = new QLabel(tr("所有候选窗口详细参数："), this);
+        allLabel->setStyleSheet("color: #1976d2; font-weight: bold;");
+        detailVLayout->addWidget(allLabel);
+        QTableWidget* detailTable = new QTableWidget(m_candidates.size(), 7, this);
+        detailTable->setHorizontalHeaderLabels(QStringList()
+            << tr("窗口句柄") << tr("进程ID") << tr("父窗口句柄")
+            << tr("类名") << tr("标题") << tr("可见") << tr("顶层"));
+        detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        for (int i = 0; i < m_candidates.size(); ++i) {
+            const WindowCandidateInfo& info = m_candidates[i];
+            detailTable->setItem(i, 0, new QTableWidgetItem(QString("0x%1").arg((quintptr)info.hwnd, 0, 16)));
+            detailTable->setItem(i, 1, new QTableWidgetItem(QString::number(info.processId)));
+            detailTable->setItem(i, 2, new QTableWidgetItem(QString("0x%1").arg((quintptr)info.hwnd, 0, 16)));
+            detailTable->setItem(i, 3, new QTableWidgetItem(info.className));
+            detailTable->setItem(i, 4, new QTableWidgetItem(info.title));
+            detailTable->setItem(i, 5, new QTableWidgetItem(info.isVisible ? tr("是") : tr("否")));
+            detailTable->setItem(i, 6, new QTableWidgetItem(info.isTopLevel ? tr("是") : tr("否")));
+        }
+        detailVLayout->addWidget(detailTable);
+    }
+    detailGroup->setLayout(detailVLayout);
+    mainLayout->addWidget(detailGroup);
+
+    // 探测失败时，展示候选窗口列表
+    if (!initialHints.isValid && !m_candidates.isEmpty()) {
+        QLabel* candidateLabel = new QLabel(tr("未能自动探测到主窗口，请从下方候选窗口中选择："), this);
+        candidateLabel->setStyleSheet("color: #d9534f; font-weight: bold;");
+        mainLayout->addWidget(candidateLabel);
+
+        // 创建表格展示候选窗口
+        QTableWidget* table = new QTableWidget(m_candidates.size(), 6, this);
+        table->setHorizontalHeaderLabels(QStringList() << tr("类名") << tr("标题") << tr("可见性") << tr("顶层") << tr("分数") << tr("进程ID"));
+        table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        table->setSelectionBehavior(QAbstractItemView::SelectRows);
+        table->setSelectionMode(QAbstractItemView::SingleSelection);
+        for (int i = 0; i < m_candidates.size(); ++i) {
+            const WindowCandidateInfo& info = m_candidates[i];
+            table->setItem(i, 0, new QTableWidgetItem(info.className));
+            table->setItem(i, 1, new QTableWidgetItem(info.title));
+            table->setItem(i, 2, new QTableWidgetItem(info.isVisible ? tr("是") : tr("否")));
+            table->setItem(i, 3, new QTableWidgetItem(info.isTopLevel ? tr("是") : tr("否")));
+            table->setItem(i, 4, new QTableWidgetItem(QString::number(info.score)));
+            table->setItem(i, 5, new QTableWidgetItem(QString::number(info.processId)));
+        }
+        mainLayout->addWidget(table);
+        // 新增：双击行直接应用参数
+        connect(table, &QTableWidget::cellDoubleClicked, this, [=](int row, int /*col*/){
+            const WindowCandidateInfo& info = m_candidates[row];
+            m_classNameLineEdit->setText(info.className);
+            m_windowTitleLineEdit->setText(info.title);
+            m_allowNonTopLevelCheckBox->setChecked(!info.isTopLevel);
+            m_minScoreSpinBox->setValue(info.score);
+            onApplyClicked(); // 直接应用
+        });
+        // 新增：表格下方增加说明
+        QLabel* tipLabel = new QLabel(tr("点击表格某一行可自动填充参数，确认无误后点击下方'应用参数'保存。"), this);
+        tipLabel->setStyleSheet("color: #1976d2; font-size: 12px;");
+        mainLayout->addWidget(tipLabel);
+        // 选中行时自动填充参数
+        connect(table, &QTableWidget::cellClicked, this, [=](int row, int /*col*/){
+            // 中文注释：点击候选窗口行，自动填充参数输入框
+            const WindowCandidateInfo& info = m_candidates[row];
+            m_classNameLineEdit->setText(info.className);
+            m_windowTitleLineEdit->setText(info.title);
+            m_allowNonTopLevelCheckBox->setChecked(!info.isTopLevel);
+            m_minScoreSpinBox->setValue(info.score);
+        });
+    }
+
     // Add a separator
     QFrame* line = new QFrame();
     line->setFrameShape(QFrame::HLine);
@@ -79,23 +201,24 @@ void DetectionResultDialog::setupUi(const SuggestedWindowHints& initialHints)
 
     connect(m_applyButton, &QPushButton::clicked, this, &DetectionResultDialog::onApplyClicked);
     connect(m_cancelButton, &QPushButton::clicked, this, &DetectionResultDialog::reject);
-    // Or directly use QDialogButtonBox signals:
-    // connect(m_buttonBox, &QDialogButtonBox::accepted, this, &DetectionResultDialog::onApplyClicked);
-    // connect(m_buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
     mainLayout->addWidget(m_buttonBox);
     setLayout(mainLayout);
 
-    // Initial population of fields
+    // 探测失败时，清空参数输入框
     if (!initialHints.isValid) {
-        // If initial detection failed, disable some fields or show a message
         m_mainExecutableLineEdit->clear();
         m_classNameLineEdit->clear();
         m_windowTitleLineEdit->clear();
         m_allowNonTopLevelCheckBox->setChecked(false);
         infoLabel->setText(tr("未能自动探测到明确的参数。请尝试手动填写或检查应用兼容性。"));
-        // Optionally disable fields if detection truly failed and we want to force manual input
-        // m_classNameLineEdit->setEnabled(false);
+    }
+
+    // 若m_candidates为空，增加提示
+    if (m_candidates.isEmpty()) {
+        QLabel* emptyLabel = new QLabel(tr("未采集到任何候选窗口，请检查应用是否正常启动或参数设置是否合理。"), this);
+        emptyLabel->setStyleSheet("color: #d32f2f; font-weight: bold;");
+        mainLayout->addWidget(emptyLabel);
     }
 }
 

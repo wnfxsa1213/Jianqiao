@@ -5,7 +5,10 @@
 #include <QIcon>       // For QIcon in AppInfo
 #include <QJsonObject> // For QJsonObject in AppInfo and SuggestedWindowHints
 #include <QMetaType>   // For Q_DECLARE_METATYPE
+#include <QList>       // For QList in other headers
+#include <QVariant>    // For QVariant if needed
 #include <windows.h>   // For HWND, DWORD (used in SuggestedWindowHints)
+#include <QJsonArray>  // For QJsonArray in SuggestedWindowHints
 
 // Represents an application in the whitelist
 struct AppInfo {
@@ -14,6 +17,7 @@ struct AppInfo {
     QIcon icon;
     QString mainExecutableHint;
     QJsonObject windowFindingHints; // Renamed from windowHints to windowFindingHints for clarity
+    QString exePath; // 新增：可执行文件完整路径，用于进程重启等
 
     bool operator==(const AppInfo& other) const {
         return name == other.name && path == other.path;
@@ -32,17 +36,20 @@ struct SuggestedWindowHints {
     bool isValid = false;           // Overall validity of the detected hints
     QString errorString;            // To store error messages during detection
     int bestScoreDuringDetection = -1; // Score achieved by the detected window
-
-    // This might be redundant if detectedExecutableName IS the main one after resolving launcher
-    // Or, if detectedExecutableName is the launcher, and this is the target.
-    // Let's assume detectedMainExecutableName refers to the actual main app (e.g. wps.exe),
-    // while detectedExecutableName could be the initial process (e.g. ksolaunch.exe OR wps.exe).
     QString detectedMainExecutableName;
+    QString processFullPath;        // 进程完整路径
+    DWORD parentProcessId = 0;      // 父进程ID
+    HWND parentWindowHandle = nullptr; // 父窗口句柄
+    int windowHierarchyLevel = 0;   // 窗口层级（0为顶层）
+    bool isVisible = false;         // 是否可见
+    bool isMinimized = false;       // 是否最小化
+
+    QJsonArray candidatesJson; // 新增：用于存储探测失败时的候选窗口信息，供UI弹窗展示
 
     SuggestedWindowHints() = default; // Ensure default constructor is available
 
     QString toString() const {
-        return QString("SuggestedHints: Valid:%1, Exe:'%2'(PID:%3), MainTargetExe:'%4', HWND:%5, Class:'%6', Title:'%7', TopLevel:%8, AppWindowStyle:%9")
+        return QString("SuggestedHints: Valid:%1, Exe:'%2'(PID:%3), MainTargetExe:'%4', HWND:%5, Class:'%6', Title:'%7', TopLevel:%8, AppWindowStyle:%9, FullPath:'%10', ParentPID:%11, ParentHWND:%12, Level:%13, Visible:%14, Minimized:%15")
             .arg(isValid)
             .arg(detectedExecutableName)
             .arg(processId)
@@ -51,7 +58,13 @@ struct SuggestedWindowHints {
             .arg(detectedClassName)
             .arg(exampleTitle)
             .arg(isTopLevel)
-            .arg(hasAppWindowStyle);
+            .arg(hasAppWindowStyle)
+            .arg(processFullPath)
+            .arg(parentProcessId)
+            .arg(reinterpret_cast<quintptr>(parentWindowHandle))
+            .arg(windowHierarchyLevel)
+            .arg(isVisible)
+            .arg(isMinimized);
     }
 };
 Q_DECLARE_METATYPE(SuggestedWindowHints)

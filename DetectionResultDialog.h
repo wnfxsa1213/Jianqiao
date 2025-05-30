@@ -13,13 +13,15 @@
 #include <QJsonObject>
 #include <QSpinBox>
 #include "common_types.h" // For SuggestedWindowHints
+#include "SystemInteractionModule.h" // 为WindowCandidateInfo结构体
 
 class DetectionResultDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DetectionResultDialog(const SuggestedWindowHints& initialHints, QWidget *parent = nullptr);
+    // 构造函数只需传递initialHints，候选窗口自动解析
+    DetectionResultDialog(const SuggestedWindowHints& initialHints, QWidget *parent = nullptr);
     ~DetectionResultDialog();
 
     // Getter for the finalized parameters (alternative to signal, or used by signal)
@@ -50,6 +52,9 @@ private:
 
     // Store initial hints in case they are needed for reset or comparison
     SuggestedWindowHints m_initialHints;
+
+    // 新增：候选窗口信息列表
+    QList<WindowCandidateInfo> m_candidates; // 由initialHints.candidatesJson自动解析
 };
 
 #endif // DETECTIONRESULTDIALOG_H 

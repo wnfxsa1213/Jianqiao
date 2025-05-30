@@ -13,6 +13,7 @@
 #include "DetectionResultDialog.h" // <<< Include DetectionResultDialog
 #include <QSpinBox>
 #include <QCheckBox> // 新增：用于自启动复选框
+#include <QProgressDialog> // 新增：用于进度弹窗
 
 // Forward declarations if needed
 // class WhitelistManagerWidget; // If we decide to embed a refactored part
@@ -114,6 +115,8 @@ private:
 
     QCheckBox* m_autoStartCheckBox = nullptr; // 新增：自启动复选框
     void updateAutoStartCheckBoxState(); // 新增：辅助函数
+
+    QProgressDialog* m_detectionProgressDialog; // 新增：探测进度弹窗指针
 
 protected:
     void paintEvent(QPaintEvent *event) override;

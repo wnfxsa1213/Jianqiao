@@ -210,6 +210,11 @@ void UserModeModule::loadConfiguration()
             m_whitelistedApps.append(app); // Use m_whitelistedApps
         }
     }
+    // 加载完成后，主动刷新UserView和发射信号
+    if (m_userViewPtr) {
+        m_userViewPtr->setAppList(m_whitelistedApps);
+    }
+    emit userAppListUpdated(m_whitelistedApps);
     qInfo() << "Configuration loaded," << m_whitelistedApps.count() << "apps in whitelist.";
 }
 
@@ -218,11 +223,10 @@ void UserModeModule::loadAndSetWhitelist()
 {
     loadConfiguration(); // Reloads m_whitelistedApps from config
     if (m_userViewPtr) {
-        qInfo() << "UserModeModule: Setting app list for UserView with" << m_whitelistedApps.count() << "apps.";
-        m_userViewPtr->setAppList(m_whitelistedApps); // Use m_whitelistedApps
-    } else {
-        qWarning() << "UserModeModule: UserView is not available to set app list.";
+        m_userViewPtr->setAppList(m_whitelistedApps);
     }
+    // 主动发射信号，确保UserView和状态栏都能刷新
+    emit userAppListUpdated(m_whitelistedApps);
 }
 
 void UserModeModule::terminateActiveProcesses() {
@@ -370,7 +374,9 @@ void UserModeModule::onApplicationActivated(const QString& appPath) {
     m_pendingActivationApps.remove(appPath);
     qDebug() << "UserModeModule: Removed" << appPath << "from pending activation apps (activated):" << m_pendingActivationApps;
     if (m_userViewPtr) {
-        m_userViewPtr->setAppLoadingState(appPath, false); // Corrected call
+        m_userViewPtr->setAppLoadingState(appPath, false); // 取消加载中
+        // 新增：激活状态栏高亮
+        m_userViewPtr->setActiveAppInStatusBar(appPath);
     }
 }
 
@@ -483,16 +489,16 @@ QString UserModeModule::findAppPathForProcess(QProcess* process) {
 
 void UserModeModule::updateUserAppList(const QList<AppInfo>& apps) {
     qDebug() << "UserModeModule::updateUserAppList - Updating apps from provided list. Count:" << apps.count();
-    m_whitelistedApps.clear(); // Assuming m_whitelistedApps is the correct member
+    m_whitelistedApps.clear();
     for (const AppInfo& app : apps) {
         m_whitelistedApps.append(app);
     }
-
-    // Emit the signal to notify UserView or other listeners
+    // 主动刷新UserView的应用列表
+    if (m_userViewPtr) {
+        m_userViewPtr->setAppList(m_whitelistedApps);
+    }
+    // 主动发射信号，通知UserView等刷新
     emit userAppListUpdated(m_whitelistedApps);
-
-    // This log message is now more accurate as the signal has been emitted,
-    // which should trigger the UserView update.
     qDebug() << "UserModeModule::updateUserAppList - Signal emitted to update UserView with new app list.";
 }
 

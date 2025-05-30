@@ -50,6 +50,7 @@ AdminDashboardView::AdminDashboardView(SystemInteractionModule* systemInteractio
     , m_detectionWaitMsSpinBox(nullptr)
     , m_saveDetectionWaitMsButton(nullptr)
     , m_autoStartCheckBox(nullptr)
+    , m_detectionProgressDialog(nullptr)
 {
     qDebug() << "管理员仪表盘(AdminDashboardView): 已创建。";
     setupUi();
@@ -563,37 +564,51 @@ void AdminDashboardView::onDetectAndAddAppClicked()
     m_pendingDetectionAppPath = filePath;
     m_pendingDetectionAppName = appName;
 
-    // Show progress/busy indicator
-    // For simplicity, we can disable the button and change its text, 
-    // or use a QProgressDialog for better feedback.
+    // 新增：显示探测进度弹窗
+    if (!m_detectionProgressDialog) {
+        m_detectionProgressDialog = new QProgressDialog("正在探测应用主窗口，请稍候...", nullptr, 0, 0, this);
+        m_detectionProgressDialog->setWindowModality(Qt::WindowModal);
+        m_detectionProgressDialog->setCancelButton(nullptr);
+        m_detectionProgressDialog->setMinimumDuration(0);
+        m_detectionProgressDialog->setWindowTitle("探测进度");
+    }
+    m_detectionProgressDialog->show();
+
     m_detectAndAddAppButton->setEnabled(false);
     m_detectAndAddAppButton->setText("正在探测...");
-    // Consider adding a QProgressDialog here for long operations
-
     qDebug() << "[AdminDashboardView] Requesting detection for:" << filePath << "App Name:" << appName;
     m_systemInteractionModulePtr->startExecutableDetection(filePath, appName);
 }
 
 void AdminDashboardView::onDetectionResultsReceived(const SuggestedWindowHints& hints, bool success, const QString& errorString)
 {
-    qDebug() << "[AdminDashboardView] Detection results received. Success:" << success;
-    m_detectAndAddAppButton->setText("探测并添加应用..."); // Reset button text
-    m_detectAndAddAppButton->setEnabled(true);    // Re-enable button
+    // 探测完成后关闭进度弹窗
+    if (m_detectionProgressDialog) {
+        m_detectionProgressDialog->hide();
+    }
+    m_detectAndAddAppButton->setText("探测并添加应用...");
+    m_detectAndAddAppButton->setEnabled(true);
 
     if (!success) {
-        QMessageBox::warning(this, tr("探测失败"), 
-            tr("未能成功探测 '%1' 的参数。错误信息: %2\n请尝试手动添加或检查应用兼容性。").arg(m_pendingDetectionAppName).arg(errorString));
-        m_pendingDetectionAppPath.clear();
-        m_pendingDetectionAppName.clear();
+        // 新增：获取候选窗口信息并传递给弹窗
+        QList<WindowCandidateInfo> candidates = m_systemInteractionModulePtr->getLastDetectionCandidates();
+        DetectionResultDialog dialog(hints, this);
+        disconnect(&dialog, &DetectionResultDialog::suggestionsApplied, this, &AdminDashboardView::onDetectionDialogApplied);
+        connect(&dialog, &DetectionResultDialog::suggestionsApplied, this, &AdminDashboardView::onDetectionDialogApplied);
+        if (dialog.exec() == QDialog::Accepted) {
+            qDebug() << "[AdminDashboardView] DetectionResultDialog accepted by user.";
+        } else {
+            qDebug() << "[AdminDashboardView] DetectionResultDialog cancelled by user.";
+            m_pendingDetectionAppPath.clear();
+            m_pendingDetectionAppName.clear();
+        }
         return;
     }
 
     qDebug() << "[AdminDashboardView] Showing DetectionResultDialog for:" << m_pendingDetectionAppName;
-    DetectionResultDialog dialog(hints, this); // Ensure 'hints' is used
-    
+    DetectionResultDialog dialog(hints, this);
     disconnect(&dialog, &DetectionResultDialog::suggestionsApplied, this, &AdminDashboardView::onDetectionDialogApplied);
     connect(&dialog, &DetectionResultDialog::suggestionsApplied, this, &AdminDashboardView::onDetectionDialogApplied);
-
     if (dialog.exec() == QDialog::Accepted) {
         qDebug() << "[AdminDashboardView] DetectionResultDialog accepted by user.";
     } else {
