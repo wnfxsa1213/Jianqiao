@@ -277,22 +277,7 @@ bool SystemInteractionModule::loadConfiguration() {
     bool hotkeyLoaded = false;
     bool blockedKeysLoaded = false;
 
-    // Determine config path - consistent with AdminModule
-    QString configDir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
-    if (configDir.isEmpty()) {
-        qWarning() << "SystemInteractionModule (loadConfiguration): Could not get AppConfigLocation, falling back to applicationDirPath for config.";
-        configDir = QCoreApplication::applicationDirPath();
-    }
-    // Ensure directory exists (it should if AdminModule ran first, but good to be robust)
-    QDir dirObj(configDir);
-    if (!dirObj.exists()) {
-        qWarning() << "SystemInteractionModule (loadConfiguration): Config directory" << configDir << "does not exist. Attempting to use application dir.";
-        // It's unlikely this module should *create* the directory if it doesn't exist, 
-        // as AdminModule usually handles initial config creation.
-        // If AdminModule hasn't run or created it, SIM might operate with defaults.
-        // For robustness if SIM is somehow initialized first or AdminModule fails to create dir:
-        // configDir = QCoreApplication::applicationDirPath(); // Or just proceed and let file open fail for defaults
-    }
+    // 统一使用英文目录，避免中文路径
     QString configPath = SystemInteractionModule::getConfigFilePath();
     qDebug() << "SystemInteractionModule (loadConfiguration): Attempting to load config from:" << configPath;
 
@@ -713,10 +698,15 @@ BOOL CALLBACK SystemInteractionModule::EnumWindowsProcWithHints(HWND hwnd, LPARA
 
         // --- Hint-based Scoring --- 
         const QJsonObject& hints = *(pArg->hints);
+        // primaryClassNameHint：主窗口类名Hint，若设置则优先匹配该类名（完全匹配加高分，部分匹配加中分）
         QString primaryClassNameHint = hints.value("primaryClassName").toString();
+        // titleContainsHint：窗口标题包含的关键字Hint，若设置则窗口标题包含该关键字会加分
         QString titleContainsHint = hints.value("titleContains").toString();
-        bool allowNonTopLevelHint = hints.value("allowNonTopLevel").toBool(false); // Default false
-        int minScoreHint = hints.value("minScore").toInt(50); // Default 50 (was 60)
+        // allowNonTopLevelHint：是否允许非顶层窗口进入候选，默认false（如需兼容特殊窗口建议设为true）
+        bool allowNonTopLevelHint = hints.value("allowNonTopLevel").toBool(true); // 默认true
+        // minScoreHint：候选窗口最低分数线，低于此分数的窗口不会被选为主窗口，默认50
+        int minScoreHint = hints.value("minScore").toInt(40); // 默认40（原为50）
+        // exStyleMustHave / exStyleMustNotHave：可扩展的窗口扩展样式Hint，暂未启用
         // QStringList exStyleMustHave = hints.value("exStyleMustHave").toVariant().toStringList();
         // QStringList exStyleMustNotHave = hints.value("exStyleMustNotHave").toVariant().toStringList();
 
@@ -822,101 +812,19 @@ HWND SystemInteractionModule::findMainWindowForProcess(DWORD processId, const QJ
  * @param maxDepth 最大递归深度，防止死循环
  * @return 最优主窗口句柄及分数
  */
-QPair<HWND, int> SystemInteractionModule::findMainWindowRecursive(DWORD processId, const QJsonObject& windowHints, int depth, int maxDepth) {
+QPair<HWND, int> SystemInteractionModule::findMainWindowRecursive(
+    DWORD processId, const QJsonObject& windowHints, int depth, int maxDepth) {
     if (depth > maxDepth) {
         qWarning() << "[递归主窗口查找] 超过最大递归深度，PID:" << processId << "，终止递归。";
         return qMakePair(nullptr, -1);
     }
-    // 兜底策略：windowHints为空时，采用全量候选窗口统计
-    if (windowHints.isEmpty()) {
-        // 用于统计类名出现频率
-        std::map<QString, int> classNameCount;
-        // 用于记录所有候选窗口信息
-        QList<WindowCandidateInfo> candidates;
-        // 定义窗口枚举回调
-        struct EnumData {
-            DWORD targetPid;
-            QList<WindowCandidateInfo>* pWindows;
-        };
-        EnumData data{processId, &candidates};
-        auto enumProc = [](HWND hwnd, LPARAM lParam) -> BOOL {
-            EnumData* d = reinterpret_cast<EnumData*>(lParam);
-            DWORD winPid = 0;
-            GetWindowThreadProcessId(hwnd, &winPid);
-            if (winPid != d->targetPid) return TRUE;
-
-            // 采集窗口类名
-            wchar_t classNameBuf[256] = {0};
-            GetClassNameW(hwnd, classNameBuf, 256);
-            QString className = QString::fromWCharArray(classNameBuf);
-
-            // 采集窗口标题
-            wchar_t titleBuf[512] = {0};
-            GetWindowTextW(hwnd, titleBuf, 512);
-            QString title = QString::fromWCharArray(titleBuf);
-
-            // 可见性
-            bool isVisible = IsWindowVisible(hwnd);
-
-            // 是否顶层窗口
-            HWND parentHwnd = GetParent(hwnd);
-            bool isTopLevel = (parentHwnd == nullptr || parentHwnd == GetDesktopWindow());
-
-            // 只收集可见顶层且标题长度大于10的窗口
-            if (isVisible && isTopLevel && !title.isEmpty() && title.length() > 10) {
-                d->pWindows->append({hwnd, className, title, isVisible, isTopLevel, winPid, 0});
-            }
-            return TRUE;
-        };
-        // 枚举本进程所有窗口
-        EnumWindows(enumProc, (LPARAM)&data);
-        // 递归枚举所有子进程
-        HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-        if (hSnapshot != INVALID_HANDLE_VALUE) {
-            PROCESSENTRY32 pe32;
-            pe32.dwSize = sizeof(PROCESSENTRY32);
-            if (Process32First(hSnapshot, &pe32)) {
-                do {
-                    if (pe32.th32ParentProcessID == processId) {
-                        EnumData childData{pe32.th32ProcessID, &candidates};
-                        EnumWindows(enumProc, (LPARAM)&childData);
-                    }
-                } while (Process32Next(hSnapshot, &pe32));
-            }
-            CloseHandle(hSnapshot);
-        }
-        // 统计类名频率，优先选择标题最长、类名出现频率最高的窗口
-        QString mostFreqClassName;
-        int maxCount = 0;
-        for (const auto& c : candidates) {
-            if (!c.className.isEmpty()) {
-                classNameCount[c.className]++;
-                if (classNameCount[c.className] > maxCount) {
-                    maxCount = classNameCount[c.className];
-                    mostFreqClassName = c.className;
-                }
-            }
-        }
-        // 先按标题长度降序，再按类名频率降序排序
-        std::sort(candidates.begin(), candidates.end(), [&](const WindowCandidateInfo& a, const WindowCandidateInfo& b) {
-            if (a.title.length() != b.title.length())
-                return a.title.length() > b.title.length();
-            return classNameCount[a.className] > classNameCount[b.className];
-        });
-        if (!candidates.isEmpty()) {
-            qDebug() << "[兜底主窗口查找] 选择标题最长/类名高频窗口:" << candidates.first().className << candidates.first().title;
-            return qMakePair(candidates.first().hwnd, 100); // 兜底分数100
-        }
-        // 若无候选，返回失败
-        return qMakePair(nullptr, -1);
-    }
-    // 1. 先尝试本进程主窗口
+    // 1. 先尝试本进程主窗口（始终用Hint打分）
     QPair<HWND, int> best = SystemInteractionModule::findMainWindowForProcessWithScore(processId, windowHints);
     if (best.first) {
-        qDebug() << QString("[递归主窗口查找] 层级%1，PID:%2，找到主窗口:%3，分数:%4").arg(depth).arg(processId).arg((quintptr)best.first).arg(best.second);
+        qDebug() << QString("[递归主窗口查找] 层级%1，PID:%2，找到主窗口:%3，分数:%4 (Hint生效)").arg(depth).arg(processId).arg((quintptr)best.first).arg(best.second);
         return best;
     }
-    // 2. 枚举所有子进程，递归查找
+    // 2. 枚举所有子进程，递归查找（递归时也传递Hint）
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot == INVALID_HANDLE_VALUE) {
         qWarning() << "[递归主窗口查找] CreateToolhelp32Snapshot失败，PID:" << processId;
@@ -925,9 +833,11 @@ QPair<HWND, int> SystemInteractionModule::findMainWindowRecursive(DWORD processI
     PROCESSENTRY32 pe32;
     pe32.dwSize = sizeof(PROCESSENTRY32);
     QPair<HWND, int> bestChild = qMakePair(nullptr, -1);
+    QList<DWORD> childPids;
     if (Process32First(hSnapshot, &pe32)) {
         do {
             if (pe32.th32ParentProcessID == processId) {
+                childPids.append(pe32.th32ProcessID);
                 QPair<HWND, int> childResult = SystemInteractionModule::findMainWindowRecursive(pe32.th32ProcessID, windowHints, depth + 1, maxDepth);
                 if (childResult.first && childResult.second > bestChild.second) {
                     bestChild = childResult;
@@ -937,12 +847,74 @@ QPair<HWND, int> SystemInteractionModule::findMainWindowRecursive(DWORD processI
     }
     CloseHandle(hSnapshot);
     if (bestChild.first) {
-        qDebug() << QString("[递归主窗口查找] 层级%1，PID:%2，子进程找到主窗口:%3，分数:%4").arg(depth).arg(processId).arg((quintptr)bestChild.first).arg(bestChild.second);
+        qDebug() << QString("[递归主窗口查找] 层级%1，PID:%2，子进程找到主窗口:%3，分数:%4 (Hint生效)").arg(depth).arg(processId).arg((quintptr)bestChild.first).arg(bestChild.second);
         return bestChild;
     }
-    // 3. 特殊类型处理（如UWP、模拟器等）
-    // 可根据进程名、窗口类名等特殊规则补充
-    // TODO: 可扩展更多特殊类型识别
+    // 3. 兜底策略：如果递归所有进程后依然没有找到主窗口，则全量枚举本进程及所有子进程的所有窗口，按标题长度和类名频率排序
+    // 用于统计类名出现频率
+    std::map<QString, int> classNameCount;
+    // 用于记录所有候选窗口信息
+    QList<WindowCandidateInfo> candidates;
+    // 定义窗口枚举回调
+    struct EnumData {
+        DWORD targetPid;
+        QList<WindowCandidateInfo>* pWindows;
+    };
+    EnumData data{processId, &candidates};
+    auto enumProc = [](HWND hwnd, LPARAM lParam) -> BOOL {
+        EnumData* d = reinterpret_cast<EnumData*>(lParam);
+        DWORD winPid = 0;
+        GetWindowThreadProcessId(hwnd, &winPid);
+        if (winPid != d->targetPid) return TRUE;
+        // 采集窗口类名
+        wchar_t classNameBuf[256] = {0};
+        GetClassNameW(hwnd, classNameBuf, 256);
+        QString className = QString::fromWCharArray(classNameBuf);
+        // 采集窗口标题
+        wchar_t titleBuf[512] = {0};
+        GetWindowTextW(hwnd, titleBuf, 512);
+        QString title = QString::fromWCharArray(titleBuf);
+        // 可见性
+        bool isVisible = IsWindowVisible(hwnd);
+        // 是否顶层窗口
+        HWND parentHwnd = GetParent(hwnd);
+        bool isTopLevel = (parentHwnd == nullptr || parentHwnd == GetDesktopWindow());
+        // 只收集可见顶层且标题长度大于0的窗口
+        if (isVisible && isTopLevel && !title.isEmpty() && title.length() > 0) {
+            d->pWindows->append({hwnd, className, title, isVisible, isTopLevel, winPid, 0});
+        }
+        return TRUE;
+    };
+    // 枚举本进程所有窗口
+    EnumWindows(enumProc, (LPARAM)&data);
+    // 递归枚举所有子进程
+    for (DWORD childPid : childPids) {
+        EnumData childData{childPid, &candidates};
+        EnumWindows(enumProc, (LPARAM)&childData);
+    }
+    // 统计类名频率，优先选择标题最长、类名出现频率最高的窗口
+    QString mostFreqClassName;
+    int maxCount = 0;
+    for (const auto& c : candidates) {
+        if (!c.className.isEmpty()) {
+            classNameCount[c.className]++;
+            if (classNameCount[c.className] > maxCount) {
+                maxCount = classNameCount[c.className];
+                mostFreqClassName = c.className;
+            }
+        }
+    }
+    // 先按标题长度降序，再按类名频率降序排序
+    std::sort(candidates.begin(), candidates.end(), [&](const WindowCandidateInfo& a, const WindowCandidateInfo& b) {
+        if (a.title.length() != b.title.length())
+            return a.title.length() > b.title.length();
+        return classNameCount[a.className] > classNameCount[b.className];
+    });
+    if (!candidates.isEmpty()) {
+        qDebug() << "[兜底主窗口查找] 选择标题最长/类名高频窗口:" << candidates.first().className << candidates.first().title;
+        return qMakePair(candidates.first().hwnd, 100); // 兜底分数100
+    }
+    // 若无候选，返回失败
     return qMakePair(nullptr, -1);
 }
 
@@ -1260,6 +1232,28 @@ void SystemInteractionModule::monitorAndActivateApplication(
     m_monitoringApps[originalAppPath] = newMonitoringInfoRawPtr; // Store raw pointer
     
     qDebug() << "SystemInteractionModule: Monitoring timer started for" << originalAppPath << "to find" << targetExecutableName;
+
+    // 在查找窗口前，针对 DroneVirtualFlight 特殊处理
+    if (targetExecutableName.compare("DroneVirtualFlight.exe", Qt::CaseInsensitive) == 0) {
+        // 优先查找 Shipping 进程
+        DWORD shippingPid = findProcessIdByName("DroneVirtualFlight-Win64-Shipping.exe");
+        if (shippingPid != 0) {
+            qDebug() << "[特殊处理] 检测到虚幻引擎 Shipping 进程，优先查找其主窗口";
+            hwnd = findMainWindowForProcess(shippingPid, windowHints);
+            if (hwnd) {
+                qDebug() << "[特殊处理] 成功找到 Shipping 进程主窗口，立即激活并降级主界面Z序";
+                activateWindow(hwnd);
+                // 激活后无需再进入后续监控定时器逻辑，直接返回
+                m_lastActivatedAppPath = originalAppPath;
+                emit applicationActivated(originalAppPath);
+                return;
+            } else {
+                qDebug() << "[特殊处理] Shipping 进程存在但未找到主窗口，继续走常规流程";
+            }
+        } else {
+            qDebug() << "[特殊处理] 未检测到 Shipping 进程，继续走常规流程";
+        }
+    }
 }
 
 void SystemInteractionModule::onMonitoringTimerTimeout() {
@@ -1298,18 +1292,15 @@ void SystemInteractionModule::onMonitoringTimerTimeout() {
     if (foundHwnd) {
         qDebug() << "SystemInteractionModule: 在全局窗口中找到匹配白名单Hint的窗口，HWND:" << foundHwnd << "Score:" << foundScore;
         activateWindow(foundHwnd);
-        // 2. 激活后主动降低主界面Z序，防止被覆盖
-        // 假设主界面QWidget指针为mainWindow（请用实际变量名替换）
-        extern QWidget* mainWindow; // 你需要在主程序中声明并赋值
-        if (mainWindow) {
-            HWND mainHwnd = reinterpret_cast<HWND>(mainWindow->winId());
-            SetWindowPos(mainHwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-            QTimer::singleShot(3000, [mainHwnd](){
-                SetWindowPos(mainHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-            });
-            qDebug() << "SystemInteractionModule: 主界面已降级Z序3秒，确保外部窗口可见。";
+        // 激活后统一调用主界面降级接口，确保外部窗口可见
+        lowerMainWindowZOrder(3000);
+        // ========== 新增：激活后如强力置顶开启，加入定时器监控 ==========
+        if (m_forceTopmostEnabled && currentInfoPtr && foundHwnd) {
+            currentInfoPtr->windowHandle = foundHwnd;
+            // 定时器已在setForceTopmostEnabled中统一管理，这里只需保证windowHandle被记录
+            qDebug() << "[置顶策略] 已将目标窗口加入强力置顶监控，HWND:" << foundHwnd;
         }
-                    emit applicationActivated(originalAppPath);
+        emit applicationActivated(originalAppPath);
         currentInfoPtr->timer->stop(); 
         auto it_success = m_monitoringApps.find(originalAppPath);
         if (it_success != m_monitoringApps.end()) {
@@ -1335,114 +1326,12 @@ void SystemInteractionModule::onMonitoringTimerTimeout() {
 }
 
 void SystemInteractionModule::activateWindow(HWND hwnd) {
-    if (!hwnd || !IsWindow(hwnd)) {
-        qWarning() << "[SystemInteractionModule] activateWindow: Invalid or non-existent window handle:" << hwnd;
-        return;
-    }
-    qDebug() << "[SystemInteractionModule] Attempting to activate window:" << hwnd;
-    ShowWindow(hwnd, SW_RESTORE); // 确保还原
-    SetForegroundWindow(hwnd);    // 置前
-
-    DWORD targetProcessId = 0;
-    GetWindowThreadProcessId(hwnd, &targetProcessId); // Get PID of the target window
-
-    // Call AllowSetForegroundWindow. ASFW_ANY is a broad permission.
-    // If targetProcessId is valid, using it is more specific.
-    if (targetProcessId != 0) {
-        qDebug() << "[SystemInteractionModule] Calling AllowSetForegroundWindow(" << targetProcessId << ")";
-        AllowSetForegroundWindow(targetProcessId);
-    } else {
-        qDebug() << "[SystemInteractionModule] Calling AllowSetForegroundWindow(ASFW_ANY) as target PID is 0.";
-        AllowSetForegroundWindow(ASFW_ANY);
-    }
-    QThread::msleep(20); // Small delay after AllowSetForegroundWindow
-
-    const int MAX_ACTIVATION_ATTEMPTS = 3;
-    const int ACTIVATION_RETRY_DELAY_MS = 150; // Increased delay
-
-    for (int attempt = 1; attempt <= MAX_ACTIVATION_ATTEMPTS; ++attempt) {
-        qDebug() << "[SystemInteractionModule] Activation attempt:" << attempt << "for HWND:" << hwnd;
-        // 优化：每次激活前都尝试还原窗口（即使不是最小化，也保证显示）
-        ShowWindow(hwnd, SW_RESTORE);
-        QThread::msleep(100); // 给窗口恢复时间
-
-        // 1. Ensure it's not minimized and is visible
-        if (IsIconic(hwnd)) {
-            qDebug() << "[SystemInteractionModule] Window is iconic, restoring (SW_RESTORE).";
-            ShowWindow(hwnd, SW_RESTORE);
-            QThread::msleep(100); // Give it time to restore
-        }
-        // Ensure it's shown (SW_SHOWNA activates and displays it in its current size and position)
-        // ShowWindow(hwnd, SW_SHOWNA); // This can sometimes be less effective than SW_RESTORE then SetForeground
-        // QThread::msleep(50);
-
-        // 2. Try to bring to top using SetWindowPos with HWND_TOPMOST
-        // This makes the window the topmost window but doesn't necessarily give it focus.
-        qDebug() << "[SystemInteractionModule] Calling SetWindowPos with HWND_TOPMOST.";
-        SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
-        QThread::msleep(50); 
-
-        // 3. Attempt to set as foreground window (this is the main function for activation)
-        qDebug() << "[SystemInteractionModule] Calling SetForegroundWindow.";
-        if (SetForegroundWindow(hwnd)) {
-            qDebug() << "[SystemInteractionModule] SetForegroundWindow successful on attempt" << attempt;
-    } else {
-            DWORD error = GetLastError();
-            qWarning() << "[SystemInteractionModule] SetForegroundWindow failed on attempt" << attempt << "GetLastError:" << error;
-            
-            // If SetForegroundWindow fails, try attaching thread input (common workaround)
-            DWORD foregroundThreadId = GetWindowThreadProcessId(GetForegroundWindow(), NULL);
-            DWORD currentThreadId = GetCurrentThreadId(); // Our thread
-
-            if (foregroundThreadId != 0 && currentThreadId != 0 && foregroundThreadId != currentThreadId) {
-                qDebug() << "[SystemInteractionModule] Attaching thread input (current:" << currentThreadId << "fg:" << foregroundThreadId << ")";
-                if (AttachThreadInput(foregroundThreadId, currentThreadId, TRUE)) {
-                    qDebug() << "[SystemInteractionModule] AttachThreadInput successful. Retrying SetForegroundWindow.";
-                    if (SetForegroundWindow(hwnd)) {
-                         qDebug() << "[SystemInteractionModule] SetForegroundWindow successful after AttachThreadInput.";
-        } else {
-                         qWarning() << "[SystemInteractionModule] SetForegroundWindow STILL failed after AttachThreadInput. GetLastError:" << GetLastError();
-            }
-                    AttachThreadInput(foregroundThreadId, currentThreadId, FALSE);
-                    qDebug() << "[SystemInteractionModule] Detached thread input.";
-        } else {
-                    qWarning() << "[SystemInteractionModule] AttachThreadInput failed. GetLastError:" << GetLastError();
-                }
-            }
-        }
-        QThread::msleep(50); // Delay after SetForegroundWindow attempts
-
-        // 4. SetActiveWindow and SetFocus are generally less forceful for bringing to front but good for input focus
-        qDebug() << "[SystemInteractionModule] Calling SetActiveWindow.";
-        SetActiveWindow(hwnd); // Sets the active window
-        qDebug() << "[SystemInteractionModule] Calling SetFocus.";
-        SetFocus(hwnd);       // Sets keyboard focus
-        
-        // 5. BringWindowToTop is another function to ensure Z-order, often redundant but can help.
-        qDebug() << "[SystemInteractionModule] Calling BringWindowToTop.";
-        BringWindowToTop(hwnd);
-
-        // 6. Check if our window is now the foreground window
-        QThread::msleep(100); // Wait a bit for OS to process all these calls
-        HWND currentForeground = GetForegroundWindow();
-        qDebug() << "[SystemInteractionModule] Current foreground window after attempt" << attempt << "is:" << currentForeground << "(Target:" << hwnd << ")";
-
-        if (currentForeground == hwnd) {
-            qDebug() << "[SystemInteractionModule] Successfully set HWND:" << hwnd << "as foreground window on attempt" << attempt << ".";
-            qDebug() << "[SystemInteractionModule] Window activation sequence completed for:" << hwnd;
-            return; // Activation successful
-        }
-
-        qWarning() << "[SystemInteractionModule] Failed to set HWND:" << hwnd << "as foreground on attempt" << attempt
-                   << ". Current foreground is:" << currentForeground << "(Last Error for SetForegroundWindow if it failed recently might not be accurate here).";
-
-        if (attempt < MAX_ACTIVATION_ATTEMPTS) {
-            qDebug() << "[SystemInteractionModule] Retrying activation in" << ACTIVATION_RETRY_DELAY_MS << "ms...";
-            QThread::msleep(ACTIVATION_RETRY_DELAY_MS);
-        }
-    }
-
-    qWarning() << "[SystemInteractionModule] Window activation sequence FAILED for HWND:" << hwnd << "after" << MAX_ACTIVATION_ATTEMPTS << "attempts.";
+    if (!hwnd) return;
+    // 让主界面降级Z序，直到外部窗口失去焦点/关闭
+    lowerMainWindowZOrderUntilExternalLost(hwnd);
+    SetForegroundWindow(hwnd);
+    SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+    qDebug() << "[窗口置顶] 已激活外部窗口并降级主界面Z序（持续检测外部窗口状态）";
 }
 
 bool SystemInteractionModule::nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result)
@@ -1842,9 +1731,11 @@ void SystemInteractionModule::stopMonitoringProcess(const QString& appPath) {
 
 // ... (rest of the SystemInteractionModule.cpp file) ... 
 
-// 静态函数：统一获取配置文件路径
+// 静态函数：统一获取配置文件路径，始终使用当前登录用户的USERPROFILE目录，避免管理员/普通用户路径不一致
 QString SystemInteractionModule::getConfigFilePath() {
-    QString configDir = QDir::toNativeSeparators(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)) + "/../JianqiaoSystem";
+    // 通过环境变量USERPROFILE获取当前登录用户主目录，确保所有身份下配置一致
+    QString userProfile = qEnvironmentVariable("USERPROFILE");
+    QString configDir = userProfile + "/AppData/Roaming/雪鸮团队/剑鞘系统";
     QDir().mkpath(configDir); // 确保目录存在
     return configDir + "/config.json";
 }
@@ -2032,7 +1923,7 @@ QPair<HWND, int> SystemInteractionModule::findMainWindowRecursiveWithCandidates(
         qWarning() << "[递归主窗口查找] 超过最大递归深度，PID:" << processId << "，终止递归。";
         return qMakePair(nullptr, -1);
     }
-    // 1. 本进程所有窗口打分，收集分数大于0的候选
+    // 1. 本进程所有窗口打分，收集分数大于0的候选（始终用Hint打分）
     struct EnumData {
         DWORD targetPid;
         const QJsonObject* hints;
@@ -2046,27 +1937,15 @@ QPair<HWND, int> SystemInteractionModule::findMainWindowRecursiveWithCandidates(
         DWORD winPid = 0;
         GetWindowThreadProcessId(hwnd, &winPid);
         if (winPid != d->targetPid) return TRUE;
-
-        // 采集窗口类名
         wchar_t classNameBuf[256] = {0};
         GetClassNameW(hwnd, classNameBuf, 256);
         QString className = QString::fromWCharArray(classNameBuf);
-
-        // 采集窗口标题
         wchar_t titleBuf[512] = {0};
         GetWindowTextW(hwnd, titleBuf, 512);
         QString title = QString::fromWCharArray(titleBuf);
-
-        // 可见性
         bool isVisible = IsWindowVisible(hwnd);
-
-        // 父窗口句柄
         HWND parentHwnd = GetParent(hwnd);
-
-        // 是否顶层窗口
         bool isTopLevel = (parentHwnd == nullptr || parentHwnd == GetDesktopWindow());
-
-        // 打分逻辑（复用EnumWindowsProcWithHints核心）
         int score = 0;
         bool possibleCandidate = true;
         const QJsonObject& hints = *(d->hints);
@@ -2089,11 +1968,8 @@ QPair<HWND, int> SystemInteractionModule::findMainWindowRecursiveWithCandidates(
         }
         if (isTopLevel) {
             score += 30;
-        } else if (allowNonTopLevelHint) {
-            score += 15;
         } else {
-            possibleCandidate = false;
-            score = -1;
+            score += 10;
         }
         LONG exStyle = GetWindowLongPtrW(hwnd, GWL_EXSTYLE);
         if (exStyle & WS_EX_APPWINDOW) {
@@ -2111,10 +1987,12 @@ QPair<HWND, int> SystemInteractionModule::findMainWindowRecursiveWithCandidates(
             d->bestHwnd = hwnd;
             d->bestScore = score;
         }
+        // 日志输出每个窗口的Hint匹配和分数
+        qDebug() << QString("[递归主窗口查找][Hint] PID:%1 HWND:%2 类名:%3 标题:%4 分数:%5").arg(winPid).arg((quintptr)hwnd).arg(className).arg(title.left(50)).arg(score);
         return TRUE;
     };
     EnumWindows(enumProc, (LPARAM)&data);
-    // 2. 递归子进程
+    // 2. 递归子进程（递归时也传递Hint）
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (hSnapshot != INVALID_HANDLE_VALUE) {
         PROCESSENTRY32 pe32;
@@ -2128,7 +2006,6 @@ QPair<HWND, int> SystemInteractionModule::findMainWindowRecursiveWithCandidates(
         }
         CloseHandle(hSnapshot);
     }
-    // 查找完成后，保存候选窗口信息
     s_lastDetectionCandidates = candidates;
     return qMakePair(data.bestHwnd, data.bestScore);
 }
@@ -2142,3 +2019,139 @@ QList<WindowCandidateInfo> SystemInteractionModule::getLastDetectionCandidates()
     return s_lastDetectionCandidates;
 }
 // ... existing code ...
+
+// ========== 置顶策略相关实现 ========== //
+void SystemInteractionModule::setSmartTopmostEnabled(bool enabled) {
+    m_smartTopmostEnabled = enabled;
+    qDebug() << "[置顶策略] 智能置顶已" << (enabled ? "启用" : "禁用") << "。仅在检测到外部窗口被覆盖时再置顶，减少系统调用。";
+}
+void SystemInteractionModule::setForceTopmostEnabled(bool enabled) {
+    m_forceTopmostEnabled = enabled;
+    qDebug() << "[置顶策略] 强力置顶已" << (enabled ? "启用" : "禁用") << "。开启后每秒持续SetWindowPos置顶，防止被其他窗口抢占。";
+    // 若启用强力置顶，启动定时器
+    if (enabled) {
+        if (!m_forceTopmostTimer) {
+            m_forceTopmostTimer = new QTimer(this);
+            connect(m_forceTopmostTimer, &QTimer::timeout, this, [this]() {
+                // 遍历所有已激活的目标窗口，强制置顶
+                for (auto it = m_monitoringApps.begin(); it != m_monitoringApps.end(); ++it) {
+                    MonitoringInfo* info = it.value();
+                    if (info && info->windowHandle) {
+                        HWND hwnd = reinterpret_cast<HWND>(info->windowHandle);
+                        if (IsWindow(hwnd)) {
+                            // 每秒强制置顶一次，防止被其他窗口覆盖
+                            SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+                        }
+                    }
+                }
+            });
+        }
+        if (!m_forceTopmostTimer->isActive()) {
+            m_forceTopmostTimer->start(1000); // 每秒强制置顶
+        }
+    } else {
+        if (m_forceTopmostTimer && m_forceTopmostTimer->isActive()) {
+            m_forceTopmostTimer->stop();
+        }
+    }
+}
+bool SystemInteractionModule::isSmartTopmostEnabled() const { return m_smartTopmostEnabled; }
+bool SystemInteractionModule::isForceTopmostEnabled() const { return m_forceTopmostEnabled; }
+// ... existing code ...
+// 在monitorAndActivateApplication和onMonitoringTimerTimeout等激活窗口逻辑中，判断m_forceTopmostEnabled优先，若为true则持续定时置顶，否则按智能置顶逻辑（如检测被覆盖时再置顶）。
+// ... existing code ...
+
+// ... existing code ...
+// ========== 主界面降级/恢复置顶实现 ========== //
+/**
+ * @brief 降低主界面Z序（临时取消置顶），延迟后自动恢复置顶
+ * @param delayMs 降级持续时间（毫秒），默认3000ms
+ * 调用场景：激活外部窗口后，主动降低主界面Z序，防止主界面抢占前台。
+ */
+void SystemInteractionModule::lowerMainWindowZOrder(int delayMs) {
+    extern QWidget* mainWindow;
+    if (mainWindow) {
+        HWND mainHwnd = reinterpret_cast<HWND>(mainWindow->winId());
+        SetWindowPos(mainHwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+        QTimer::singleShot(delayMs, [mainHwnd]() {
+            SetWindowPos(mainHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+        });
+        qDebug() << "SystemInteractionModule: 主界面已降级Z序" << delayMs << "ms，确保外部窗口可见。";
+    }
+}
+// ... existing code ...
+// ========== 优化activateWindow，激活外部窗口后统一调用主界面降级 ========== //
+
+// ... existing code ...
+void SystemInteractionModule::lowerMainWindowZOrderUntilExternalLost(HWND externalHwnd) {
+    extern QWidget* mainWindow;
+    if (!mainWindow || !externalHwnd) return;
+    HWND mainHwnd = reinterpret_cast<HWND>(mainWindow->winId());
+    // 1. 先降级主界面Z序
+    SetWindowPos(mainHwnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+    m_lastActivatedExternalHwnd = externalHwnd;
+    // 2. 启动定时器，持续检测外部窗口状态
+    if (!m_topmostRestoreTimer) {
+        m_topmostRestoreTimer = new QTimer(this);
+        connect(m_topmostRestoreTimer, &QTimer::timeout, this, [this, mainHwnd]() {
+            if (!m_lastActivatedExternalHwnd || !IsWindow(m_lastActivatedExternalHwnd)) {
+                // 外部窗口已关闭
+                SetWindowPos(mainHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                m_topmostRestoreTimer->stop();
+                qDebug() << "[窗口置顶] 外部窗口已关闭，主界面恢复置顶";
+                return;
+            }
+            // 检查外部窗口是否最小化或失去焦点
+            if (IsIconic(m_lastActivatedExternalHwnd) || GetForegroundWindow() != m_lastActivatedExternalHwnd) {
+                SetWindowPos(mainHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+                m_topmostRestoreTimer->stop();
+                qDebug() << "[窗口置顶] 外部窗口失去焦点或最小化，主界面恢复置顶";
+            }
+            // 否则继续保持主界面非置顶
+        });
+    }
+    if (!m_topmostRestoreTimer->isActive()) {
+        m_topmostRestoreTimer->start(500); // 每500ms检测一次
+    }
+    qDebug() << "[窗口置顶] 主界面降级Z序，持续检测外部窗口状态";
+}
+// ... existing code ...
+
+// ... existing code ...
+// ========== 宽松查找主窗口辅助函数 ========== //
+/**
+ * @brief 宽松查找：返回目标进程的第一个可见顶层窗口
+ * @param processId 目标进程ID
+ * @return HWND 第一个可见窗口句柄，找不到返回nullptr
+ */
+static DWORD s_looseFindProcessId = 0;
+static HWND s_looseFindResultHwnd = nullptr;
+static BOOL CALLBACK EnumWindowsProcForLooseFind(HWND hwnd, LPARAM lParam) {
+    DWORD pid = 0;
+    GetWindowThreadProcessId(hwnd, &pid);
+    wchar_t className[256] = {0}, title[256] = {0};
+    GetClassNameW(hwnd, className, 256);
+    GetWindowTextW(hwnd, title, 256);
+    BOOL isVisible = IsWindowVisible(hwnd);
+    BOOL isMinimized = IsIconic(hwnd);
+    // 调试日志
+    qDebug() << "[窗口枚举] HWND:" << hwnd << "PID:" << pid
+             << "Class:" << QString::fromWCharArray(className)
+             << "Title:" << QString::fromWCharArray(title)
+             << "Visible:" << isVisible << "Minimized:" << isMinimized;
+    if (pid == s_looseFindProcessId && isVisible && !isMinimized) {
+        s_looseFindResultHwnd = hwnd;
+        qDebug() << "[宽松兜底] 命中第一个可见窗口:" << hwnd;
+        return FALSE;
+    }
+    return TRUE;
+}
+static HWND findFirstVisibleTopLevelWindow(DWORD processId) {
+    s_looseFindProcessId = processId;
+    s_looseFindResultHwnd = nullptr;
+    EnumWindows(EnumWindowsProcForLooseFind, 0);
+    return s_looseFindResultHwnd;
+}
+// ... existing code ...
+// ========== 合并唯一findMainWindowForProcess实现 ========== //
+

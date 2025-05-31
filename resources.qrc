@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
     <file alias="styles/AppCardWidget.qss">styles/AppCardWidget.qss</file>
+    <file alias="styles/UserView.qss">styles/UserView.qss</file>
     <!-- Add other resources like icons here -->
     <file alias="icons/loading_spinner.gif">icons/loading_spinner.gif</file>
     <file alias="images/admin_bg.jpg">images/admin_bg.jpg</file>

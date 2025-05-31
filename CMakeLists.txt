@@ -103,7 +103,7 @@ if(MSVC)
     set(APP_MANIFEST "${CMAKE_CURRENT_SOURCE_DIR}/JianqiaoSystem.exe.manifest")
     if(EXISTS ${APP_MANIFEST})
         set_target_properties(JianqiaoSystem PROPERTIES
-            LINK_FLAGS "/MANIFESTUAC:level='requireAdministrator' /MANIFEST:EMBED /MANIFESTINPUT:${APP_MANIFEST}"
+            LINK_FLAGS "/MANIFEST:EMBED /MANIFESTINPUT:${APP_MANIFEST}"
         )
     endif()
 endif() 

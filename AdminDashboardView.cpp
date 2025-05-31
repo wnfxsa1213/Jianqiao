@@ -51,6 +51,8 @@ AdminDashboardView::AdminDashboardView(SystemInteractionModule* systemInteractio
     , m_saveDetectionWaitMsButton(nullptr)
     , m_autoStartCheckBox(nullptr)
     , m_detectionProgressDialog(nullptr)
+    , m_smartTopmostCheckBox(nullptr)
+    , m_forceTopmostCheckBox(nullptr)
 {
     qDebug() << "管理员仪表盘(AdminDashboardView): 已创建。";
     setupUi();
@@ -268,6 +270,24 @@ void AdminDashboardView::setupUi()
     updateAutoStartCheckBoxState(); // 启动时同步状态
     // --- END ---
 
+    // --- 新增：置顶策略设置 ---
+    QGroupBox* topmostSettingsGroup = new QGroupBox("窗口置顶策略", m_settingsTab);
+    QVBoxLayout* topmostSettingsLayout = new QVBoxLayout(topmostSettingsGroup);
+    m_smartTopmostCheckBox = new QCheckBox("智能置顶（推荐，自动检测Z序并适时置顶）", topmostSettingsGroup);
+    m_forceTopmostCheckBox = new QCheckBox("强力置顶（持续定时强制置顶，适用于特殊抢焦点应用，可能影响系统弹窗）", topmostSettingsGroup);
+    QLabel* topmostTipLabel = new QLabel("说明：\n- 智能置顶：仅在检测到应用被覆盖时自动恢复置顶，兼顾体验和兼容性。\n- 强力置顶：每隔1秒强制将应用窗口置顶，适合极端场景，但可能导致输入法、弹窗等被遮挡。\n- 两者可同时开启，强力置顶优先生效。", topmostSettingsGroup);
+    topmostTipLabel->setWordWrap(true);
+    topmostSettingsLayout->addWidget(m_smartTopmostCheckBox);
+    topmostSettingsLayout->addWidget(m_forceTopmostCheckBox);
+    topmostSettingsLayout->addWidget(topmostTipLabel);
+    topmostSettingsGroup->setLayout(topmostSettingsLayout);
+    settingsTabLayout->addWidget(topmostSettingsGroup);
+    // 信号连接
+    connect(m_smartTopmostCheckBox, &QCheckBox::toggled, this, &AdminDashboardView::onSmartTopmostCheckBoxToggled);
+    connect(m_forceTopmostCheckBox, &QCheckBox::toggled, this, &AdminDashboardView::onForceTopmostCheckBoxToggled);
+    // 加载配置文件，设置CheckBox初始状态
+    updateTopmostCheckBoxState();
+
     settingsTabLayout->addStretch(1); 
     m_settingsTab->setLayout(settingsTabLayout);
     m_tabWidget->addTab(m_settingsTab, "系统设置");
@@ -326,15 +346,38 @@ void AdminDashboardView::populateWhitelistView()
 {
     if (!m_whitelistListWidget) return;
     m_whitelistListWidget->clear();
-    for (const AppInfo& app : m_currentApps) {
+    for (int i = 0; i < m_currentApps.size(); ++i) {
+        const AppInfo& app = m_currentApps[i];
         QString itemText = QString("%1 (%2)").arg(app.name).arg(app.path);
-        QListWidgetItem* item = new QListWidgetItem(itemText);
+        QListWidgetItem* item = new QListWidgetItem();
         item->setData(Qt::UserRole, app.path); // Store path for easy retrieval
         item->setToolTip(itemText); // 设置工具提示显示完整文本
         if (!app.icon.isNull()) {
             item->setIcon(app.icon);
         }
+        // 创建自定义小部件，包含两个QCheckBox
+        QWidget* widget = new QWidget();
+        QHBoxLayout* layout = new QHBoxLayout(widget);
+        layout->setContentsMargins(0,0,0,0);
+        QLabel* nameLabel = new QLabel(itemText, widget);
+        QCheckBox* smartBox = new QCheckBox("智能置顶", widget);
+        QCheckBox* forceBox = new QCheckBox("强力置顶", widget);
+        smartBox->setChecked(app.smartTopmost);
+        forceBox->setChecked(app.forceTopmost);
+        // 绑定槽函数，捕获当前索引
+        connect(smartBox, &QCheckBox::toggled, this, [this, i, smartBox, forceBox](bool checked){
+            onAppTopmostCheckBoxChanged(i, checked, forceBox->isChecked());
+        });
+        connect(forceBox, &QCheckBox::toggled, this, [this, i, smartBox, forceBox](bool checked){
+            onAppTopmostCheckBoxChanged(i, smartBox->isChecked(), checked);
+        });
+        layout->addWidget(nameLabel);
+        layout->addWidget(smartBox);
+        layout->addWidget(forceBox);
+        layout->addStretch();
+        widget->setLayout(layout);
         m_whitelistListWidget->addItem(item);
+        m_whitelistListWidget->setItemWidget(item, widget);
     }
 }
 
@@ -422,6 +465,9 @@ void AdminDashboardView::onAddAppClicked()
     AppInfo newApp;
     newApp.name = appName;
     newApp.path = appPath;
+    // 自动补全 mainExecutableHint，确保后续状态栏能正确探测进程
+    QFileInfo fi(appPath);
+    newApp.mainExecutableHint = fi.fileName(); // 以文件名作为进程名Hint
     // Try to get icon - for now, this might be a basic attempt or rely on AdminModule later
     // For immediate UI update, we might need a temporary icon or SystemInteractionModule direct call if safe.
     // Let's assume icon loading is handled when the list is fully processed by AdminModule/UserModeModule.
@@ -431,6 +477,10 @@ void AdminDashboardView::onAddAppClicked()
         qWarning() << "AdminDashboardView: Could not load icon for" << appPath << "during add.";
     }
 
+    // 在populateWhitelistView()中，为每个应用条目动态添加QWidget（含两个QCheckBox），并与AppInfo的smartTopmost/forceTopmost字段联动。勾选变化时，更新m_currentApps并emit whitelistChanged。
+    // 在onAddAppClicked和onDetectionDialogApplied中，弹窗增加两个QCheckBox，用户可选择置顶策略，保存到newApp.smartTopmost/forceTopmost。
+    newApp.smartTopmost = m_smartTopmostCheckBox->isChecked();
+    newApp.forceTopmost = m_forceTopmostCheckBox->isChecked();
 
     m_currentApps.append(newApp);
     populateWhitelistView(); // Refresh the list view
@@ -658,6 +708,11 @@ void AdminDashboardView::onDetectionDialogApplied(const QString& finalMainExecut
     }
     // --- END MODIFICATION ---
 
+    // 在populateWhitelistView()中，为每个应用条目动态添加QWidget（含两个QCheckBox），并与AppInfo的smartTopmost/forceTopmost字段联动。勾选变化时，更新m_currentApps并emit whitelistChanged。
+    // 在onAddAppClicked和onDetectionDialogApplied中，弹窗增加两个QCheckBox，用户可选择置顶策略，保存到newApp.smartTopmost/forceTopmost。
+    newApp.smartTopmost = m_smartTopmostCheckBox->isChecked();
+    newApp.forceTopmost = m_forceTopmostCheckBox->isChecked();
+
     m_currentApps.append(newApp);
     populateWhitelistView(); // Refresh the list widget directly
 
@@ -731,6 +786,69 @@ void AdminDashboardView::onAutoStartCheckBoxToggled(bool checked) {
         reg.remove(appName);
         qDebug() << "已取消开机自启动:" << exePath;
     }
+}
+
+// 辅助函数：检测当前是否已设置置顶策略，并同步复选框
+void AdminDashboardView::updateTopmostCheckBoxState() {
+    // 注册表路径：HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+    QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString appName = QCoreApplication::applicationName();
+    QString exePath = QCoreApplication::applicationFilePath().replace('/', '\\');
+    QVariant val = reg.value(appName);
+    if (val.isValid() && val.toString() == exePath) {
+        m_smartTopmostCheckBox->setChecked(true);
+        m_forceTopmostCheckBox->setChecked(true);
+    } else {
+        m_smartTopmostCheckBox->setChecked(false);
+        m_forceTopmostCheckBox->setChecked(false);
+    }
+}
+
+// 槽函数：设置或取消智能置顶
+void AdminDashboardView::onSmartTopmostCheckBoxToggled(bool checked) {
+    QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString appName = QCoreApplication::applicationName();
+    QString exePath = QCoreApplication::applicationFilePath().replace('/', '\\');
+    if (checked) {
+        reg.setValue(appName, exePath);
+        qDebug() << "已设置智能置顶:" << exePath;
+    } else {
+        reg.remove(appName);
+        qDebug() << "已取消智能置顶:" << exePath;
+    }
+}
+
+// 槽函数：设置或取消强力置顶
+void AdminDashboardView::onForceTopmostCheckBoxToggled(bool checked) {
+    QSettings reg("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString appName = QCoreApplication::applicationName();
+    QString exePath = QCoreApplication::applicationFilePath().replace('/', '\\');
+    if (checked) {
+        reg.setValue(appName, exePath);
+        qDebug() << "已设置强力置顶:" << exePath;
+    } else {
+        reg.remove(appName);
+        qDebug() << "已取消强力置顶:" << exePath;
+    }
+}
+
+// 置顶策略复选框联动槽函数实现
+// 参数说明：appIndex-应用索引，smartChecked-智能置顶状态，forceChecked-强力置顶状态
+void AdminDashboardView::onAppTopmostCheckBoxChanged(int appIndex, bool smartChecked, bool forceChecked)
+{
+    // 边界检查，防止越界
+    if (appIndex < 0 || appIndex >= m_currentApps.size()) return;
+
+    // 更新当前应用的置顶策略
+    m_currentApps[appIndex].smartTopmost = smartChecked;
+    m_currentApps[appIndex].forceTopmost = forceChecked;
+
+    // 立即发射白名单变更信号，保证配置和UI同步
+    emit whitelistChanged(m_currentApps);
+
+    // 可选：调试输出
+    qDebug() << "AdminDashboardView: 应用" << m_currentApps[appIndex].name
+             << "置顶策略已更新，智能置顶:" << smartChecked << "强力置顶:" << forceChecked;
 }
 
 // Implement other methods and slots as functionality is migrated 

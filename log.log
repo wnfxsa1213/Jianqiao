@@ -1,41 +1,13 @@
-00:53:38: 为项目JianqiaoSystem执行步骤 ...
-00:53:38: 正在启动 "D:\QT\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13270/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target clean
+16:49:59: 为项目JianqiaoSystem执行步骤 ...
+16:49:59: 正在启动 "D:\QT\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13270/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target all
 
-[1/2 20.8/sec] Cleaning additional files...
-[2/2 27.0/sec] Cleaning all built files...
-Cleaning... 20 files.
-00:53:39: 进程"D:\QT\Tools\CMake_64\bin\cmake.exe"正常退出。
-00:53:39: 正在启动 "D:\QT\Tools\CMake_64\bin\cmake.exe" --build C:/Users/13270/Desktop/Jianqiaov2/build/Desktop_Qt_6_9_0_MSVC2022_64bit-Release --target all
-
-[1/22 1.0/sec] Automatic MOC and UIC for target JianqiaoSystem
-[2/22 1.7/sec] Automatic RCC for resources.qrc
-[3/22 2.0/sec] Building RC object CMakeFiles\JianqiaoSystem.dir\appicon.rc.res
-[4/22 2.6/sec] Building RC object CMakeFiles\JianqiaoSystem.dir\version.rc.res
-[5/22 2.6/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\EWIEGA46WW\qrc_resources.cpp.obj
-[6/22 1.5/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HoverIconWidget.cpp.obj
-[7/22 1.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\main.cpp.obj
-[8/22 1.9/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AppStatusModel.cpp.obj
-[9/22 2.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminLoginView.cpp.obj
-[10/22 2.2/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AppCardWidget.cpp.obj
-[11/22 2.3/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\HotkeyEditDialog.cpp.obj
-[12/22 2.3/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj
-FAILED: CMakeFiles/JianqiaoSystem.dir/AdminDashboardView.cpp.obj 
-C:\PROGRA~1\MICROS~3\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\HostX64\x64\cl.exe  /nologo /TP -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -IC:\Users\13270\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release\JianqiaoSystem_autogen\include -IC:\Users\13270\Desktop\Jianqiaov2 -external:ID:\QT\6.9.0\msvc2022_64\include\QtWidgets -external:ID:\QT\6.9.0\msvc2022_64\include -external:ID:\QT\6.9.0\msvc2022_64\include\QtCore -external:ID:\QT\6.9.0\msvc2022_64\mkspecs\win32-msvc -external:ID:\QT\6.9.0\msvc2022_64\include\QtGui -external:ID:\QT\6.9.0\msvc2022_64\include\QtGui\6.9.0 -external:ID:\QT\6.9.0\msvc2022_64\include\QtGui\6.9.0\QtGui -external:ID:\QT\6.9.0\msvc2022_64\include\QtCore\6.9.0 -external:ID:\QT\6.9.0\msvc2022_64\include\QtCore\6.9.0\QtCore -external:ID:\QT\6.9.0\msvc2022_64\include\QtConcurrent -external:W0 /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -Zc:__cplusplus -permissive- -utf-8 /showIncludes /FoCMakeFiles\JianqiaoSystem.dir\AdminDashboardView.cpp.obj /FdCMakeFiles\JianqiaoSystem.dir\ /FS -c C:\Users\13270\Desktop\Jianqiaov2\AdminDashboardView.cpp
-C:\Users\13270\Desktop\Jianqiaov2\AdminDashboardView.cpp(595): error C2661: “DetectionResultDialog::DetectionResultDialog”: 没有重载函数接受 3 个参数
-C:\Users\13270\Desktop\Jianqiaov2\AdminDashboardView.cpp(595): note: 尝试匹配参数列表“(const SuggestedWindowHints, QList<WindowCandidateInfo>, AdminDashboardView *)”时
-C:\Users\13270\Desktop\Jianqiaov2\AdminDashboardView.cpp(609): error C2661: “DetectionResultDialog::DetectionResultDialog”: 没有重载函数接受 3 个参数
-C:\Users\13270\Desktop\Jianqiaov2\AdminDashboardView.cpp(609): note: 尝试匹配参数列表“(const SuggestedWindowHints, QList<WindowCandidateInfo>, AdminDashboardView *)”时
-[13/22 2.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AppStatusBar.cpp.obj
-[14/22 2.5/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserView.cpp.obj
-[15/22 2.7/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\WhitelistManagerView.cpp.obj
-[16/22 2.8/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoCoreShell.cpp.obj
-[17/22 3.0/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\DetectionResultDialog.cpp.obj
-[18/22 3.0/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\UserModeModule.cpp.obj
-[19/22 3.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\AdminModule.cpp.obj
-[20/22 3.1/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\JianqiaoSystem_autogen\mocs_compilation.cpp.obj
-[21/22 2.9/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj
+[1/2 0.4/sec] Building CXX object CMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj
+FAILED: CMakeFiles/JianqiaoSystem.dir/SystemInteractionModule.cpp.obj 
+C:\PROGRA~1\MICROS~3\2022\COMMUN~1\VC\Tools\MSVC\1444~1.352\bin\HostX64\x64\cl.exe  /nologo /TP -DQT_CONCURRENT_LIB -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64 -IC:\Users\13270\Desktop\Jianqiaov2\build\Desktop_Qt_6_9_0_MSVC2022_64bit-Release\JianqiaoSystem_autogen\include -IC:\Users\13270\Desktop\Jianqiaov2 -external:ID:\QT\6.9.0\msvc2022_64\include\QtWidgets -external:ID:\QT\6.9.0\msvc2022_64\include -external:ID:\QT\6.9.0\msvc2022_64\include\QtCore -external:ID:\QT\6.9.0\msvc2022_64\mkspecs\win32-msvc -external:ID:\QT\6.9.0\msvc2022_64\include\QtGui -external:ID:\QT\6.9.0\msvc2022_64\include\QtGui\6.9.0 -external:ID:\QT\6.9.0\msvc2022_64\include\QtGui\6.9.0\QtGui -external:ID:\QT\6.9.0\msvc2022_64\include\QtCore\6.9.0 -external:ID:\QT\6.9.0\msvc2022_64\include\QtCore\6.9.0\QtCore -external:ID:\QT\6.9.0\msvc2022_64\include\QtConcurrent -external:W0 /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MD -Zc:__cplusplus -permissive- -utf-8 /showIncludes /FoCMakeFiles\JianqiaoSystem.dir\SystemInteractionModule.cpp.obj /FdCMakeFiles\JianqiaoSystem.dir\ /FS -c C:\Users\13270\Desktop\Jianqiaov2\SystemInteractionModule.cpp
+C:\Users\13270\Desktop\Jianqiaov2\SystemInteractionModule.cpp(2135): error C2084: 函数“HWND SystemInteractionModule::findMainWindowForProcess(DWORD,const QJsonObject &)”已有主体
+C:\Users\13270\Desktop\Jianqiaov2\SystemInteractionModule.cpp(801): note: 参见“SystemInteractionModule::findMainWindowForProcess”的前一个定义
 ninja: build stopped: subcommand failed.
-00:53:46: 进程"D:\QT\Tools\CMake_64\bin\cmake.exe"退出，退出代码 1 。
-00:53:46: Error while building/deploying project JianqiaoSystem (kit: Desktop Qt 6.9.0 MSVC2022 64bit)
-00:53:46: When executing step "构建"
-00:53:46: Elapsed time: 00:08.
+16:50:01: 进程"D:\QT\Tools\CMake_64\bin\cmake.exe"退出，退出代码 1 。
+16:50:01: Error while building/deploying project JianqiaoSystem (kit: Desktop Qt 6.9.0 MSVC2022 64bit)
+16:50:01: When executing step "构建"
+16:50:01: Elapsed time: 00:03.

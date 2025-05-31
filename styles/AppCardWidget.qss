@@ -1,46 +1,59 @@
 QWidget#appCard {
-    min-width: 68px; /* 略大于内部图标，给padding空间 */
-    max-width: 68px;
-    min-height: 68px;
-    max-height: 68px;
-    background-color: rgba(255, 255, 255, 0.55); /* 半透明白色，若隐若无 */
-    border-radius: 20px; /* 更大圆角 */ 
-    padding: 6px; /* 内边距，让图标和边框有距离 */
-    margin: 2px; /* 卡片之间的间距，如果Dock布局需要的话 */
-    border: none; /* 去掉边框 */
+    min-width: 128px; /* 卡片最小宽度，适应更大图标 */
+    max-width: 128px;
+    min-height: 128px;
+    max-height: 128px;
+    background: #2b31de; /* 主色：卡片默认背景色，深蓝色，体现科技感 */
+    border-radius: 24px; /* 卡片圆角，数值越大越圆润，提升现代感 */
+    padding: 16px; /* 内边距，保证图标与边框有空间 */
+    padding-bottom: 16px; /* 增大底部内边距 */
+    margin: 4px; /* 卡片之间的间距，避免拥挤 */
+    border: none;
+    /* box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10), 0 1.5px 4px 0 rgba(0,0,0,0.08); */ /* Qt不支持box-shadow，注释掉避免警告 */
+    /* backdrop-filter: blur(8px); */  /* Qt不支持，注释掉避免警告 */
+    /* transition: background 0.2s, box-shadow 0.2s; */ /* Qt不支持transition，注释掉避免警告 */
+    /* 建议：如需高DPI自适应，建议在C++中动态调整min/max-width/height */
 }
 
 QWidget#appCard:hover {
-    background-color: rgba(255, 255, 255, 0.75); /* 悬浮时略微加深 */
+    background: #1475c4; /* 悬浮色：鼠标悬浮时的高亮蓝色，提升交互感 */
+    /* box-shadow: 0 8px 32px 0 rgba(0,0,0,0.18), 0 2px 8px 0 rgba(0,0,0,0.12); */ /* Qt不支持box-shadow，注释掉避免警告 */
+    /* transform: scale(1.08); // QSS不支持，需要C++动画 */
 }
 
 QWidget#appCard:pressed {
-    background-color: rgba(255, 255, 255, 0.45);
+    background: #9a5e0aa8; /* 按下色：点击时的深金色，突出点击反馈 */
+    /* box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10); */ /* Qt不支持box-shadow，注释掉避免警告 */
 }
 
 /* Name label will be hidden via C++, so no specific QSS needed to hide it for now,
    but can be styled here if made visible later */
 QLabel#nameLabel {
-    color: white;
-    font-size: 9px; /* 如果显示，则非常小 */
+    color: #0fd74e; /* 文字颜色：高亮白色，适合深色背景 */
+    font-size: 10px;
+    font-weight: 500;
     qproperty-alignment: 'AlignCenter';
-    background-color: transparent; /*确保背景透明*/
+    background: transparent;
+    /* text-shadow: 0 1px 2px rgba(0,0,0,0.18); */ /* Qt不支持text-shadow，注释掉避免警告 */
 }
 
 QLabel#iconLabel {
     qproperty-alignment: 'AlignCenter';
-    background-color: transparent; /*确保背景透明*/
+    background: transparent;
+    /* 图标阴影建议C++绘制，QSS不支持 */
 }
 
 /* Styling for loading state */
-QWidget#appCard[loading=\"true\"] {
-    background-color: rgba(0, 0, 0, 0.18);
+QWidget#appCard[loading="true"] {
+    background: #1469b3; /* 加载状态色：深灰半透明，弱化卡片内容 */
+    /* box-shadow: 0 0 0 0 transparent; */ /* Qt不支持box-shadow，注释掉避免警告 */
 }
 
-QLabel#loadingIndicatorLabel { /* If using a text label for loading */
-    color: white;
-    font-size: 10px;
+QLabel#loadingIndicatorLabel {
+    color: #d32f2f; /* 加载指示器文字颜色：纯白色，突出提示 */
+    font-size: 12px;
     font-weight: bold;
     qproperty-alignment: 'AlignCenter';
-    background-color: transparent;
+    background: transparent;
+    /* text-shadow: 0 1px 4px rgba(0,0,0,0.25); */ /* Qt不支持text-shadow，注释掉避免警告 */
 }

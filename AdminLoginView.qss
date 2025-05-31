@@ -3,6 +3,7 @@ QWidget#AdminLoginView { /* 使用对象名称选择器以确保样式只应用�
     background-color: #f0f0f0; /* 浅灰色背景 */
     border: 1px solid #cccccc;
     border-radius: 5px;
+    /* 建议：如需高DPI自适应，建议在C++中动态调整控件尺寸 */
 }
 
 QLabel {
@@ -31,6 +32,7 @@ QPushButton {
     padding: 8px 16px; /* 增加内边距 */
     font-size: 14px;
     min-height: 20px; /* 确保按钮有足够高度 */
+    /* transition: background 0.2s; */ /* Qt不支持transition，注释掉避免警告 */
 }
 
 QPushButton:hover {

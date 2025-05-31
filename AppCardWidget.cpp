@@ -1,4 +1,5 @@
 #include "AppCardWidget.h"
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QMouseEvent>
@@ -11,6 +12,11 @@
 #include <QResizeEvent> // For resize event handling
 #include <QPainter>
 #include <QPainterPath>
+#include <QRect>
+#include <QImage>
+#include <QIcon>
+#include <QSize>
+#include <Qt>
 
 // 辅助函数：裁剪透明边距
 static QRect tightBoundingRect(const QImage& img) {
@@ -69,11 +75,21 @@ AppCardWidget::AppCardWidget(const QString& appName, const QString& appPath, con
     } else {
         qWarning() << "AppCardWidget: Could not load QSS file.";
     }
-    
+    // 图标健壮性处理：如icon无效则显示默认图标
+    if (m_appIcon.isNull()) {
+        QPixmap defaultPixmap(56, 56);
+        defaultPixmap.fill(Qt::gray);
+        m_appIcon = QIcon(defaultPixmap);
+        qWarning() << "AppCardWidget: appIcon is null, using default icon.";
+    }
     // 创建缩放动画
     m_scaleAnimation = new QPropertyAnimation(this, "scaleFactor");
     m_scaleAnimation->setDuration(ANIMATION_DURATION);
     m_scaleAnimation->setEasingCurve(QEasingCurve::OutCubic);
+
+    qreal dpi = this->logicalDpiX();
+    int baseSize = 128 * (dpi / 96.0); // 96为标准DPI
+    setFixedSize(baseSize, baseSize);
 }
 
 void AppCardWidget::setupUi()
@@ -81,13 +97,11 @@ void AppCardWidget::setupUi()
     // 移除使用QVBoxLayout进行垂直居中的方法
     // 改为直接在widget中放置图标并手动控制位置
     
-    setFixedSize(96, 96); // 放大卡片整体尺寸
-    
     m_iconLabel = new QLabel(this);
     m_iconLabel->setObjectName("iconLabel");
-    m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, QSize(80, 80))); // 放大图标
-    m_iconLabel->setFixedSize(QSize(80, 80));
-    m_iconLabel->setAlignment(Qt::AlignCenter);
+    m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, QSize(56, 56))); // 放大图标
+    m_iconLabel->setFixedSize(QSize(56, 56));//设置固定大小
+    m_iconLabel->setAlignment(Qt::AlignCenter);//设置对齐方式
     
     // 取消使用布局，改为手动设置位置
     m_layout = nullptr;
@@ -95,7 +109,7 @@ void AppCardWidget::setupUi()
     m_nameLabel = new QLabel(m_appName, this);
     m_nameLabel->setObjectName("nameLabel");
     m_nameLabel->setAlignment(Qt::AlignCenter);
-    m_nameLabel->setWordWrap(true);
+    m_nameLabel->setWordWrap(true);//
     m_nameLabel->setVisible(false); // 默认隐藏名称标签
 
     m_loadingIndicatorLabel = new QLabel(this);
@@ -106,7 +120,7 @@ void AppCardWidget::setupUi()
     m_loadingMovie = new QMovie(":/icons/loading_spinner.gif");
     if (m_loadingMovie->isValid()) {
         m_loadingIndicatorLabel->setMovie(m_loadingMovie);
-        m_loadingMovie->setScaledSize(QSize(32, 32)); 
+        m_loadingMovie->setScaledSize(QSize(32, 32)); //设置缩放大小
     } else {
         qDebug() << "AppCardWidget: Loading spinner GIF not found or invalid. Falling back to text.";
         m_loadingIndicatorLabel->setText("..."); 
@@ -119,14 +133,21 @@ void AppCardWidget::setupUi()
 void AppCardWidget::updateIconPosition()
 {
     if (m_iconLabel) {
-        QSize scaledSize = QSize(80 * m_scaleFactor, 80 * m_scaleFactor); // 放大缩放基准
+        // 计算缩放后图标的目标尺寸，最大为卡片本身尺寸的95%
+        int iconBaseSize = qMin(width(), height()) * 0.70; // 图标更大
+        QSize scaledSize = QSize(iconBaseSize * m_scaleFactor, iconBaseSize * m_scaleFactor);
+
+        // 生成缩放后的pixmap并设置到label
         m_iconLabel->setPixmap(scaledCenteredPixmap(m_appIcon, scaledSize));
+        m_iconLabel->setFixedSize(scaledSize);
+        m_iconLabel->setAttribute(Qt::WA_TranslucentBackground, true); // 保证背景透明
+
+        // 让图标始终居中于卡片
         int scaledX = (width() - scaledSize.width()) / 2;
-        int scaledY = (height() - scaledSize.height()) / 2;
-        m_iconLabel->setGeometry(scaledX, scaledY, scaledSize.width(), scaledSize.height());
+        int scaledY = (height() - scaledSize.height()) / 2 - 6;
+        m_iconLabel->move(scaledX, scaledY);
     }
-    
-    // 加载指示器也需要居中
+    // 加载指示器同理，始终居中
     if (m_loadingIndicatorLabel && m_loadingIndicatorLabel->isVisible()) {
         int x = (width() - m_loadingIndicatorLabel->width()) / 2;
         int y = (height() - m_loadingIndicatorLabel->height()) / 2;

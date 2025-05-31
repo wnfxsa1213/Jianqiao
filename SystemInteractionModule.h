@@ -38,9 +38,10 @@ struct MonitoringInfo {
     int attempts;
     quint32 launcherPid;
     bool forceActivateOnly;
-    QTimer* timer; 
+    QTimer* timer;
+    HWND windowHandle = nullptr; // 新增：记录已激活窗口句柄
 
-    MonitoringInfo() : attempts(0), launcherPid(0), forceActivateOnly(false), timer(nullptr) {}
+    MonitoringInfo() : attempts(0), launcherPid(0), forceActivateOnly(false), timer(nullptr), windowHandle(nullptr) {}
 
     // Rule of Five no longer needed as we will manage this via raw pointers in the map
     // // 1. Destructor 
@@ -140,6 +141,37 @@ public:
      */
     QList<WindowCandidateInfo> getLastDetectionCandidates() const;
 
+    /**
+     * @brief 降低主界面Z序（临时取消置顶），延迟后自动恢复置顶
+     * @param delayMs 降级持续时间（毫秒），默认3000ms
+     */
+    void lowerMainWindowZOrder(int delayMs = 3000);
+
+    /**
+     * @brief 设置智能置顶模式开关（仅在窗口被覆盖时再置顶）
+     * @param enabled 是否启用
+     */
+    void setSmartTopmostEnabled(bool enabled);
+    /**
+     * @brief 设置强力置顶模式开关（每秒持续SetWindowPos置顶）
+     * @param enabled 是否启用
+     */
+    void setForceTopmostEnabled(bool enabled);
+    /**
+     * @brief 查询智能置顶是否启用
+     */
+    bool isSmartTopmostEnabled() const;
+    /**
+     * @brief 查询强力置顶是否启用
+     */
+    bool isForceTopmostEnabled() const;
+
+    /**
+     * @brief 降低主界面Z序，直到外部窗口关闭/最小化/失去焦点才恢复置顶
+     * @param externalHwnd 外部窗口句柄
+     */
+    void lowerMainWindowZOrderUntilExternalLost(HWND externalHwnd);
+
 signals:
     void adminLoginRequested();
     void applicationActivated(const QString& appPath);
@@ -194,6 +226,15 @@ private:
 
     // 新增：递归查找主窗口（支持特殊类型应用）
     static QPair<HWND, int> findMainWindowRecursive(DWORD processId, const QJsonObject& windowHints, int depth = 0, int maxDepth = 4);
+
+    // 置顶策略配置
+    bool m_smartTopmostEnabled = true; // 智能置顶，默认开启。仅在窗口被覆盖时再置顶，减少系统调用。
+    bool m_forceTopmostEnabled = false; // 强力置顶，默认关闭。开启后每秒强制SetWindowPos置顶，防止被其他窗口抢占。
+    QTimer* m_forceTopmostTimer = nullptr; // 强力置顶定时器，定时遍历所有目标窗口持续置顶。
+
+    // 新增：持续检测外部窗口状态的定时器和句柄
+    QTimer* m_topmostRestoreTimer = nullptr; // 检测外部窗口状态的定时器
+    HWND m_lastActivatedExternalHwnd = nullptr; // 最近一次激活的外部窗口句柄
 };
 
 #endif // SYSTEMINTERACTIONMODULE_H 

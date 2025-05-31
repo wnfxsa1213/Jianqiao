@@ -1,0 +1,209 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 通用项目 Cursor .mdc 规则
+
+## 1. 任务与项目管理（manager 工具）
+
+- **任务拆解与分配**
+  - 使用 `mcp-shrimp-task-manager_split_tasks` 工具，将复杂需求拆解为可独立完成的子任务。
+  - 每个子任务需明确输入、输出、依赖关系和验收标准。
+- **任务执行与追踪**
+  - 用 `mcp-shrimp-task-manager_list_tasks` 查看所有任务及其状态。
+  - 用 `mcp-shrimp-task-manager_execute_task` 获取具体任务的实现指导。
+  - 用 `mcp-shrimp-task-manager_verify_task` 对已完成任务进行验收和评分。
+- **任务维护**
+  - 用 `mcp-shrimp-task-manager_update_task` 动态调整任务内容、依赖或验收标准。
+  - 用 `mcp-shrimp-task-manager_delete_task` 删除无效或冗余的未完成任务。
+- **项目规则与标准**
+  - 用 `mcp-shrimp-task-manager_init_project_rules` 初始化或更新项目开发规范。
+
+> **推荐时机**：  
+> - 需求分析、开发计划阶段优先使用 manager 工具进行任务拆解和分配。  
+> - 开发过程中持续用 manager 工具追踪进度、调整任务、验收成果。
+
+---
+
+## 2. 知识与文档管理（memory-bank-mcp 工具）
+
+- **知识库建立**
+  - 用 `mcp_memory-bank-mcp_list_projects` 查看所有知识库项目。
+  - 用 `mcp_memory-bank-mcp_list_project_files` 查看某项目下的所有知识文件。
+- **知识文档读写**
+  - 用 `mcp_memory-bank-mcp_memory_bank_read` 读取指定知识文件内容。
+  - 用 `mcp_memory-bank-mcp_memory_bank_write` 新建知识文件并写入内容。
+  - 用 `mcp_memory-bank-mcp_memory_bank_update` 更新已有知识文件内容。
+- **知识库应用场景**
+  - 记录架构设计、技术决策、接口文档、常见问题、开发规范等。
+  - 作为团队成员间知识共享与传承的载体。
+
+> **推荐时机**：  
+> - 需求澄清、技术调研、架构设计、经验总结等阶段，及时沉淀到 memory-bank
+> - 代码评审、交接、培训等场景，优先查阅和补充 memory-bank。
+
+---
+
+## 3. 文件与系统操作（desktopMCP 工具）
+
+- **文件操作**
+  - 用 `mcp_desktop-commander_list_directory` 列出目录内容，了解项目结构。
+  - 用 `mcp_desktop-commander_read_file` 读取文件内容，支持分段读取大文件。
+  - 用 `mcp_desktop-commander_write_file` 写入或追加文件内容，注意分块写入大文件。
+  - 用 `mcp_desktop-commander_create_directory` 创建新目录。
+  - 用 `mcp_desktop-commander_move_file` 移动或重命名文件/目录。
+  - 用 `mcp_desktop-commander_delete_file` 删除文件。
+- **代码/文本搜索**
+  - 用 `mcp_desktop-commander_search_code` 在指定目录下全文检索代码或文本内容。
+  - 用 `mcp_desktop-commander_search_files` 按文件名模糊查找文件。
+- **系统命令与进程管理**
+  - 用 `mcp_desktop-commander_execute_command` 执行系统命令（如构建、测试等）。
+  - 用 `mcp_desktop-commander_list_processes` 查看当前进程。
+  - 用 `mcp_desktop-commander_kill_process` 终止指定进程。
+
+> **推荐时机**：  
+> - 需要批量操作文件、自动化脚本、查找/定位代码、分析项目结构时优先使用 desktopMCP 工具。  
+> - 处理大文件时，务必分段读写，避免超出行数限制。
+
+---
+
+## 4. 综合建议
+
+- **优先级顺序**：  
+  1. 先用 manager 工具进行任务规划与分解，明确开发目标和分工。
+  2. 过程中遇到知识沉淀需求，及时用 memory-bank-mcp 工具记录和查阅。
+  3. 具体开发、调试、查找、批量操作时，充分利用 desktopMCP 工具提升效率。
+- **协作与规范**：  
+  - 所有重要决策、接口、经验、问题，建议同步到 memory-bank，便于团队协作。
+  - 任务状态、进度、变更，建议通过 manager 工具统一管理，保证项目有序推进。
+- **安全与合规**：  
+  - 文件操作、系统命令需注意权限和安全，避免误删、误操作。
+  - 任务和知识文档需定期备份，防止数据丢失。
+
+---
+
+**本规则可根据实际项目需求灵活调整，建议团队成员熟练掌握三大类工具的使用方法和最佳实践。**
+---
+
+## 5. C++/Qt6 项目开发规范补充
+
+- **代码结构与模块化**
+  - 严格按照模块（如 Core、Admin、UserMode、SystemInteraction 等）进行文件和类的划分，避免跨模块耦合。
+  - 所有与 Windows API 相关的代码应集中在 SystemInteractionModule，其他模块仅通过接口调用。
+
+- **C++ 编码规范**
+  - 采用现代 C++（C++17 及以上）语法，优先使用智能指针、范围 for、auto、constexpr 等特性。
+  - 头文件保护统一使用 `#pragma once`。
+  - 类成员变量命名统一加前缀 m_，私有成员函数加下划线后缀。
+  - 禁止使用裸指针管理资源，必须用智能指针或 Qt 对象树。
+  - 重要逻辑、复杂算法、所有 OS API 调用处必须有详细中文注释。
+  - 错误处理要完善，所有系统/Qt API 调用后需检查返回值并记录日志。
+
+- **Qt6 相关规范**
+  - UI 优先使用 QML，若用 Qt Widgets 必须配合 QSS 保证现代化风格。
+  - QML 文件命名与 C++ 逻辑文件一一对应，便于维护。
+  - 信号与槽连接优先用新语法（函数指针/lamda），避免老式字符串方式。
+  - 动画、过渡效果要平滑自然，提升用户体验。
+  - 所有资源（图片、图标、QML）统一放在 resources.qrc 管理。
+
+- **跨平台与安全性**
+  - 禁止编写任何与非 Windows 平台相关的兼容性代码。
+  - 涉及管理员权限、凭证存储等敏感操作，需加密处理并有安全注释。
+
+- **代码风格与审查**
+  - 统一使用 clang-format 进行代码格式化，风格文件需随项目维护。
+  - 重要合并需代码评审，评审意见及时沉淀到 memory-bank。
+
+- **文档与知识沉淀**
+  - 关键设计、接口说明、模块交互流程、常见问题，需同步到 memory-bank。
+  - 代码注释与文档保持一致，便于团队协作和后续维护。
+
+---
+
+
+**如需调整目录结构，建议团队讨论并在memory-bank记录变更历史。**
+
+---
+
+## 6. 通用C++/Qt6项目文件目录结构规范
+
+- 推荐目录结构：
+
+```
+项目根目录/
+├── CMakeLists.txt                # 构建脚本（或 qmake .pro 文件）
+├── main.cpp                      # 程序入口
+├── config/                       # 配置文件目录
+├── src/                          # 主要源代码目录
+│   ├── core/                     # 核心功能模块
+│   ├── modules/                  # 业务/功能模块（如用户、管理、系统等）
+│   ├── ui/                       # UI相关（QML、Widgets、样式等）
+│   ├── common/                   # 公共类型、工具类、常用宏
+│   └── ...
+├── include/                      # 公共头文件目录（如有需要）
+├── resources/                    # 资源文件（图片、图标、QML等）
+│   ├── qml/                      # QML文件
+│   ├── icons/                    # 图标
+│   ├── images/                   # 图片
+│   └── ...
+├── styles/                       # QSS样式表、主题等
+├── doc/                          # 项目文档、设计说明、API文档
+├── tests/                        # 单元测试、集成测试代码
+├── scripts/                      # 构建、部署、工具脚本
+├── .cursor/                      # Cursor规则与AI辅助相关目录
+│   └── rules/                    # 规则文件（如v1.mdc、v2.mdc）
+├── .gitignore                    # Git忽略文件
+└── README.md                     # 项目说明文档
+```
+
+- 规范说明：
+  - 业务模块、核心模块、UI、资源、文档、测试等分目录存放，结构清晰，便于协作和维护。
+  - QML、图片、图标等资源建议统一放在 resources/ 下，便于资源管理和引用。
+  - 公共类型、工具类、常用宏建议放在 common/ 或 include/ 目录。
+  - 测试代码与主代码分离，便于自动化测试和持续集成。
+  - 所有配置、脚本、文档等非代码文件单独归档，便于查阅和版本管理。
+
+---
+
+**如需根据实际项目调整目录结构，建议团队讨论并在memory-bank记录变更历史。**
+
+---
+
+## 7. context7 MCP工具使用规范
+
+- **主要用途**：查阅第三方库/框架的权威文档，辅助开发、集成和排查问题。
+- **推荐流程**：
+  1. 先用 `resolve-library-id` 输入库名，获取 context7 兼容库ID。
+  2. 再用 `get-library-docs` 输入库ID（可选填主题、token数），获取详细文档。
+- **常见场景**：
+  - 查找 Qt、Boost、spdlog、OpenCV 等库的API用法和最佳实践。
+  - 精准定位某个类、函数、模块的官方说明。
+  - 辅助代码开发、接口集成、问题排查。
+- **注意事项**：
+  - 必须先 resolve-library-id，再 get-library-docs。
+  - 主题（topic）可选填，能精准定位文档内容。
+  - 如未找到合适库ID，可尝试更换关键词或缩小范围。
+  - token 数量建议默认10000，特殊需求可增大。
+
+---
+
+## 8. thinking（链式思考）MCP工具使用规范
+
+- **主要用途**：系统性分析复杂问题、需求澄清、技术决策、疑难排查、团队知识沉淀。
+- **推荐流程**：
+  1. 明确问题或目标，输入到 thinking 工具。
+  2. 按步骤逐步推理，每一步都可记录假设、分析、结论。
+  3. 发现问题可回退修正，或对某一步分支探索。
+  4. 思考充分后输出最终结论或方案。
+- **常见场景**：
+  - 需求分析、架构设计、技术选型、疑难排查、团队讨论。
+- **注意事项**：
+  - 每一步建议有明确目标和结论，便于后续复盘。
+  - 重要思考过程建议同步到 memory-bank，便于团队共享和知识传承。
+  - 可结合 manager 工具，将思考结论转化为具体任务。
+
+---
+
+
+

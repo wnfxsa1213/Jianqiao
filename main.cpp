@@ -76,6 +76,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("剑鞘系统");
     QCoreApplication::setApplicationVersion("2.0.0.0");
 
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
     qDebug() << "Application started."; // This should now go to log.txt
 
     JianqiaoCoreShell w;

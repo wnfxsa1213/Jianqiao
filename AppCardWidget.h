@@ -5,6 +5,11 @@
 #include <QString>
 #include <QIcon>
 #include <QPropertyAnimation>
+#include <QRect>
+#include <QImage>
+#include <QPixmap>
+#include <QSize>
+#include <Qt>
 
 class QLabel;
 class QVBoxLayout;

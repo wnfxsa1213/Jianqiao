@@ -45,6 +45,7 @@ signals:
     void adminLoginHotkeyChanged(const QList<DWORD>& newHotkeySequence); // Assuming AdminModule provides DWORD list
     // void viewClosed(); // Replaced by userRequestsExitAdminMode for clarity
     void detectionResultsReceived(const SuggestedWindowHints& hints, bool success, const QString& errorString); // <<< NEW SIGNAL
+    void appTopmostCheckBoxChanged(int appIndex, bool smartChecked, bool forceChecked);
 
 private slots:
     void onAddAppClicked();    // Added
@@ -58,6 +59,9 @@ private slots:
     void onDetectionDialogApplied(const QString& finalMainExecutableHint, const QJsonObject& finalWindowHints); // <<< NEW SLOT for dialog results
     void onDetectionWaitMsSaveClicked(); // 新增槽函数
     void onAutoStartCheckBoxToggled(bool checked); // 新增：自启动槽函数
+    void onSmartTopmostCheckBoxToggled(bool checked); // 槽函数
+    void onForceTopmostCheckBoxToggled(bool checked); // 槽函数
+    void onAppTopmostCheckBoxChanged(int appIndex, bool smartChecked, bool forceChecked);
 
 private:
     void setupUi();
@@ -114,9 +118,15 @@ private:
     QPushButton* m_saveDetectionWaitMsButton; // 保存按钮
 
     QCheckBox* m_autoStartCheckBox = nullptr; // 新增：自启动复选框
+    QCheckBox* m_smartTopmostCheckBox = nullptr; // 智能置顶复选框
+    QCheckBox* m_forceTopmostCheckBox = nullptr; // 强力置顶复选框
     void updateAutoStartCheckBoxState(); // 新增：辅助函数
+    void updateTopmostCheckBoxState(); // 辅助函数
 
     QProgressDialog* m_detectionProgressDialog; // 新增：探测进度弹窗指针
+
+    bool isSmartTopmostEnabled() const;
+    bool isForceTopmostEnabled() const;
 
 protected:
     void paintEvent(QPaintEvent *event) override;

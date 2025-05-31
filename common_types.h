@@ -18,6 +18,8 @@ struct AppInfo {
     QString mainExecutableHint;
     QJsonObject windowFindingHints; // Renamed from windowHints to windowFindingHints for clarity
     QString exePath; // 新增：可执行文件完整路径，用于进程重启等
+    bool smartTopmost = true; // 智能置顶
+    bool forceTopmost = false; // 强力置顶
 
     bool operator==(const AppInfo& other) const {
         return name == other.name && path == other.path;

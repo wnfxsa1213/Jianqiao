@@ -1,6 +1,5 @@
 {
     "admin_password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
-    "admin_password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
     "shortcuts": {
         "admin_login": {
             "key_sequence": [
@@ -14,40 +13,46 @@
     "detection_wait_ms": 10000,
     "whitelist_apps": [
         {
+            "forceTopmost": false,
+            "mainExecutableHint": "bambu-studio.exe",
+            "name": "拓竹",
+            "path": "D:/切片软件/bambu-studio.exe",
+            "smartTopmost": true
+        },
+        {
+            "forceTopmost": false,
+            "mainExecutableHint": "betaflight-configurator.exe",
+            "name": "地面站",
+            "path": "D:/调参软件/betaflight-configurator.exe",
+            "smartTopmost": true
+        },
+        {
+            "forceTopmost": false,
+            "mainExecutableHint": "wps.exe",
             "name": "WPS",
-            "path": "C:/Users/13027/AppData/Local/Kingsoft/WPS Office/ksolaunch.exe",
-            "windowFindingHints": {
-                "allowNonTopLevel": true,
-                "minScore": 50,
-                "primaryClassName": "OpusApp",
-                "titleContains": "WPS Office"
-            }
+            "path": "D:/WPS Office/ksolaunch.exe",
+            "smartTopmost": true
+        },
+        {
+            "forceTopmost": false,
+            "mainExecutableHint": "lceda-pro.exe",
+            "name": "嘉立创",
+            "path": "D:/嘉立创/lceda-pro/lceda-pro.exe",
+            "smartTopmost": true
+        },
+        {
+            "forceTopmost": false,
+            "mainExecutableHint": "SLDWORKS.exe",
+            "name": "SLDWORKS",
+            "path": "D:/Program Files/SOLIDWORKS Corp/SOLIDWORKS/SLDWORKS.exe",
+            "smartTopmost": true
+        },
+        {
+            "forceTopmost": false,
+            "mainExecutableHint": "DroneVirtualFlight-Win64-Shipping.exe",
+            "name": "模拟器",
+            "path": "D:/模拟器l联机/DroneVirtualFlight/Binaries/Win64/DroneVirtualFlight-Win64-Shipping.exe",
+            "smartTopmost": true
         }
-    ],
-    "user_mode_settings": {
-        "blocked_keys": [
-            "VK_LWIN",
-            "VK_RWIN"
-        ],
-        "blocked_key_combinations": [
-            ["VK_MENU", "VK_TAB"],
-            ["VK_CONTROL", "VK_SHIFT", "VK_ESCAPE"],
-            ["VK_LWIN", "D"],
-            ["VK_LWIN", "L"],
-            ["VK_LWIN", "VK_TAB"],
-            ["VK_CONTROL", "VK_ESCAPE"],
-            ["VK_MENU", "VK_F4"],
-            ["VK_LWIN", "S"],
-            ["VK_LWIN", "A"],
-            ["VK_LWIN", "N"],
-            ["VK_LWIN", "VK_SHIFT", "S"],
-            ["VK_LWIN", "E"],
-            ["VK_LWIN", "R"],
-            ["VK_LWIN", "I"],
-            ["VK_LWIN", "X"],
-            ["VK_LWIN", "P"],
-            ["VK_LWIN", "K"],
-            ["VK_CONTROL", "VK_MENU", "VK_DELETE"]
-        ]
-    }
+    ]
 }

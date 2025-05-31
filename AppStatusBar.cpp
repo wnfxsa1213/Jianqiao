@@ -12,20 +12,21 @@
 AppStatusBar::AppStatusBar(QWidget* parent)
     : QWidget(parent), m_model(nullptr)
 {
-    m_layout = new QHBoxLayout(this);
-    m_layout->setContentsMargins(8, 4, 8, 4);
-    m_layout->setSpacing(10);
-    setLayout(m_layout);
+    m_layout = new QHBoxLayout(this);//创建一个水平布局
+    // m_layout->setContentsMargins(8, 4, 8, 4);//布局边距交由QSS控制
+    // m_layout->setSpacing(10);//布局间距交由QSS控制
+    setLayout(m_layout);//设置布局
+    this->setObjectName("appStatusBar");
 }
 
 // 绑定数据模型
 void AppStatusBar::setModel(AppStatusModel* model) {
     if (m_model) {
-        disconnect(m_model, nullptr, this, nullptr);
+        disconnect(m_model, nullptr, this, nullptr);//断开连接
     }
-    m_model = model;
+    m_model = model;//设置模型
     if (m_model) {
-        connect(m_model, &AppStatusModel::statusChanged, this, &AppStatusBar::refreshCards);
+        connect(m_model, &AppStatusModel::statusChanged, this, &AppStatusBar::refreshCards);//连接信号和槽
         refreshCards();
     }
 }
@@ -34,7 +35,7 @@ void AppStatusBar::setModel(AppStatusModel* model) {
 void AppStatusBar::refreshCards() {
     // 彻底清理布局中所有项（包括stretch和widget），防止漂移
     while (QLayoutItem* item = m_layout->takeAt(0)) {
-        if (item->widget()) item->widget()->deleteLater(); // 删除控件
+        if (item->widget()) item->widget()->deleteLater(); // 删除控件/布局项
         delete item; // 删除布局项（包括stretch）
     }
     m_cardWidgets.clear();
